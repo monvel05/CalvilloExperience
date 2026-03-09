@@ -1,5 +1,5 @@
 {
-  "name": "CalvilloExperience",
+  "name": "calvillo-experience",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -27,6 +27,7 @@
     "@capacitor/keyboard": "8.0.0",
     "@capacitor/status-bar": "8.0.1",
     "@ionic/angular": "^8.0.0",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "ionicons": "^7.0.0",
     "nodemon": "^3.1.14",
