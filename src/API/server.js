@@ -1,66 +1,103 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
 
+// Importaciones de configuracion
+const loginRoutes = require('./routes/login.routes');
+const { connDB } = require('./database');
+
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api', loginRoutes);
 
-const db = require('./database');
+// ==========================================
+// RUTAS DE USUARIOS
+// ==========================================
 
+// Registrar Usuario (Validado con tabla Usuarios)
+app.post('/usuarios', async (req, res) => {
+    const { nombre, fechaNacimiento, correo, contraseña, idTipoUsuario, idGenero, idIdioma } = req.body;
 
+    if (!nombre || !correo || !contraseña) {
+        return res.status(400).json({ message: "Faltan campos obligatorios" });
+    }
 
-app.post('/usuarios', (req, res) => {
-    const { nombre, correo, password, rol } = req.body;
-    const query = 'INSERT INTO usuarios (nombre, correo, password, rol) VALUES (?, ?, ?, ?)';
-    db.query(query, [nombre, correo, password, rol], (err, result) => {
-        if (err) return res.status(500).send(err);
-        res.status(201).send({ message: 'Usuario registrado', id: result.insertId });
-    });
+    try {
+        const hashedPassword = await bcrypt.hash(contraseña, 10);
+        const query = `INSERT INTO Usuarios (nombre, fechaNacimiento, correo, contraseña, idTipoUsuario, idGenero, idIdioma) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+        connDB.query(query, [nombre, fechaNacimiento, correo, hashedPassword, idTipoUsuario, idGenero, idIdioma], (err, result) => {
+            if (err) return res.status(500).json({ message: "Error al registrar", error: err });
+            res.status(201).json({ message: 'Usuario registrado correctamente', id: result.insertId });
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error interno", error });
+    }
 });
 
+// Obtener un usuario por ID
 app.get('/usuarios/:id', (req, res) => {
-    const { id } = req.params;
-    db.query('SELECT id, nombre, correo, rol FROM usuarios WHERE id = ?', [id], (err, result) => {
+    const query = `SELECT idUsuario, nombre, correo, idTipoUsuario FROM Usuarios WHERE idUsuario = ?`;
+    connDB.query(query, [req.params.id], (err, result) => {
         if (err) return res.status(500).send(err);
         res.json(result[0]);
     });
 });
 
-app.post('/sitios', (req, res) => {
-    const { nombre, descripcion, tipo, id_dueno } = req.body;
-    const query = 'INSERT INTO sitios (nombre, descripcion, tipo, id_dueno) VALUES (?, ?, ?, ?)';
-    db.query(query, [nombre, descripcion, tipo, id_dueno], (err, result) => {
-        if (err) return res.status(500).send(err);
-        res.status(201).send({ message: 'Sitio agregado correctamente' });
-    });
-});
+// ==========================================
+// RUTAS DE NEGOCIOS
+// ==========================================
 
-app.get('/sitios', (req, res) => {
-    db.query('SELECT * FROM sitios', (err, results) => {
+// Obtener todos los negocios con su ubicacion
+app.get('/negocios', (req, res) => {
+    const query = `
+        SELECT n.*, u.municipio, u.estado 
+        FROM Negocios n
+        LEFT JOIN Ubicacion u ON n.idUbicacion = u.idUbicacion`;
+    
+    connDB.query(query, (err, results) => {
         if (err) return res.status(500).send(err);
         res.json(results);
     });
 });
 
-app.put('/sitios/:id', (req, res) => {
-    const { id } = req.params;
-    const { nombre, descripcion } = req.body;
-    const query = 'UPDATE sitios SET nombre = ?, descripcion = ? WHERE id = ?';
-    db.query(query, [nombre, descripcion, id], (err, result) => {
-        if (err) return res.status(500).send(err);
-        res.send({ message: 'Sitio actualizado' });
+// ==========================================
+// RUTAS DE RESERVAS
+// ==========================================
+
+// Crear una nueva reserva
+app.post('/reservas', (req, res) => {
+    const { fechaEntrada, fechaSalida, horaEntrada, horaSalida, idUsuario, idNegocio, idEstatus } = req.body;
+    
+    const query = `INSERT INTO Reservas (fechaEntrada, fechaSalida, horaEntrada, horaSalida, idUsuario, idNegocio, idEstatus) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    connDB.query(query, [fechaEntrada, fechaSalida, horaEntrada, horaSalida, idUsuario, idNegocio, idEstatus || 1], (err, result) => {
+        if (err) return res.status(500).json({ error: err });
+        res.status(201).json({ message: 'Reserva creada con exito', idReserva: result.insertId });
     });
 });
 
-app.delete('/sitios/:id', (req, res) => {
-    const { id } = req.params;
-    db.query('DELETE FROM sitios WHERE id = ?', [id], (err, result) => {
+// ==========================================
+// RUTAS DE RESEÑAS
+// ==========================================
+
+// Publicar una reseña
+app.post('/resenas', (req, res) => {
+    const { calificacion, comentario, idUsuario, idNegocio } = req.body;
+    const fecha = new Date().toISOString().split('T')[0];
+
+    const query = `INSERT INTO Resenas (calificacion, comentario, fecha, idUsuario, idNegocio) VALUES (?, ?, ?, ?, ?)`;
+
+    connDB.query(query, [calificacion, comentario, fecha, idUsuario, idNegocio], (err, result) => {
         if (err) return res.status(500).send(err);
-        res.send({ message: 'Sitio eliminado' });
+        res.status(201).json({ message: 'Reseña enviada correctamente' });
     });
 });
 
+// Inicio del servidor
 app.listen(port, () => {
-    console.log(`Servidor de @Karol corriendo en el puerto ${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
