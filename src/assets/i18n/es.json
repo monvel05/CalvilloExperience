@@ -1,0 +1,13 @@
+{
+  "NAVBAR": {
+    "HOME": "Inicio",
+    "BUSINESSES": "Negocios",
+    "LOGIN": "Iniciar Sesión",
+    "REGISTER": "Registrarse"
+  },
+  "TOURISM": {
+    "WELCOME": "Descubre la magia de Calvillo",
+    "BOOK_NOW": "Reservar Ahora",
+    "REVIEWS": "Reseñas"
+  }
+}
