@@ -26,11 +26,24 @@ app.post('/usuarios', async (req, res) => {
     }
 
     try {
+        // 1. Tipado: Convertimos a número para asegurar que la DB reciba el tipo correcto
+        const tipoId = parseInt(idTipoUsuario);
+        const generoId = parseInt(idGenero);
+        const idiomaId = parseInt(idIdioma);
+
+        // 2. Seguridad: Encriptado de contraseña
         const hashedPassword = await bcrypt.hash(contraseña, 10);
+        
         const query = `INSERT INTO Usuarios (nombre, fechaNacimiento, correo, contraseña, idTipoUsuario, idGenero, idIdioma) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-        connDB.query(query, [nombre, fechaNacimiento, correo, hashedPassword, idTipoUsuario, idGenero, idIdioma], (err, result) => {
-            if (err) return res.status(500).json({ message: "Error al registrar", error: err });
+        connDB.query(query, [nombre, fechaNacimiento, correo, hashedPassword, tipoId, generoId, idiomaId], (err, result) => {
+            if (err) {
+                // 3. Validación de duplicados: Si el correo ya existe (Requiere UNIQUE en la DB)
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return res.status(400).json({ message: "El correo electrónico ya está registrado" });
+                }
+                return res.status(500).json({ message: "Error al registrar", error: err });
+            }
             res.status(201).json({ message: 'Usuario registrado correctamente', id: result.insertId });
         });
     } catch (error) {

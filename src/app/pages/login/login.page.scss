@@ -1,34 +1,233 @@
-.login-content {
-  --background: #fdfdfd; // Un blanco muy suave
+// Paleta de colores
+:host {
+  --flower-box: #EDD9BE;
+  --soft-roses: #FAC1B5;
+  --lavender: #C59FBE;
+  --pink-tulips: #F283AE;
+  --eucalyptus: #98B8B9;
+  --tulip-stems: #C6C870;
 }
 
-.login-container {
-  margin-top: 20%;
-  padding: 20px;
+.login-background {
+  --background: var(--flower-box);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  h2 {
-    color: #4a4a4a;
-    text-align: center;
-    margin-bottom: 30px;
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 30px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.input-item {
-  --background: #ffffff;
-  margin-bottom: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  --highlight-color-focused: #f0a69a; // Tono coral para foco
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .login-logo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 16px;
+    border-radius: 25px;
+    box-shadow: 0 10px 20px rgba(242, 131, 174, 0.2);
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, var(--pink-tulips) 0%, var(--lavender) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p {
+    color: var(--eucalyptus);
+    font-size: 16px;
+    margin: 8px 0 0;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
 }
 
-.login-btn {
-  --background: #f0a69a; // Tu color principal coral
-  --background-activated: #e69285;
-  margin-top: 20px;
-  font-weight: bold;
+.custom-input {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --border-width: 0;
+  --border-color: transparent;
+  --highlight-height: 0;
+  margin-bottom: 20px;
+  border: 2px solid var(--lavender);
+  border-radius: 16px;
+  --border-radius: 16px;
+  --inner-border-radius: 16px;
+  transition: all 0.3s ease;
+
+  ion-icon {
+    color: var(--pink-tulips);
+    font-size: 22px;
+    margin: 0 12px 0 16px;
+  }
+
+  ion-input {
+    --color: #333;
+    --placeholder-color: var(--eucalyptus);
+    --placeholder-opacity: 0.6;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-size: 15px;
+  }
+
+  &:focus-within {
+    border-color: var(--pink-tulips);
+    box-shadow: 0 0 0 4px rgba(242, 131, 174, 0.1);
+  }
+
+  &.ion-invalid.ion-touched {
+    border-color: #ff6b6b;
+  }
 }
 
-.register-btn {
-  --color: #f0a69a; // Color coral para el texto de registro
+.login-button {
+  --background: var(--pink-tulips);
+  --background-hover: var(--lavender);
+  --background-activated: var(--lavender);
+  --border-radius: 50px;
+  --color: white;
+  --box-shadow: 0 8px 20px rgba(242, 131, 174, 0.4);
+  margin: 24px 0 16px;
+  height: 56px;
+  font-size: 18px;
+  font-weight: 600;
   text-transform: none;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    --box-shadow: 0 12px 25px rgba(197, 159, 190, 0.5);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 24px;
+
+  p {
+    color: var(--eucalyptus);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .register-link {
+    a {
+      color: var(--pink-tulips) !important;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      margin-left: 5px;
+      transition: color 0.3s ease;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--pink-tulips);
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        color: var(--lavender) !important;
+        
+        &::after {
+          width: 100%;
+          background: var(--lavender);
+        }
+      }
+    }
+  }
+}
+
+// Estilos para mensajes de error (si los agregas)
+.error-message {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin: 5px 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+// Animación de carga para el botón
+.button-loading {
+  --background: var(--lavender);
+  opacity: 0.8;
+  pointer-events: none;
+  
+  ion-spinner {
+    margin-right: 8px;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .login-header {
+    h1 {
+      font-size: 28px;
+    }
+    
+    .login-logo {
+      width: 70px;
+      height: 70px;
+    }
+  }
+
+  .custom-input {
+    ion-input {
+      --padding-top: 14px;
+      --padding-bottom: 14px;
+    }
+  }
 }

@@ -1,13 +1,121 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Registrarse</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <h1>Crear Cuenta</h1>
+        <p>Únete a Calvillo Experience</p>
+      </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Registrarse</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+        
+        <ion-item lines="none" class="custom-input" 
+          [class.ion-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input formControlName="nombre" placeholder="Nombre completo"></ion-input>
+        </ion-item>
+
+        @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>El nombre es requerido</span>
+          </div>
+        }
+
+        <ion-item lines="none" class="custom-input"
+          [class.ion-invalid]="registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-input formControlName="fechaNacimiento" type="date" placeholder="Fecha de nacimiento"></ion-input>
+        </ion-item>
+
+        @if (registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>La fecha de nacimiento es requerida</span>
+          </div>
+        }
+
+        <ion-item lines="none" class="custom-input"
+          [class.ion-invalid]="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input formControlName="correo" type="email" placeholder="Correo electrónico"></ion-input>
+        </ion-item>
+
+
+        
+        @if (registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>Ingresa un correo electrónico válido</span>
+          </div>
+        }
+
+        <ion-item lines="none" class="custom-input"
+          [class.ion-invalid]="registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input formControlName="contraseña" type="password" placeholder="Contraseña"></ion-input>
+        </ion-item>
+
+        @if (registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>La contraseña debe tener al menos 6 caracteres</span>
+          </div>
+        }
+
+        <ion-item lines="none" class="custom-input"
+          [class.ion-invalid]="registroForm.get('confirmarContraseña')?.invalid && registroForm.get('confirmarContraseña')?.touched">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input formControlName="confirmarContraseña" type="password" placeholder="Confirmar contraseña"></ion-input>
+        </ion-item>
+
+        @if (registroForm.get('confirmarContraseña')?.invalid && registroForm.get('confirmarContraseña')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>Las contraseñas no coinciden</span>
+          </div>
+        }
+
+        <ion-item lines="none" class="custom-input">
+          <ion-icon name="people-outline" slot="start"></ion-icon>
+          <ion-label>Tipo de usuario</ion-label>
+          <ion-select formControlName="idTipoUsuario" placeholder="Selecciona un rol" interface="popover">
+            <ion-select-option value="1">Administrador</ion-select-option>
+            <ion-select-option value="2">Turista</ion-select-option>
+            <ion-select-option value="3">Negocio</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" class="custom-input">
+          <ion-icon name="male-female-outline" slot="start"></ion-icon>
+          <ion-label>Género</ion-label>
+          <ion-select formControlName="idGenero" placeholder="Selecciona un género" interface="popover">
+            <ion-select-option value="1">Hombre</ion-select-option>
+            <ion-select-option value="2">Mujer</ion-select-option>
+            <ion-select-option value="3">Prefiero no decirlo</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" class="custom-input">
+          <ion-icon name="language-outline" slot="start"></ion-icon>
+          <ion-label>Idioma</ion-label>
+          <ion-select formControlName="idIdioma" placeholder="Selecciona un idioma" interface="popover">
+            <ion-select-option value="1">Español</ion-select-option>
+            <ion-select-option value="2">Inglés</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="login-button"
+          [disabled]="registroForm.invalid">
+          Registrarse
+        </ion-button>
+      </form>
+
+      <div class="login-footer">
+        <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+      </div>
+    </div>
+  </div>
 </ion-content>
