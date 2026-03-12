@@ -13,6 +13,11 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', loginRoutes);
 
+// Middleware personalizado para detectar el idioma
+// 1. Importas tu nuevo middleware
+const detectLanguage = require('./middleware/language'); 
+app.use(detectLanguage);
+
 // ==========================================
 // RUTAS DE USUARIOS
 // ==========================================
