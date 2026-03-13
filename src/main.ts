@@ -1,21 +1,20 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-// ESTA ES LA IMPORTACIÓN QUE DEBES AGREGAR:
+import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
+
+// Importaciones de servicios, rutas y componentes
 import { AuthService } from './app/services/auth';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { Observable } from 'rxjs';
 
-//Imports de lenguajes y su interceptor
+// Imports de lenguajes y su interceptor
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { languageInterceptor } from './app/interceptor/language.interceptor';
 
-
-
-// 1. Creamos nuestra propia clase Loader (hace exactamente lo mismo que TranslateHttpLoader 
-// pero con la posibilidad de configurar el path y el formato)
+// 1. Creamos nuestra propia clase Loader
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(
     private http: HttpClient, 
@@ -35,11 +34,25 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(), // <-- Ahora esto ya no marcará error
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
+    
+    // Tus servicios
     AuthService,
+    
+    // UNIFICADO: Solo llamamos a provideHttpClient una vez, pasándole tu interceptor
     provideHttpClient(withInterceptors([languageInterceptor])),
+
+    // AGREGADO: La inyección global del módulo de traducciones
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      })
+    )
   ],
-});
+}).catch(err => console.error(err));

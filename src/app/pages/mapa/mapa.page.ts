@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-//import { GoogleMapsModule } from '@angular/google-maps';
-//import { PuntoInteres } from './punto-interes.model';
+import { PuntoInteres } from 'src/app/interfaces/punto-interes';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @Component({
   selector: 'app-mapa',
@@ -16,20 +16,20 @@ export class MapaPage implements OnInit {
 
   constructor() { }
 
-  //center: google.maps.LatLngLiteral = { lat: 21.8469, lng: -102.7184 };
+  center: google.maps.LatLngLiteral = { lat: 21.8469, lng: -102.7184 };
   zoom = 14;
 
   // Signal para almacenar la lista de lugares en Calvillo
-  //lugares = signal<PuntoInteres[]>([]);
+  lugares = signal<PuntoInteres[]>([]);
   
   // Signal para saber qué marcador se tocó (útil para la UI)
-  //lugarSeleccionado = signal<PuntoInteres | null>(null);
+  lugarSeleccionado = signal<PuntoInteres | null>(null);
 
   ngOnInit() {
-    //this.cargarDatosSimulados();
+    this.cargarDatosSimulados();
   }
 
-  /** cargarDatosSimulados() {
+  cargarDatosSimulados() {
     // Datos de prueba mientras el backend está listo
     this.lugares.set([
       { 
@@ -47,16 +47,14 @@ export class MapaPage implements OnInit {
         iconoUrl: 'assets/icons/presa.svg' 
       }
     ]);
-  }*/
+  }
 
-    /**
      // Método que se ejecuta al hacer clic en un marcador
   onMarcadorClick(lugar: PuntoInteres) {
     // Actualizamos el Signal. La UI reaccionará automáticamente.
     this.lugarSeleccionado.set(lugar);
     console.log('El usuario seleccionó:', lugar.nombre);
   }
-     */
 }
 
 
