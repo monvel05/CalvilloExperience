@@ -1,0 +1,49 @@
+<div class="page">
+
+<header class="topbar">
+<h1>Calvillo Experience</h1>
+</header>
+
+<main class="feed">
+
+<div id="contenedorPublicaciones"></div>
+
+</main>
+
+<button class="fab" onclick="abrirModal()">
++
+</button>
+
+</div>
+
+
+<div id="modalPublicacion" class="modal">
+
+<div class="modal-card">
+
+<h2>Nueva publicación</h2>
+
+<textarea
+id="descripcionPublicacion"
+placeholder="Comparte tu experiencia en Calvillo..."
+></textarea>
+
+<input
+type="file"
+id="imagenPublicacion"
+accept="image/*"
+/>
+
+<div class="modal-actions">
+
+<button onclick="cerrarModal()">Cancelar</button>
+
+<button class="btn-publicar" onclick="publicar()">
+Publicar
+</button>
+
+</div>
+
+</div>
+
+</div>

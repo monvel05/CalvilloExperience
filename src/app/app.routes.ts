@@ -8,6 +8,7 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
     canActivate: [authGuard],
     data: { roles: ['admin'] } // <-- Verifica que esta línea esté aquí
+
   },
   {
     path: '',
@@ -38,5 +39,10 @@ export const routes: Routes = [
     path: 'mapa',
     loadComponent: () => import('./pages/mapa/mapa.page').then( m => m.MapaPage)
   },
+  {
+    path: 'muro-social',
+    loadComponent: () => import('./pages/muro-social/muro-social.page').then( m => m.MuroSocial)
+  },
 
 ];
+

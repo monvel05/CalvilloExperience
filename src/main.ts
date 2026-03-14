@@ -4,6 +4,7 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
 import { authInterceptor } from './app/auth-interceptor';
 
+
 // Importaciones de servicios, rutas y componentes
 import { AuthService } from './app/services/auth';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
