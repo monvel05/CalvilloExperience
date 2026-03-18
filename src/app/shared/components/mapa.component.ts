@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UbicacionService } from './ubicacion.service';
-import { Lugar } from './lugar.interface'; 
-import { ATRACTIVOS } from './atractivos';
-import { CENADURIAS } from './cenadurias';
-import { COMIDA_RAPIDA } from './comida_rapida';
-import { HOSPEDAJE } from './hospedaje';
-import { TRANSPORTE } from './transporte';
+import { Component, OnInit } from '@angular/core';
+import { UbicacionService } from 'src/app/core/services/ubicacion.service';
+import { Lugar } from '../interfaces/lugar.interface';
+import { ATRACTIVOS } from 'src/assets/data/atractivos';
+import { CENADURIAS } from 'src/assets/data/cenadurias';
+import { COMIDA_RAPIDA } from 'src/assets/data/comida_rapida';
+import { HOSPEDAJE } from 'src/assets/data/hospedaje';
+import { TRANSPORTE } from 'src/assets/data/transporte';
 
 declare var H: any;
 
@@ -13,11 +13,10 @@ declare var H: any;
   selector: 'app-mapa',
   templateUrl: './mapa.component.html'
 })
-export class MapaComponent implements OnInit, OnDestroy {
+export class MapaComponent implements OnInit {
   map: any;
   userMarker: any;
   lugaresActuales: Lugar[] = [];
-  private watchId?: string;
 
   constructor(private ubicacionService: UbicacionService) {}
 
@@ -25,13 +24,9 @@ export class MapaComponent implements OnInit, OnDestroy {
     const pos = await this.ubicacionService.obtenerUbicacionActual();
     this.initMap(pos);
     
-    this.watchId = await this.ubicacionService.vigilarUbicacion((nuevaPos) => {
+    this.ubicacionService.vigilarUbicacion((nuevaPos) => {
       this.actualizarMarcadorUsuario(nuevaPos);
     });
-  }
-
-  ngOnDestroy() {
-    this.ubicacionService.detenerVigilancia(this.watchId);
   }
 
   initMap(pos: {lat: number, lng: number}) {

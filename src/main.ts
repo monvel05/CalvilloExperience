@@ -2,10 +2,10 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
-import { authInterceptor } from './app/auth-interceptor';
+import { authInterceptor } from './app/core/interceptors/auth-interceptor';
 
 // Importaciones de servicios, rutas y componentes
-import { AuthService } from './app/services/auth';
+import { AuthService } from './app/core/services/auth';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 
 // Imports de lenguajes y su interceptor
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { languageInterceptor } from './app/interceptor/language.interceptor';
+import { languageInterceptor } from './app/core/interceptors/language.interceptor';
 
 // 1. Creamos nuestra propia clase Loader
 export class CustomTranslateLoader implements TranslateLoader {

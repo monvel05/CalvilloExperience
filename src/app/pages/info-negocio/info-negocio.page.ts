@@ -9,7 +9,7 @@ import {
   arrowBackOutline, locationOutline, star, checkmarkCircle, 
   timeOutline, mapOutline, addOutline, removeOutline, walkOutline 
 } from 'ionicons/icons';
-import { DatosNegocio } from 'src/app/interfaces/datos-negocio';
+import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 
 @Component({
   selector: 'app-info-negocio',

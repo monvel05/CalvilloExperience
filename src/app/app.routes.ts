@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 // 1. Importamos el guardia que acabas de crear (revisa que el nombre del archivo coincida)
-import { authGuard } from './auth-guard'; 
+import { authGuard } from './core/services/auth-guard'; 
 
 export const routes: Routes = [
   {
@@ -37,7 +37,8 @@ export const routes: Routes = [
   {
     path: 'mapa',
     loadComponent: () => import('./pages/mapa/mapa.page').then( m => m.MapaPage)
-  },  {
+  },
+  {
     path: 'info-negocio',
     loadComponent: () => import('./pages/info-negocio/info-negocio.page').then( m => m.InfoNegocioPage)
   },
