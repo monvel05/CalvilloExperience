@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 // Importamos el objeto environment desde tu carpeta env
-const { environment } = require("../env/env.ts"); 
+const { environment } = require("../src/env/env.ts"); 
 
 const connDB = mysql.createConnection({
   host: environment.database.host,

@@ -1,0 +1,100 @@
+<ion-content class="fondo-claro">
+  
+  <div class="loader-container" *ngIf="cargando">
+    <ion-spinner color="success"></ion-spinner>
+  </div>
+
+  <div class="wf-container" *ngIf="!cargando && negocio">
+    
+    <div class="header-actions">
+      <ion-button fill="clear" color="dark">
+        <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+        Volver
+      </ion-button>
+      <div class="location-badge">
+        <ion-icon name="location-outline"></ion-icon>
+        {{ negocio.ubicacion.municipio || 'Calvillo, AGS' }}
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="gallery-column">
+        <div class="main-image-container">
+          <img [src]="negocio.imagen" alt="Experiencia principal" class="main-image">
+          <div class="rating-badge" *ngIf="negocio.calificacionMedia">
+            <ion-icon name="star"></ion-icon> {{ negocio.calificacionMedia }}
+          </div>
+        </div>
+        </div>
+
+      <div class="info-column">
+        
+        <div class="title-section">
+          <p class="subtitle">EXPERIENCIA LOCAL</p>
+          <div class="title-row">
+            <h1 class="business-name">{{ negocio.nombre }}</h1>
+            
+            @if (negocio.verificado) {
+              <ion-icon name="checkmark-circle" color="primary" class="verified-icon"></ion-icon>
+            }
+          </div>
+        </div>
+        
+        <div class="business-description">
+          <p>{{ negocio.descripcion }}</p>
+        </div>
+
+        <div class="info-accordions">
+          
+          <div class="accordion">
+            <div class="accordion-header" (click)="toggleSeccion(0)">
+              <div class="header-title">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>Horarios y Contacto</span>
+              </div>
+              <ion-icon [name]="seccionesAbiertas[0] ? 'remove-outline' : 'add-outline'"></ion-icon>
+            </div>
+            <div class="accordion-content" [class.open]="seccionesAbiertas[0]">
+              <p><strong>Apertura:</strong> {{ negocio.horario }}</p>
+              <p><strong>Teléfono:</strong> {{ negocio.telefono }}</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" (click)="toggleSeccion(1)">
+              <div class="header-title">
+                <ion-icon name="map-outline"></ion-icon>
+                <span>Ubicación y Mapa</span>
+              </div>
+              <ion-icon [name]="seccionesAbiertas[1] ? 'remove-outline' : 'add-outline'"></ion-icon>
+            </div>
+            <div class="accordion-content" [class.open]="seccionesAbiertas[1]">
+              <p>{{ negocio.ubicacion.direccionCompleta }}</p>
+              
+              <div class="map-placeholder">
+                <ion-icon name="map-outline"></ion-icon>
+                <span>Google Maps Platform <br> (Lat: {{negocio.ubicacion.latitud}}, Lng: {{negocio.ubicacion.longitud}})</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="action-section">
+          <ion-button *ngIf="negocio.tieneInventario" 
+                      expand="block" 
+                      class="reserve-btn" 
+                      (click)="iniciarReserva()">
+            RESERVAR AHORA
+          </ion-button>
+
+          <div class="no-reservation-msg" *ngIf="!negocio.tieneInventario">
+            <ion-icon name="walk-outline"></ion-icon>
+            <p>Este lugar es de acceso libre o no requiere reserva de inventario. ¡Puedes visitarlo directamente!</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ion-content>

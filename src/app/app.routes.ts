@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 // 1. Importamos el guardia que acabas de crear (revisa que el nombre del archivo coincida)
-import { authGuard } from './auth-guard'; 
+import { authGuard } from './core/guards/auth-guard'; 
 
 export const routes: Routes = [
   {
     path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
     canActivate: [authGuard],
     data: { roles: ['admin'] } // <-- Verifica que esta línea esté aquí
 
@@ -43,6 +43,12 @@ export const routes: Routes = [
     path: 'muro-social',
     loadComponent: () => import('./pages/muro-social/muro-social.page').then( m => m.MuroSocial)
   },
+  {
+    path: 'info-negocio',
+    loadComponent: () => import('./pages/info-negocio/info-negocio.page').then( m => m.InfoNegocioPage)
+  },
 
 ];
+  
+
 
