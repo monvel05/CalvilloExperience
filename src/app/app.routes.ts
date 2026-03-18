@@ -5,7 +5,7 @@ import { authGuard } from './core/services/auth-guard';
 export const routes: Routes = [
   {
     path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
     canActivate: [authGuard],
     data: { roles: ['admin'] } // <-- Verifica que esta línea esté aquí
   },
