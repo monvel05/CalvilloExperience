@@ -37,6 +37,10 @@ export const routes: Routes = [
   {
     path: 'mapa',
     loadComponent: () => import('./pages/mapa/mapa.page').then( m => m.MapaPage)
+  },  {
+    path: 'info-negocio',
+    loadComponent: () => import('./pages/info-negocio/info-negocio.page').then( m => m.InfoNegocioPage)
   },
+
 
 ];
