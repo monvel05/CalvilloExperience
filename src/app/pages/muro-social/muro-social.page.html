@@ -1,49 +1,23 @@
 <div class="page">
+  <header class="topbar">
+    <h1>Calvillo Experience</h1>
+  </header>
 
-<header class="topbar">
-<h1>Calvillo Experience</h1>
-</header>
+  <main class="feed">
+    <div class="card-publicar">
+      <h3>Comparte tu experiencia</h3>
+      <textarea id="descripcionPublicacion" placeholder="¿Qué descubriste en Calvillo?"></textarea>
+      
+      <div class="input-row">
+        <div class="file-wrapper">
+          <input type="file" id="imagenPublicacion" accept="image/*" />
+        </div>
+        <button class="btn-publicar" onclick="publicar()">Publicar</button>
+      </div>
+    </div>
 
-<main class="feed">
-
-<div id="contenedorPublicaciones"></div>
-
-</main>
-
-<button class="fab" onclick="abrirModal()">
-+
-</button>
-
-</div>
-
-
-<div id="modalPublicacion" class="modal">
-
-<div class="modal-card">
-
-<h2>Nueva publicación</h2>
-
-<textarea
-id="descripcionPublicacion"
-placeholder="Comparte tu experiencia en Calvillo..."
-></textarea>
-
-<input
-type="file"
-id="imagenPublicacion"
-accept="image/*"
-/>
-
-<div class="modal-actions">
-
-<button onclick="cerrarModal()">Cancelar</button>
-
-<button class="btn-publicar" onclick="publicar()">
-Publicar
-</button>
-
-</div>
-
-</div>
-
+    <div id="contenedorPublicaciones">
+      <p class="loading-text">Cargando muro social...</p>
+    </div>
+  </main>
 </div>

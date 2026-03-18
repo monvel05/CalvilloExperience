@@ -6,190 +6,127 @@ import { CloudinaryService } from '../../services/cloudinary-service';
   templateUrl: './muro-social.page.html',
   styleUrls: ['./muro-social.page.scss'],
 })
-
 export class MuroSocial implements OnInit {
 
-  publicaciones:any[] = [];
+  publicaciones: any[] = [];
   idUsuario = 2;
 
-  constructor(private cloudinary: CloudinaryService){}
+  constructor(private cloudinary: CloudinaryService) {}
 
-  ngOnInit(){
+  ngOnInit() {
+    // Registrar funciones globales para que funcionen los onclick del HTML inyectado
+    (window as any).darLike = (id: number) => this.darLike(id);
+    (window as any).publicar = () => this.publicar();
+    (window as any).eliminarPublicacion = (id: number) => this.eliminarPublicacion(id);
+  }
 
-    (window as any).darLike = (id:number)=>this.darLike(id);
-    (window as any).abrirModal = ()=>this.abrirModal();
-    (window as any).cerrarModal = ()=>this.cerrarModal();
-    (window as any).publicar = ()=>this.publicar();
-    (window as any).eliminarPublicacion = (id:number)=>this.eliminarPublicacion(id);
-
+  // Se ejecuta siempre al entrar a la pestaña
+  ionViewWillEnter() {
     this.cargarPublicaciones();
-
   }
 
-  async cargarPublicaciones(){
+  async cargarPublicaciones() {
+    try {
+      const response = await fetch("http://localhost:3000/api/publicaciones");
+      const data = await response.json();
+      this.publicaciones = data;
 
-    const response = await fetch("http://localhost:3000/api/publicaciones");
-    const data = await response.json();
-
-    this.publicaciones = data;
-
-    this.renderPublicaciones();
-
+      // Esperar un momento a que el DOM esté listo antes de renderizar
+      setTimeout(() => this.renderPublicaciones(), 100);
+    } catch (error) {
+      console.error("Error cargando posts", error);
+    }
   }
 
-  renderPublicaciones(){
-
-    const contenedor:any = document.getElementById("contenedorPublicaciones");
+  renderPublicaciones() {
+    const contenedor: any = document.getElementById("contenedorPublicaciones");
+    if (!contenedor) return;
 
     contenedor.innerHTML = "";
 
-    this.publicaciones.forEach(pub=>{
-
-      let imagenHTML = "";
-
-      if(pub.foto){
-        imagenHTML = `<img class="imagen" src="${pub.foto}">`;
-      }
-
+    this.publicaciones.forEach(pub => {
       const tarjeta = document.createElement("div");
-
       tarjeta.className = "publicacion";
 
+      const fotoHTML = pub.foto ? `<div class="contenedor-foto"><img src="${pub.foto}"></div>` : "";
+
       tarjeta.innerHTML = `
-
-      <div class="header">
-
-        <div class="avatar"></div>
-
-        <div class="info">
-          <h3>${pub.nombre}</h3>
-          <p class="fecha">${pub.fecha}</p>
+        <div class="header">
+          <div class="avatar"></div>
+          <div class="info">
+            <span class="nombre">${pub.nombre || 'Explorador'}</span>
+            <span class="fecha">${pub.fecha || 'Reciente'}</span>
+          </div>
         </div>
-
-      </div>
-
-      ${imagenHTML}
-
-      <p class="descripcion">${pub.descripcion}</p>
-
-      <div class="acciones">
-
-        <button class="like-btn" onclick="darLike(${pub.idPublicacion})">
-          ❤️ ${pub.likes}
-        </button>
-
-        <button class="delete-btn" onclick="eliminarPublicacion(${pub.idPublicacion})">
-          🗑
-        </button>
-
-      </div>
-
+        ${fotoHTML}
+        <div class="contenido-texto">
+          <p class="descripcion"><strong>${pub.nombre || 'Usuario'}</strong> ${pub.descripcion}</p>
+        </div>
+        <div class="acciones">
+          <button class="like-btn" onclick="darLike(${pub.idPublicacion})">
+            <span>❤️</span> 
+            <span class="count">${pub.likes || 0}</span>
+          </button>
+          <button class="delete-btn" onclick="eliminarPublicacion(${pub.idPublicacion})">
+            <span class="icon-delete">🗑️</span>
+          </button>
+        </div>
       `;
-
       contenedor.appendChild(tarjeta);
-
     });
-
   }
 
-  async darLike(id:number){
-
-    await fetch(`http://localhost:3000/api/publicaciones/${id}/like`,{
-
-      method:"POST",
-
-      headers:{
-        "Content-Type":"application/json"
-      },
-
-      body:JSON.stringify({
-        idUsuario:this.idUsuario
-      })
-
+  async darLike(id: number) {
+    await fetch(`http://localhost:3000/api/publicaciones/${id}/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idUsuario: this.idUsuario })
     });
-
     this.cargarPublicaciones();
-
   }
 
-  async eliminarPublicacion(id:number){
-
-    if(!confirm("¿Eliminar publicación?")) return;
-
-    await fetch(`http://localhost:3000/api/publicaciones/${id}`,{
-      method:"DELETE"
-    });
-
+  async eliminarPublicacion(id: number) {
+    if (!confirm("¿Eliminar publicación?")) return;
+    await fetch(`http://localhost:3000/api/publicaciones/${id}`, { method: "DELETE" });
     this.cargarPublicaciones();
-
   }
 
-  abrirModal(){
-    document.getElementById("modalPublicacion")!.style.display="flex";
-  }
+  async publicar() {
+    const txt: any = document.getElementById("descripcionPublicacion");
+    const img: any = document.getElementById("imagenPublicacion");
+    const btn: any = document.querySelector(".btn-publicar");
 
-  cerrarModal(){
-    document.getElementById("modalPublicacion")!.style.display="none";
-  }
+    if (!txt.value.trim()) return alert("Escribe algo primero");
 
-  async publicar(){
+    try {
+      btn.innerText = "Cargando...";
+      btn.disabled = true;
 
-    const textarea:any = document.getElementById("descripcionPublicacion");
-    const inputImagen:any = document.getElementById("imagenPublicacion");
-
-    const descripcion = textarea.value;
-    const imagen = inputImagen.files[0];
-
-    if(!descripcion){
-      alert("Escribe una descripción");
-      return;
-    }
-
-    let linkFoto = null;
-
-    try{
-
-      if(imagen){
-
-        const response:any = await this.cloudinary.uploadImage(imagen);
-
-        linkFoto = response.secure_url;
-
+      let linkFoto = null;
+      if (img.files[0]) {
+        const res: any = await this.cloudinary.uploadImage(img.files[0]);
+        linkFoto = res.secure_url;
       }
 
-      await fetch("http://localhost:3000/api/publicaciones",{
-
-        method:"POST",
-
-        headers:{
-          "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-
-          descripcion:descripcion,
-          idUsuario:this.idUsuario,
-          idNegocio:1,
-          linkFoto:linkFoto
-
+      await fetch("http://localhost:3000/api/publicaciones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          descripcion: txt.value,
+          idUsuario: this.idUsuario,
+          idNegocio: 1,
+          linkFoto: linkFoto
         })
-
       });
 
-      textarea.value="";
-      inputImagen.value="";
-
-      this.cerrarModal();
-
+      txt.value = "";
+      img.value = "";
       this.cargarPublicaciones();
-
-    }catch(error){
-
-      console.error(error);
+    } catch (e) {
       alert("Error al publicar");
-
+    } finally {
+      btn.innerText = "Publicar";
+      btn.disabled = false;
     }
-
   }
-
 }

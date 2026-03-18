@@ -1,197 +1,221 @@
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+/* Variables de Estilo Calvillo Experience */
+$primary-color: #6366f1;
+$bg-color: #f0f2f5;
+$text-dark: #262626; // Negro suave tipo Instagram
+$text-muted: #8e8e8e;
+$border-light: #dbdbdb;
+
+.page {
+  background-color: $bg-color;
+  height: 100vh;
+  width: 100%;
+  display: block;
+  /* HABILITAR SCROLL */
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-.page{
-  background:#F3EFEA;
-  min-height:100vh;
+.topbar {
+  background: #ffffff;
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid $border-light;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  
+  h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-dark;
+    letter-spacing: -0.5px;
+  }
 }
 
-.topbar{
-  background:white;
-  padding:18px;
-  text-align:center;
-  border-bottom:1px solid #eee;
+.feed {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px 16px 100px 16px; // Espacio extra abajo para que el scroll no corte el último post
 }
 
-.topbar h1{
-  font-size:20px;
-  font-weight:600;
-  color:#5b4338;
-}
+/* Tarjeta de Creación de Post */
+.card-publicar {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid $border-light;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-.feed{
-  max-width:600px;
-  margin:auto;
-  padding:20px;
-}
-
-.publicacion{
-  background:white;
-  border-radius:18px;
-  margin-bottom:20px;
-  overflow:hidden;
-  box-shadow:0 6px 20px rgba(0,0,0,0.06);
-}
-
-.header{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-}
-
-.avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:#d8c8ba;
-}
-
-.info h3{
-  font-size:15px;
-  font-weight:600;
-}
-
-.fecha{
-  font-size:12px;
-  color:#888;
-}
-
-.imagen{
-  width:100%;
-  height:auto;
-  display:block;
-}
-
-.descripcion{
-  padding:14px;
-  font-size:14px;
-  line-height:1.4;
-}
-
-.acciones{
-  padding:0 14px 14px 14px;
-}
-
-.like-btn{
-  border:none;
-  background:#f1ebe6;
-  border-radius:20px;
-  padding:6px 14px;
-  font-size:14px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.like-btn:hover{
-  background:#e8ded6;
-  transform:scale(1.05);
-}
-
-.fab{
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  border:none;
-  background:#7C5C4F;
-  color:white;
-  font-size:28px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.2);
-  cursor:pointer;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.4);
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-card{
-  background:white;
-  width:90%;
-  max-width:420px;
-  border-radius:20px;
-  padding:20px;
-}
-
-.modal-card textarea{
-  width:100%;
-  height:110px;
-  border-radius:12px;
-  border:1px solid #ddd;
-  padding:10px;
-  margin:12px 0;
-}
-
-.modal-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-}
-
-.modal-actions button{
-  border:none;
-  padding:8px 14px;
-  border-radius:10px;
-  background:#ddd;
-}
-
-.btn-publicar{
-  background:#7C5C4F;
-  color:white;
-}
-
-@media (max-width:768px){
-
-  .feed{
-    padding:15px;
+  h3 {
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+    color: $text-muted;
+    font-weight: 600;
   }
 
-}
+  textarea {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fafafa;
+    /* FIX: FORZAR TEXTO NEGRO AL ESCRIBIR */
+    color: #000000 !important;
+    font-size: 15px;
+    line-height: 1.4;
+    resize: none;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background: #ffffff;
+    }
 
-@media (max-width:480px){
-
-  .topbar h1{
-    font-size:18px;
+    &::placeholder {
+      color: #999999;
+    }
   }
 
-  .descripcion{
-    font-size:13px;
-  }
+  .input-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
 
-  .fab{
-    width:50px;
-    height:50px;
-    font-size:24px;
-  }
+    input[type="file"] {
+      font-size: 0.75rem;
+      color: $text-muted;
+      max-width: 60%;
+    }
 
+    .btn-publicar {
+      background: $primary-color;
+      color: #ffffff !important;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      &:active { opacity: 0.7; }
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+  }
 }
 
-.delete-btn{
+/* Estilos para Publicaciones Inyectadas vía JS (::ng-deep es necesario) */
+::ng-deep .publicacion {
+  background: #ffffff;
+  border: 1px solid $border-light;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
-border:none;
-background:#f8d7da;
-border-radius:20px;
-padding:6px 10px;
-cursor:pointer;
-margin-left:10px;
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 12px;
 
+    .avatar {
+      width: 34px;
+      height: 34px;
+      background: #efefef;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 1px solid #eee;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      .nombre {
+        font-weight: 700;
+        font-size: 14px;
+        color: $text-dark !important;
+      }
+      .fecha {
+        font-size: 11px;
+        color: $text-muted;
+      }
+    }
+  }
+
+  .contenedor-foto {
+    width: 100%;
+    background: #f8f8f8;
+    img {
+      width: 100%;
+      display: block;
+      height: auto;
+      max-height: 500px;
+      object-fit: cover;
+    }
+  }
+
+  .contenido-texto {
+    padding: 12px 16px;
+    .descripcion {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: $text-dark !important;
+      
+      strong {
+        font-weight: 700;
+        margin-right: 6px;
+      }
+    }
+  }
+
+  .acciones {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px 14px 16px;
+    border-top: 1px solid #fafafa;
+
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .like-btn {
+      gap: 6px;
+      /* FIX: FORZAR COLOR NEGRO EN EL NÚMERO DE LIKES */
+      color: $text-dark !important;
+      font-weight: 700;
+      
+      span.count {
+        font-size: 14px;
+        color: $text-dark !important;
+      }
+      
+      span.icon {
+        font-size: 1.2rem;
+      }
+    }
+
+    .delete-btn {
+      opacity: 0.3;
+      font-size: 14px;
+      &:hover { opacity: 1; color: #ff4d4d; }
+    }
+  }
 }
 
-.delete-btn:hover{
-
-background:#f1b0b7;
-
+.loading-text {
+  text-align: center;
+  color: $text-muted;
+  margin-top: 30px;
+  font-size: 0.9rem;
 }
