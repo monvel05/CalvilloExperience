@@ -1,0 +1,213 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nueva Reserva</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="citrus-main-bg">
+  <div class="dashboard-container">
+
+    <div class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Cenaduría <span>Doña Lupe</span></h1>
+        <p class="hero-subtitle">Calvillo Experience</p>
+        <div class="hero-location">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>Centro Histórico, Calvillo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-grid">
+
+      <div class="booking-info">
+        <div class="info-card">
+
+          <div class="dates-row">
+            <div class="date-field">
+              <div class="field-label">LLEGADA</div>
+              <div class="field-value">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <ion-datetime-button datetime="date"></ion-datetime-button>
+              </div>
+            </div>
+            <div class="date-field">
+              <div class="field-label">HORA DE ENTRADA</div>
+              <div class="field-value">
+                <ion-icon name="time-outline"></ion-icon>
+                <ion-datetime-button datetime="time"></ion-datetime-button>
+              </div>
+            </div>
+          </div>
+
+          @if (selectedDate || selectedTime) {
+            <div class="selected-info">
+              @if (selectedDate) {
+                <div class="info-chip">
+                  <ion-icon name="calendar-clear-outline"></ion-icon>
+                  <span>{{ selectedDate }}</span>
+                </div>
+              }
+              @if (selectedTime) {
+                <div class="info-chip">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span>{{ selectedTime }}</span>
+                </div>
+              }
+            </div>
+          }
+
+          <div class="people-field">
+            <div class="field-label">NÚMERO DE PERSONAS</div>
+            <div class="field-value-select">
+              <ion-select [(ngModel)]="numeroPersonas" placeholder="Seleccionar" interface="popover" class="custom-select">
+                <ion-select-option value="1">1 Persona</ion-select-option>
+                <ion-select-option value="2">2 Personas</ion-select-option>
+                <ion-select-option value="3">3 Personas</ion-select-option>
+                <ion-select-option value="4">4 Personas</ion-select-option>
+                <ion-select-option value="5">5 Personas</ion-select-option>
+                <ion-select-option value="6">6 Personas</ion-select-option>
+                <ion-select-option value="7">7 Personas</ion-select-option>
+                <ion-select-option value="8">8+ Personas</ion-select-option>
+              </ion-select>
+              <ion-icon name="chevron-down-outline" class="select-icon"></ion-icon>
+            </div>
+          </div>
+
+          <div class="exit-time-field">
+            <div class="field-label">HORA DE SALIDA</div>
+            <div class="field-value" (click)="openExitTimeModal()">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ exitTime || 'Seleccionar hora de salida' }}</span>
+            </div>
+          </div>
+
+          <button class="btn-reservar" (click)="confirmarReserva()">
+            RESERVAR AHORA
+          </button>
+        </div>
+      </div>
+
+      <div class="calendar-section">
+        <div class="calendar-card">
+          <h3 class="section-title">Disponibilidad</h3>
+
+          <div class="calendar-container">
+            <div class="calendar-header">
+              <button class="calendar-nav" (click)="prevMonth()">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+              </button>
+              <span class="calendar-month">{{ currentMonth }} {{ currentYear }}</span>
+              <button class="calendar-nav" (click)="nextMonth()">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div class="calendar-weekdays">
+              <span>D</span><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span>
+            </div>
+
+            <div class="calendar-days">
+              @for (day of calendarDays; track $index) {
+                <div class="day" 
+                  [class.available]="day.available && !day.empty"
+                  [class.selected]="day.isSelected" 
+                  [class.disabled]="!day.available && !day.empty"
+                  [class.empty]="day.empty" 
+                  (click)="selectDay(day)">
+                  {{ day.date }}
+                </div>
+              }
+            </div>
+
+            @if (selectedDay) {
+              <div class="accept-button-container">
+                <button class="btn-accept" (click)="acceptDate()">
+                  <ion-icon name="checkmark-circle-outline"></ion-icon>
+                  ACEPTAR
+                </button>
+              </div>
+            }
+
+            <div class="calendar-legend">
+              <div class="legend-item">
+                <span class="legend-dot available-dot"></span>
+                <span>Disponible</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot selected-dot"></span>
+                <span>Seleccionado</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot unavailable-dot"></span>
+                <span>No disponible</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hours-section">
+            <h4 class="hours-title">Horarios de atención</h4>
+            <div class="hours-grid">
+              <div class="hour-item">
+                <span class="hour-day">Lunes a Jueves</span>
+                <span class="hour-time">6:00 PM - 11:00 PM</span>
+              </div>
+              <div class="hour-item">
+                <span class="hour-day">Viernes a Domingo</span>
+                <span class="hour-time">5:00 PM - 12:00 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-info">
+      <div class="payment-methods">
+        <span class="payment-label">FORMAS DE PAGO</span>
+        <div class="payment-icons">
+          <ion-icon name="card-outline"></ion-icon>
+          <span>Visa</span>
+          <span>Mastercard</span>
+          <span>Amex</span>
+          <span>Efectivo</span>
+        </div>
+      </div>
+
+      <div class="contact-info">
+        <div class="contact-item">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>+52 (449) 123 4567</span>
+        </div>
+        <div class="contact-item">
+          <ion-icon name="mail-outline"></ion-icon>
+          <span>reservas@cenaduradonalupe.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="date" presentation="date" [(ngModel)]="currentDate" (ionChange)="onDateChange($event)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="time" presentation="time" [(ngModel)]="currentTime" (ionChange)="onTimeChange($event)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal #exitTimeModal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime presentation="time" [(ngModel)]="exitTimeValue" (ionChange)="onExitTimeChange($event)">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>
