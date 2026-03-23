@@ -5,9 +5,14 @@ const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
 
-// Middlewares primero
+// Importaciones de configuracion
+const logsRoutes = require('./routes/logs.routes');
+const { connDB } = require('./database');
+
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api/logs', logsRoutes);
 
 // Middleware personalizado para detectar el idioma
 // 1. Importas tu nuevo middleware
@@ -16,11 +21,12 @@ app.use(detectLanguage);
 
 const loginRoutes = require('./routes/login.routes');
 const publicacionesRoutes = require('./routes/publicaciones.routes');
-const { connDB } = require('./database');
 
 // Rutas API
 app.use('/api', publicacionesRoutes);
 app.use('/api', loginRoutes);
+
+
 // ==========================================
 // RUTAS DE USUARIOS
 // ==========================================

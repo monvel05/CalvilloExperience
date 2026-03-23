@@ -4,6 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 // <-- 2. Importamos tu archivo de environments (verifica que la ruta sea correcta para tu proyecto)
 import { environment } from 'src/env/env';
+import { TrackingService } from './core/services/tracking-service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +14,10 @@ import { environment } from 'src/env/env';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent implements OnInit { // <-- 3. Implementamos la interfaz OnInit
-  // Inyectamos el servicio de traducción
+  // Inyectamos servicios
   private translate = inject(TranslateService);
+  private trackingService = inject(TrackingService);
+  private router = inject(Router)
 
   constructor() {
     // 1. Definimos los idiomas que soporta la app
@@ -32,6 +37,15 @@ export class AppComponent implements OnInit { // <-- 3. Implementamos la interfa
       // Si es su primera vez, usamos explícitamente 'es' para evitar el error de tipos
       this.translate.use('es');
     }
+
+    // TRACKING AUTOMÁTICO DE VISTAS DE PÁGINA
+    this.router.events.pipe(
+      // Filtramos para que solo reaccione cuando la navegación ha terminado con éxito
+      filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      // Registramos la URL exacta que el turista acaba de abrir
+      this.trackingService.registrarEvento('PAGE_VIEW', { ruta: event.urlAfterRedirects });
+    });
   }
 
   // 4. Usamos el ciclo de vida ngOnInit para disparar la carga del mapa

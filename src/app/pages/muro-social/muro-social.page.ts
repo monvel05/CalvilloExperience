@@ -15,6 +15,7 @@ import {
   imagesOutline
 } from 'ionicons/icons';
 
+
 @Component({
   selector: 'app-muro-social',
   templateUrl: './muro-social.page.html',

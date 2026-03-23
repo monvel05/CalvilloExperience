@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "demon": "nodemon --watch src/API --exec node src/API/server.js"
+    "demon": "nodemon --watch src/API --exec node API/server.js"
   },
   "private": true,
   "dependencies": {
