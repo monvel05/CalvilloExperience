@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CloudinaryService } from '../../services/cloudinary-service';
+import { CloudinaryService } from 'src/app/core/services/cloudinary-service';
 
 @Component({
   selector: 'app-muro-social',

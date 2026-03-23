@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth'; 
+import { AuthService } from 'src/app/core/services/auth';
 import { CommonModule } from '@angular/common'; // Importante para *ngIf
 import { addIcons } from 'ionicons';
 import { mailOutline, lockClosedOutline, alertCircleOutline } from 'ionicons/icons';
