@@ -1,0 +1,65 @@
+<ion-content class="login-background">
+  <div class="login-wrapper">
+    <div class="login-card">
+
+      <div class="login-header">
+        <img src="assets/icon/favicon.png" alt="Logo" class="login-logo">
+        <h1>Calvillo</h1>
+        <p>Experience</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input 
+            type="email" 
+            formControlName="correo" 
+            placeholder="Correo electrónico"
+            [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched"
+          >
+          </ion-input>
+        </ion-item>
+        <!-- Mensaje de error opcional -->
+        <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error-message">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>Correo electrónico válido requerido</span>
+        </div>
+
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input 
+            type="password" 
+            formControlName="contraseña" 
+            placeholder="Contraseña"
+            [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched"
+          >
+          </ion-input>
+        </ion-item>
+        <!-- Mensaje de error opcional -->
+        <div *ngIf="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched" class="error-message">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>La contraseña debe tener al menos 6 caracteres</span>
+        </div>
+
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="login-button"
+          [disabled]="loginForm.invalid"
+        >
+          Iniciar Sesión
+        </ion-button>
+      </form>
+
+      <div class="login-footer">
+        <p>¿No tienes cuenta?
+          <span class="register-link">
+            <a routerLink="/registrarse">
+              Regístrate
+            </a>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>
