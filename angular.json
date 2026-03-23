@@ -36,7 +36,7 @@
               }
             ],
             "styles": [
-              "src/global.scss", 
+              "src/global.scss",
               "src/theme/variables.scss"
             ],
             "scripts": [],
@@ -70,9 +70,7 @@
               "sourceMap": true,
               "namedChunks": true
             },
-            "ci": {
-              "progress": false
-            }
+            "ci": {}
           },
           "defaultConfiguration": "production"
         },
@@ -85,9 +83,7 @@
             "development": {
               "buildTarget": "app:build:development"
             },
-            "ci": {
-              "progress": false
-            }
+            "ci": {}
           },
           "defaultConfiguration": "development"
         },
@@ -113,14 +109,13 @@
               }
             ],
             "styles": [
-              "src/global.scss", 
+              "src/global.scss",
               "src/theme/variables.scss"
             ],
             "scripts": []
           },
           "configurations": {
             "ci": {
-              "progress": false,
               "watch": false
             }
           }
@@ -129,7 +124,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "src/**/*.ts", 
+              "src/**/*.ts",
               "src/**/*.html"
             ]
           }

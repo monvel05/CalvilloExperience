@@ -9,7 +9,6 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { Observable } from 'rxjs';
 
-// Interceptores y Traducciones
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { authInterceptor } from './app/auth-interceptor';
 import { languageInterceptor } from './app/interceptor/language.interceptor';
@@ -36,7 +35,6 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     
-    // Aquí unificamos los interceptores de seguridad e idiomas
     provideHttpClient(
       withInterceptors([authInterceptor, languageInterceptor])
     ),
