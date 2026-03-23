@@ -1,33 +1,37 @@
-<ion-header>
-  <ion-toolbar color="tertiary">
-    <ion-title>Explora Calvillo</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar style="--background: #fdfcf9;">
+    <ion-title class="text-title-elegant ion-text-center">Explora Calvillo</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div style="text-align: center; margin-top: 20px;">
-    <h2>¿Qué haremos hoy en Calvillo?</h2>
-    <p>Descubre lugares mágicos</p>
+  <div style="text-align: center; margin: 30px 0;">
+    <h1 class="text-title-elegant" style="font-size: 2.2rem;">Descubre la magia</h1>
+    <p style="color: #8d6e63; font-weight: 300; letter-spacing: 1px;">PUEBLO MÁGICO</p>
   </div>
-  
+
   <ion-grid>
     <ion-row>
       <ion-col size="6">
-        <ion-card class="ion-text-center">
-          <ion-card-content>
-            <ion-icon name="restaurant-outline" size="large"></ion-icon>
-            <p>Gastronomía</p>
+        <ion-card class="card-soft-design" button>
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="restaurant-outline" style="font-size: 2.5rem; color: #a5d6a7;"></ion-icon>
+            <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Gastronomía</p>
           </ion-card-content>
         </ion-card>
       </ion-col>
       <ion-col size="6">
-        <ion-card class="ion-text-center">
-          <ion-card-content>
-            <ion-icon name="map-outline" size="large"></ion-icon>
-            <p>Mapa</p>
+        <ion-card class="card-soft-design" button>
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="map-outline" style="font-size: 2.5rem; color: #90caf9;"></ion-icon>
+            <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Mapa</p>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-button expand="block" class="button-primary-custom">
+    EXPLORAR AHORA
+  </ion-button>
 </ion-content>
