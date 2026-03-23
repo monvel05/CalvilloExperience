@@ -47,7 +47,6 @@ export const routes: Routes = [
     path: 'info-negocio',
     loadComponent: () => import('./pages/info-negocio/info-negocio.page').then( m => m.InfoNegocioPage)
   },
-
 ];
   
 

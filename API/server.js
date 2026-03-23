@@ -122,3 +122,127 @@ app.post('/resenas', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+
+// ==========================================
+// DASHBOARD
+// ==========================================
+
+// Obtener ganancias totales
+app.get('/api/dashboard/ganancias', (req, res) => {
+    const query = `
+        SELECT SUM(p.monto) AS total 
+        FROM pagos p
+        INNER JOIN usuarios u ON p.idUsuario = u.idUsuario
+        WHERE u.idTipoUsuario = 3
+    `;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result[0]); // Retorna { total: acumulado }
+    });
+});
+
+// membresias 
+app.get('/api/dashboard/membresias', (req, res) => {
+    const query = `
+        SELECT p.tipo_membresia, COUNT(*) AS total
+        FROM pagos p
+        INNER JOIN usuarios u ON p.idUsuario = u.idUsuario
+        WHERE u.idTipoUsuario = 3
+        GROUP BY p.tipo_membresia
+    `;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result); 
+    });
+});
+
+//ganancias por mes
+app.get('/api/dashboard/ganancias-mensuales', (req, res) => {
+    const query = `
+        SELECT MONTH(p.fecha) AS mes, SUM(p.monto) AS total
+        FROM pagos p
+        INNER JOIN usuarios u ON p.idUsuario = u.idUsuario
+        WHERE u.idTipoUsuario = 3
+        GROUP BY mes
+        ORDER BY mes
+    `;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result);
+    });
+});
+
+//Total de usuarios 
+app.get('/api/dashboard/usuarios', (req, res) => {
+    const query = `SELECT COUNT(*) AS total FROM usuarios`;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result[0]);
+    });
+});
+
+// Total de Turistas (Filtrando por idTipoUsuario = 2)
+app.get('/api/dashboard/turistas', (req, res) => {
+    const query = `SELECT COUNT(*) AS total FROM Usuarios WHERE idTipoUsuario = 2`;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result[0]);
+    });
+});
+
+// Total de Usuarios tipo Negocio (Filtrando por idTipoUsuario = 3)
+app.get('/api/dashboard/negocios', (req, res) => {
+    const query = `SELECT COUNT(*) AS total FROM Usuarios WHERE idTipoUsuario = 3`;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result[0]);
+    });
+});
+
+// Obtener distribución de usuarios por género
+app.get('/api/dashboard/generos', (req, res) => {
+    const query = `
+        SELECT g.genero, COUNT(u.idUsuario) AS total
+        FROM usuarios u
+        INNER JOIN generos g ON u.idGenero = g.idGenero
+        GROUP BY g.genero
+    `;
+
+    connDB.query(query, (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result);
+    });
+});
+
+// Obtener lista completa de negocios para el directorio
+app.get('/api/dashboard/lista-negocios', (req, res) => {
+    const query = `
+        SELECT 
+            n.idNegocio,
+            n.nombre,
+            cn.nombre AS categoria,
+            COALESCE(
+                (SELECT p.tipo_membresia 
+                 FROM usuarios u 
+                 INNER JOIN pagos p ON u.idUsuario = p.idUsuario 
+                 WHERE u.nombre = n.nombre AND u.idTipoUsuario = 3 
+                 ORDER BY p.fecha DESC LIMIT 1), 
+                'Sin Membresia'
+            ) AS membresia
+        FROM negocios n
+        INNER JOIN subtipos_negocio sn ON n.idSubtipo_Negocio = sn.idSubtipo_Negocio
+        INNER JOIN categorias_negocio cn ON sn.idCategoria_Negocio = cn.idCategoria_Negocio
+        ORDER BY n.nombre ASC
+    `;
+
+    connDB.query(query, (err, results) => {
+        if (err) return res.status(500).json(err);
+        res.json(results);
+    });
+});

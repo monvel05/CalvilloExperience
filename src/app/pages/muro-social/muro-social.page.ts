@@ -1,132 +1,151 @@
 import { Component, OnInit } from '@angular/core';
-import { CloudinaryService } from '../../services/cloudinary-service';
+import { Router } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { CloudinaryService } from '../../core/services/cloudinary-service';
+import { addIcons } from 'ionicons';
+import { 
+  arrowBackOutline, 
+  imageOutline, 
+  paperPlaneOutline, 
+  heart, 
+  trashOutline,
+  imagesOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-muro-social',
   templateUrl: './muro-social.page.html',
   styleUrls: ['./muro-social.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class MuroSocial implements OnInit {
 
+  // --- VARIABLES ---
   publicaciones: any[] = [];
-  idUsuario = 2;
+  nombreArchivo: string = '';
+  // Ojo: En tu base de datos, el idUsuario 6 corresponde a "Admin"
+  idUsuario = 6; 
 
-  constructor(private cloudinary: CloudinaryService) {}
-
-  ngOnInit() {
-    // Registrar funciones globales para que funcionen los onclick del HTML inyectado
-    (window as any).darLike = (id: number) => this.darLike(id);
-    (window as any).publicar = () => this.publicar();
-    (window as any).eliminarPublicacion = (id: number) => this.eliminarPublicacion(id);
+  // --- CONSTRUCTOR ---
+  constructor(
+    private cloudinary: CloudinaryService,
+    private router: Router
+  ) {
+    // Registramos todos los íconos que usamos en el HTML del muro
+    addIcons({
+      'arrow-back-outline': arrowBackOutline,
+      'image-outline': imageOutline,
+      'paper-plane-outline': paperPlaneOutline,
+      'heart': heart,
+      'trash-outline': trashOutline,
+      'images-outline': imagesOutline
+    });
   }
 
-  // Se ejecuta siempre al entrar a la pestaña
+  // --- CICLO DE VIDA DE ANGULAR ---
+  ngOnInit() {
+    // La inicialización queda limpia, Angular maneja los eventos ahora
+  }
+
+  // Se ejecuta cada vez que entras a la pestaña
   ionViewWillEnter() {
     this.cargarPublicaciones();
   }
 
+  // --- FUNCIONES DEL MURO SOCIAL ---
   async cargarPublicaciones() {
     try {
       const response = await fetch("http://localhost:3000/api/publicaciones");
       const data = await response.json();
       this.publicaciones = data;
-
-      // Esperar un momento a que el DOM esté listo antes de renderizar
-      setTimeout(() => this.renderPublicaciones(), 100);
     } catch (error) {
       console.error("Error cargando posts", error);
     }
   }
 
-  renderPublicaciones() {
-    const contenedor: any = document.getElementById("contenedorPublicaciones");
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-
-    this.publicaciones.forEach(pub => {
-      const tarjeta = document.createElement("div");
-      tarjeta.className = "publicacion";
-
-      const fotoHTML = pub.foto ? `<div class="contenedor-foto"><img src="${pub.foto}"></div>` : "";
-
-      tarjeta.innerHTML = `
-        <div class="header">
-          <div class="avatar"></div>
-          <div class="info">
-            <span class="nombre">${pub.nombre || 'Explorador'}</span>
-            <span class="fecha">${pub.fecha || 'Reciente'}</span>
-          </div>
-        </div>
-        ${fotoHTML}
-        <div class="contenido-texto">
-          <p class="descripcion"><strong>${pub.nombre || 'Usuario'}</strong> ${pub.descripcion}</p>
-        </div>
-        <div class="acciones">
-          <button class="like-btn" onclick="darLike(${pub.idPublicacion})">
-            <span>❤️</span> 
-            <span class="count">${pub.likes || 0}</span>
-          </button>
-          <button class="delete-btn" onclick="eliminarPublicacion(${pub.idPublicacion})">
-            <span class="icon-delete">🗑️</span>
-          </button>
-        </div>
-      `;
-      contenedor.appendChild(tarjeta);
-    });
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.nombreArchivo = file.name; // Guardamos el nombre de la imagen
+    } else {
+      this.nombreArchivo = ''; // Si cancela, lo dejamos en blanco
+    }
   }
 
   async darLike(id: number) {
-    await fetch(`http://localhost:3000/api/publicaciones/${id}/like`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idUsuario: this.idUsuario })
-    });
-    this.cargarPublicaciones();
+    try {
+      await fetch(`http://localhost:3000/api/publicaciones/${id}/like`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idUsuario: this.idUsuario })
+      });
+      this.cargarPublicaciones();
+    } catch (error) {
+      console.error("Error al dar like", error);
+    }
   }
 
   async eliminarPublicacion(id: number) {
-    if (!confirm("¿Eliminar publicación?")) return;
-    await fetch(`http://localhost:3000/api/publicaciones/${id}`, { method: "DELETE" });
-    this.cargarPublicaciones();
+    if (!confirm("¿Estás seguro de que deseas eliminar esta publicación?")) return;
+    
+    try {
+      await fetch(`http://localhost:3000/api/publicaciones/${id}`, { method: "DELETE" });
+      this.cargarPublicaciones();
+    } catch (error) {
+      console.error("Error al eliminar", error);
+    }
   }
 
-  async publicar() {
-    const txt: any = document.getElementById("descripcionPublicacion");
-    const img: any = document.getElementById("imagenPublicacion");
-    const btn: any = document.querySelector(".btn-publicar");
+  // Recibimos los elementos HTML directamente gracias a las variables de plantilla (#)
+  async publicar(txtInput: HTMLTextAreaElement, imgInput: HTMLInputElement) {
+    const descripcion = txtInput.value;
 
-    if (!txt.value.trim()) return alert("Escribe algo primero");
+    if (!descripcion.trim()) {
+      alert("Por favor, escribe algo antes de publicar.");
+      return;
+    }
 
     try {
-      btn.innerText = "Cargando...";
-      btn.disabled = true;
-
       let linkFoto = null;
-      if (img.files[0]) {
-        const res: any = await this.cloudinary.uploadImage(img.files[0]);
+      
+      // Si el usuario seleccionó una imagen, la subimos a Cloudinary primero
+      if (imgInput.files && imgInput.files[0]) {
+        const res: any = await this.cloudinary.uploadImage(imgInput.files[0]);
         linkFoto = res.secure_url;
       }
 
+      // Guardamos la publicación en la base de datos
       await fetch("http://localhost:3000/api/publicaciones", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          descripcion: txt.value,
+          descripcion: descripcion,
           idUsuario: this.idUsuario,
-          idNegocio: 1,
+          idNegocio: 1, // Por ahora está fijo en 1, puedes hacerlo dinámico después
           linkFoto: linkFoto
         })
       });
 
-      txt.value = "";
-      img.value = "";
+      // Limpiamos los campos del formulario después de publicar con éxito
+      txtInput.value = "";
+      imgInput.value = "";
+      this.nombreArchivo = "";
+      
+      // Recargamos el muro para ver la nueva publicación
       this.cargarPublicaciones();
+      
     } catch (e) {
-      alert("Error al publicar");
-    } finally {
-      btn.innerText = "Publicar";
-      btn.disabled = false;
+      console.error(e);
+      alert("Hubo un error al intentar publicar. Inténtalo de nuevo.");
     }
+  }
+
+  regresarAdmin() {
+    // Te regresa al panel de administrador
+    this.router.navigate(['/administrador-inicio']);
   }
 }

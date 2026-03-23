@@ -3,7 +3,7 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
 import { authInterceptor } from './app/core/interceptors/auth-interceptor';
-
+import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 // Importaciones de servicios, rutas y componentes
 import { AuthService } from './app/core/services/auth';
@@ -40,6 +40,7 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideCharts(withDefaultRegisterables()), // AGREGADO: Proveedor para ng2-charts
     
     // Tus servicios
     AuthService,
