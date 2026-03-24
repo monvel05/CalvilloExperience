@@ -12,6 +12,7 @@ import {
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 import { TrackingService } from 'src/app/core/services/tracking-service';
 
+
 @Component({
   selector: 'app-info-negocio',
   templateUrl: './info-negocio.page.html',

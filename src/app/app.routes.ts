@@ -51,6 +51,11 @@ export const routes: Routes = [
     redirectTo: "home",
     pathMatch: "full"
   }
+  {
+    path: 'reservar',
+    loadComponent: () => import('./pages/reservar/reservar.page').then( m => m.ReservarPage)
+  },
+
 
 ];
   
