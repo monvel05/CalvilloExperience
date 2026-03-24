@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-//import { MapaComponent } from 'src/app/shared/components/mapa.component'; 
-import { MapaPage } from '../mapa/mapa.page';
+import { MapaComponent } from '../../shared/components/mapa.component';
 
 @Component({
   selector: 'app-home',

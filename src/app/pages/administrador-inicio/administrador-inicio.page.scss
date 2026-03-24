@@ -1,0 +1,314 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; 
+  font-family: 'Segoe UI', sans-serif;
+  background: #fdfbfb; 
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: #ffffff;
+  color: #334155;
+  padding: 20px;
+  border-right: 1px solid #fce7f3;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #f472b6; 
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.perfil {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.perfil img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #a7f3d0; 
+  object-fit: cover;
+}
+
+.perfil h3 {
+  margin: 10px 0 5px;
+  color: #475569;
+}
+
+.perfil span {
+  font-size: 12px;
+  color: #64748b;
+  background: #fdf2f8; 
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  flex: 1;
+}
+
+.sidebar li {
+  padding: 12px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  color: #64748b;
+  transition: all 0.3s ease;
+  margin-bottom: 5px;
+}
+
+.sidebar li ion-icon {
+  font-size: 20px;
+}
+
+.sidebar li.active,
+.sidebar li:hover {
+  background: #fdf2f8; 
+  color: #f472b6;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+  overflow: hidden; 
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-shrink: 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #334155;
+}
+
+.header p {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* FILTRO */
+.custom-segment {
+  background: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
+  --background: #ffffff;
+  border: 1px solid #fce7f3;
+}
+
+/* CARDS DASHBOARD */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
+}
+
+.card {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2); 
+  border: 1px solid #fdf2f8;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card p {
+  color: #64748b;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.card ion-icon {
+  font-size: 22px;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.icon-usuarios { color: #f472b6; background: #fdf2f8; }
+.icon-turistas { color: #34d399; background: #d1fae5; }
+.icon-negocios { color: #fbbf24; background: #fef3c7; }
+.icon-ganancias { color: #a78bfa; background: #f3e8ff; }
+
+.card h2 {
+  margin: 10px 0 5px;
+  font-size: 24px;
+  color: #334155;
+}
+
+.positive {
+  color: #34d399;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* CHARTS */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 15px;
+  flex: 1; 
+  min-height: 0; 
+}
+
+.chart-card {
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #fdf2f8;
+}
+
+.chart-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.chart-card.large {
+  grid-column: span 1; 
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  flex: 1; 
+  min-height: 0;
+}
+
+/* EXPORT */
+.export-buttons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.btn-export {
+  --border-radius: 8px;
+  --box-shadow: none;
+  font-weight: 600;
+  height: 40px;
+}
+
+.btn-export.pdf {
+  --background: #fdf2f8;
+  --color: #f472b6;
+}
+
+.btn-export.excel {
+  --background: #d1fae5;
+  --color: #10b981;
+}
+
+/* LA CLASE MAGICA QUE REEMPLAZA AL *ngIf */
+.vista-oculta {
+  display: none !important;
+}
+
+/* ==========================================
+   ESTILOS PARA NEGOCIOS
+   ========================================== */
+.negocios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.negocio-card {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2);
+  border: 1px solid #fdf2f8;
+  gap: 15px;
+  transition: transform 0.2s ease;
+}
+
+.negocio-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(251, 207, 232, 0.4);
+}
+
+.negocio-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.negocio-info ion-icon {
+  font-size: 24px;
+  color: #f472b6;
+  background: #fdf2f8;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.negocio-info h4 {
+  margin: 0 0 5px 0;
+  color: #334155;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.negocio-info p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* ETIQUETAS (BADGES) */
+.badge {
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.badge-vip { background: #fef3c7; color: #d97706; }
+.badge-premium { background: #d1fae5; color: #059669; }
+.badge-basica { background: #e0e7ff; color: #4f46e5; }
+.badge-ninguna { background: #f1f5f9; color: #64748b; }
