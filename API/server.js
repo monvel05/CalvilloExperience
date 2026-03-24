@@ -252,3 +252,10 @@ app.get('/api/dashboard/lista-negocios', (req, res) => {
         res.json(results);
     });
 });
+
+// ==========================================
+// MAPA
+// ====
+app.post('/logs', (req, res) => {
+  res.status(200).send({ status: 'ok' });
+});

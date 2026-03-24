@@ -1,9 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { 
+  IonContent, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonButtons,      
+  IonBackButton,    
+  IonButton, 
+  IonIcon 
+} from '@ionic/angular/standalone';
 import { CloudinaryService } from '../../core/services/cloudinary-service';
 import { addIcons } from 'ionicons';
 import { 
@@ -15,13 +23,23 @@ import {
   imagesOutline
 } from 'ionicons/icons';
 
-
 @Component({
   selector: 'app-muro-social',
   templateUrl: './muro-social.page.html',
   styleUrls: ['./muro-social.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [
+    CommonModule, 
+    FormsModule,
+    IonContent, 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonButtons,      
+    IonBackButton,    
+    IonButton, 
+    IonIcon
+  ]
 })
 export class MuroSocial implements OnInit {
 

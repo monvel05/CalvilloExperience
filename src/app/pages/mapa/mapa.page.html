@@ -1,53 +1,87 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Mapa de Calvillo</ion-title>
+    <ion-segment value="lugares">
+      <ion-segment-button value="lugares">
+        <ion-label>Lugares</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="gastronomia">
+        <ion-label>Gastronomía</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="rutas">
+        <ion-label>Rutas</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-  <google-map height="500px" width="100%" [center]="center" [zoom]="zoom">
-
-    @if (lugares()[0]) {
+  
+  <google-map height="100%" width="100%" [center]="center" [zoom]="zoom">
+    @for (lugar of lugares(); track lugar.id) {
       <map-marker 
-        [position]="lugares()[0].coordenadas" 
-        [title]="lugares()[0].nombre"
-        (mapClick)="onMarcadorClick(lugares()[0])">
+        [position]="lugar.coordenadas" 
+        [title]="lugar.nombre"
+        (mapClick)="onMarcadorClick(lugar)">
       </map-marker>
     }
-
-    @if (lugares()[1]) {
-      <map-marker 
-        [position]="lugares()[1].coordenadas" 
-        [title]="lugares()[1].nombre"
-        (mapClick)="onMarcadorClick(lugares()[1])">
-      </map-marker>
-    }
-
   </google-map>
 
-  <ion-modal [isOpen]="modalAbierto" [breakpoints]="[0, 0.4, 0.8]" [initialBreakpoint]="0.4">
+  <ion-modal [isOpen]="modalAbierto" [breakpoints]="[0, 0.4, 0.8]" [initialBreakpoint]="0.4" (didDismiss)="cerrarModal()">
     <ng-template>
       @if (lugarSeleccionado()) {
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>{{ lugarSeleccionado()!.nombre }}</ion-title>
-          </ion-toolbar>
-        </ion-header>
-
         <ion-content class="ion-padding">
-          <ion-card>
-            <ion-card-content>
-              Categoría: {{ lugarSeleccionado()!.categoria }}
-            </ion-card-content>
-          </ion-card>
+          
+          <div class="tarjeta-boceto">
+            <div class="imagen-caja">
+              <ion-icon name="image-outline"></ion-icon>
+            </div>
+            
+            <div class="info-caja">
+              <h2 class="titulo-lugar">{{ lugarSeleccionado()!.nombre }}</h2>
+              <p class="texto-lorem">Lorem ipsum dolor sit amet...</p>
+              
+              <div class="boton-derecha">
+                <ion-button fill="outline" color="dark" size="small">
+                  Ver más >
+                </ion-button>
+              </div>
+            </div>
+          </div>
 
-          <ion-button expand="block" (click)="cerrarModal()">
-            Cerrar
-          </ion-button>
         </ion-content>
       }
     </ng-template>
   </ion-modal>
 
 </ion-content>
+
+<ion-footer>
+  <ion-tab-bar slot="bottom">
+    
+    <ion-tab-button tab="inicio">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button tab="mapa" class="tab-selected">
+      <ion-icon name="location"></ion-icon>
+      <ion-label>Mapa</ion-label>
+    </ion-tab-button>
+    
+   <ion-tab-button tab="reservas">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <ion-label>Reservas</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="irAMuroSocial()">
+      <ion-icon name="images-outline"></ion-icon>
+      <ion-label>Muro Social</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button tab="perfil">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-footer>
