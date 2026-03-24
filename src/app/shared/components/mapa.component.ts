@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { TrackingService } from 'src/app/core/services/tracking-service';
 
 @Component({
   selector: 'app-mapa',
@@ -10,6 +11,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [CommonModule, IonicModule]
 })
 export class MapaComponent implements OnInit {
+  private trackingService = inject(TrackingService);
 
   @Input() centro = { lat: 21.8467, lng: -102.7187 };
 

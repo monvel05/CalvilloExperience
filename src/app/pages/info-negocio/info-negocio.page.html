@@ -84,7 +84,7 @@
           <ion-button *ngIf="negocio.tieneInventario" 
                       expand="block" 
                       class="reserve-btn" 
-                      (click)="iniciarReserva()">
+                      (click)="iniciarReserva(negocio.idNegocio)">
             RESERVAR AHORA
           </ion-button>
 

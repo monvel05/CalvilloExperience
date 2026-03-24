@@ -8,7 +8,6 @@ import {
   IonGrid, IonRow, IonCol, IonBadge 
 } from '@ionic/angular/standalone';
 import { TrackingService } from 'src/app/core/services/tracking-service';
-import { Router } from 'express';
 
 @Component({
   selector: 'app-turista-inicio',
@@ -33,6 +32,8 @@ import { Router } from 'express';
   ]
 })
 export class TuristaInicioPage implements OnInit {
+  private trackingService = inject(TrackingService);
+  private router = inject(Router);
 
   constructor() { }
 
