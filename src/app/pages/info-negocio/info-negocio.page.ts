@@ -11,6 +11,7 @@ import {
 } from 'ionicons/icons';
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 
+
 @Component({
   selector: 'app-info-negocio',
   templateUrl: './info-negocio.page.html',

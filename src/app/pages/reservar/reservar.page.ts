@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReservasService } from '../../core/services/reservas.service';
 import { 
   IonContent, 
   IonHeader, 
@@ -14,7 +15,8 @@ import {
   IonDatetimeButton,
   IonModal,
   IonIcon,
-  IonLabel
+  IonLabel,
+  IonButton // Asegúrate de incluir IonButton en los imports
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -23,6 +25,7 @@ import {
   styleUrls: ['./reservar.page.scss'],
   standalone: true,
   imports: [
+    CommonModule, // Necesario para ngFor y ngIf
     IonContent, 
     IonHeader, 
     IonTitle, 
@@ -34,14 +37,16 @@ import {
     IonDatetime,
     IonDatetimeButton,
     IonModal,
-    IonIcon,    
+    IonIcon,
+    IonLabel,
+    IonButton,
     FormsModule 
   ]
 })
 export class ReservarPage implements OnInit {
   @ViewChild('exitTimeModal') exitTimeModal!: IonModal;
   
-  // Variables para fechas y horas
+  // Variables para fechas y horas (Strings formateados para la DB)
   selectedDate: string = '';
   selectedTime: string = '';
   exitTime: string = '';
@@ -55,11 +60,13 @@ export class ReservarPage implements OnInit {
   selectedDay: any = null;
   calendarDays: any[] = [];
   
-  // Fecha actual para el datetime
+  // Fechas en formato ISO para los componentes de Ionic
   currentDate: string = new Date().toISOString();
   currentTime: string = new Date().toISOString();
 
-  constructor() {
+  // Inyectamos el servicio respetando el orden de carpetas de tu equipo
+  constructor(private reservasService: ReservasService) {
+    
     const today = new Date();
     this.currentMonth = this.monthNames[today.getMonth()];
     this.currentYear = today.getFullYear();
@@ -68,30 +75,19 @@ export class ReservarPage implements OnInit {
 
   ngOnInit() { }
 
-  // Generar días del calendario
   generateCalendar() {
-    // Obtener el primer día del mes y cuántos días tiene
     const monthIndex = this.monthNames.indexOf(this.currentMonth);
     const firstDayOfMonth = new Date(this.currentYear, monthIndex, 1);
     const daysInMonth = new Date(this.currentYear, monthIndex + 1, 0).getDate();
-    const startingDayOfWeek = firstDayOfMonth.getDay(); // 0 = Domingo, 1 = Lunes, etc.
+    const startingDayOfWeek = firstDayOfMonth.getDay();
     
-    // Días no disponibles (simulación - puedes conectar con tu API)
     const unavailableDays: number[] = [1, 15, 20, 25];
-    
     this.calendarDays = [];
     
-    // Agregar días vacíos al inicio para alinear con el día de la semana
     for (let i = 0; i < startingDayOfWeek; i++) {
-      this.calendarDays.push({
-        date: '',
-        available: false,
-        isSelected: false,
-        empty: true
-      });
+      this.calendarDays.push({ date: '', available: false, isSelected: false, empty: true });
     }
     
-    // Agregar los días del mes
     for (let i = 1; i <= daysInMonth; i++) {
       const isAvailable = !unavailableDays.includes(i);
       this.calendarDays.push({
@@ -104,140 +100,108 @@ export class ReservarPage implements OnInit {
     }
   }
   
-  // Seleccionar un día
   selectDay(day: any) {
     if (day.empty || !day.available) return;
-    
-    // Remover selección anterior
-    this.calendarDays.forEach(d => {
-      if (d.isSelected) d.isSelected = false;
-    });
-    
-    // Seleccionar nuevo día
+    this.calendarDays.forEach(d => d.isSelected = false);
     day.isSelected = true;
     this.selectedDay = day;
   }
   
-  // Aceptar fecha seleccionada
   acceptDate() {
     if (this.selectedDay) {
-      // Formatear la fecha seleccionada
-      const day = this.selectedDay.date;
-      const month = this.currentMonth;
+      const day = this.selectedDay.date.toString().padStart(2, '0');
+      const monthIndex = (this.monthNames.indexOf(this.currentMonth) + 1).toString().padStart(2, '0');
       const year = this.currentYear;
-      this.selectedDate = `${day} ${month} ${year}`;
       
-      // También guardar en formato ISO para posibles usos
-      const monthIndex = this.monthNames.indexOf(this.currentMonth);
-      const dateObj = new Date(year, monthIndex, day);
-      this.currentDate = dateObj.toISOString();
+      // Formato YYYY-MM-DD que espera MySQL
+      this.selectedDate = `${year}-${monthIndex}-${day}`;
+      this.currentDate = new Date(year, parseInt(monthIndex) - 1, parseInt(day)).toISOString();
       
-      // Limpiar selección visual
       this.selectedDay.isSelected = false;
       this.selectedDay = null;
     }
   }
   
-  // Abrir modal de hora de salida
   openExitTimeModal() {
     this.exitTimeModal.present();
   }
   
-  // Cuando se selecciona hora de salida en el modal
   onExitTimeChange(event: any) {
     const selectedTime = event.detail.value;
     if (selectedTime) {
-      // Formatear la hora para mostrar (ej: "18:30")
       const date = new Date(selectedTime);
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
-      this.exitTime = `${hours}:${minutes}`;
+      this.exitTime = `${hours}:${minutes}:00`; // Formato HH:mm:ss
       this.exitTimeValue = selectedTime;
     }
     this.exitTimeModal.dismiss();
   }
   
-  // Cuando se selecciona fecha de llegada desde el datetime-button
   onDateChange(event: any) {
     const selectedDate = event.detail.value;
     if (selectedDate) {
       const date = new Date(selectedDate);
-      const day = date.getDate();
-      const month = this.monthNames[date.getMonth()];
-      const year = date.getFullYear();
-      this.selectedDate = `${day} ${month} ${year}`;
+      this.selectedDate = date.toISOString().split('T')[0]; // Extrae YYYY-MM-DD
       this.currentDate = selectedDate;
     }
   }
   
-  // Cuando se selecciona hora de llegada desde el datetime-button
   onTimeChange(event: any) {
     const selectedTime = event.detail.value;
     if (selectedTime) {
       const date = new Date(selectedTime);
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
-      this.selectedTime = `${hours}:${minutes}`;
+      this.selectedTime = `${hours}:${minutes}:00`; // Formato HH:mm:ss
       this.currentTime = selectedTime;
     }
   }
-  
-  // Navegar entre meses
+
+  // Navegación de meses
   prevMonth() {
     const currentMonthIndex = this.monthNames.indexOf(this.currentMonth);
     let newMonthIndex = currentMonthIndex - 1;
-    let newYear = this.currentYear;
-    
-    if (newMonthIndex < 0) {
-      newMonthIndex = 11;
-      newYear--;
-    }
-    
+    if (newMonthIndex < 0) { newMonthIndex = 11; this.currentYear--; }
     this.currentMonth = this.monthNames[newMonthIndex];
-    this.currentYear = newYear;
     this.generateCalendar();
   }
   
   nextMonth() {
     const currentMonthIndex = this.monthNames.indexOf(this.currentMonth);
     let newMonthIndex = currentMonthIndex + 1;
-    let newYear = this.currentYear;
-    
-    if (newMonthIndex > 11) {
-      newMonthIndex = 0;
-      newYear++;
-    }
-    
+    if (newMonthIndex > 11) { newMonthIndex = 0; this.currentYear++; }
     this.currentMonth = this.monthNames[newMonthIndex];
-    this.currentYear = newYear;
     this.generateCalendar();
   }
   
-  // Confirmar reserva
+  // FUNCIONALIDAD: Guardar en Base de Datos
   confirmarReserva() {
-    if (!this.selectedDate) {
-      console.log('❌ Por favor selecciona una fecha');
+    if (!this.selectedDate || !this.selectedTime || !this.numeroPersonas) {
+      alert('Por favor, completa la fecha, hora de entrada y número de personas.');
       return;
     }
-    
-    if (!this.selectedTime) {
-      console.log('❌ Por favor selecciona una hora de llegada');
-      return;
-    }
-    
-    if (!this.numeroPersonas) {
-      console.log('❌ Por favor selecciona el número de personas');
-      return;
-    }
-    
-    const reserva = {
-      fecha: this.selectedDate,
-      horaLlegada: this.selectedTime,
-      horaSalida: this.exitTime || 'No especificada',
-      personas: this.numeroPersonas
+
+    // Adaptado exactamente al server.js de tu compañero
+    const datosReserva = {
+      fechaEntrada: this.selectedDate,
+      fechaSalida: this.selectedDate,
+      horaEntrada: this.selectedTime,
+      horaSalida: this.exitTime || this.selectedTime, // Si no hay salida, usamos la de entrada
+      idUsuario: 1,  // ID estático por ahora
+      idNegocio: 1,  // ID para Cenaduría Doña Lupe
+      idEstatus: 1   // 1 = Activa
     };
-    
-    console.log('✅ Reserva confirmada:', reserva);
-    // Aquí puedes agregar la lógica para guardar la reserva
+
+    this.reservasService.enviarReserva(datosReserva).subscribe({
+      next: (res) => {
+        console.log('✅ Reserva guardada:', res);
+        alert('Reserva creada con éxito en Calvillo Experience');
+      },
+      error: (err) => {
+        console.error('❌ Error al guardar:', err);
+        alert('Hubo un problema al conectar con el servidor.');
+      }
+    });
   }
 }
