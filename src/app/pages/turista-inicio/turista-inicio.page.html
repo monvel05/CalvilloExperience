@@ -10,10 +10,11 @@
     <p style="color: #8d6e63; font-weight: 300; letter-spacing: 1px;">PUEBLO MÁGICO</p>
   </div>
 
+  <!-- Grid de Categorías -->
   <ion-grid>
     <ion-row>
       <ion-col size="6">
-        <ion-card class="card-soft-design" button>
+        <ion-card class="card-soft-design" button (click)="irACenadurias()">
           <ion-card-content class="ion-text-center">
             <ion-icon name="restaurant-outline" style="font-size: 2.5rem; color: #a5d6a7;"></ion-icon>
             <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Gastronomía</p>
@@ -21,7 +22,7 @@
         </ion-card>
       </ion-col>
       <ion-col size="6">
-        <ion-card class="card-soft-design" button>
+        <ion-card class="card-soft-design" button (click)="irAlMapa()">
           <ion-card-content class="ion-text-center">
             <ion-icon name="map-outline" style="font-size: 2.5rem; color: #90caf9;"></ion-icon>
             <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Mapa</p>
@@ -29,9 +30,39 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="card-soft-design" button (click)="irAComidaRapida()">
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="fast-food-outline" style="font-size: 2.5rem; color: #ffb74d;"></ion-icon>
+            <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Comida Rápida</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="card-soft-design" button (click)="irAHospedaje()">
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="bed-outline" style="font-size: 2.5rem; color: #f06292;"></ion-icon>
+            <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Hospedaje</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="card-soft-design" button (click)="irAAtractivos()">
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="star-outline" style="font-size: 2.5rem; color: #ce93d8;"></ion-icon>
+            <p style="margin-top: 10px; color: #4b2c20; font-weight: 500;">Atractivos Turísticos</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 
-  <ion-button expand="block" class="button-primary-custom">
+  <ion-button expand="block" class="button-primary-custom" (click)="irAlMapa()">
     EXPLORAR AHORA
   </ion-button>
 </ion-content>
