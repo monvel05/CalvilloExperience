@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UbicacionService } from 'src/app/core/services/ubicacion.service';
 import { Lugar } from '../interfaces/lugar.interface';
 import { ATRACTIVOS } from 'src/assets/data/atractivos';
@@ -6,6 +6,7 @@ import { CENADURIAS } from 'src/assets/data/cenadurias';
 import { COMIDA_RAPIDA } from 'src/assets/data/comida_rapida';
 import { HOSPEDAJE } from 'src/assets/data/hospedaje';
 import { TRANSPORTE } from 'src/assets/data/transporte';
+import { TrackingService } from 'src/app/core/services/tracking-service';
 
 declare var H: any;
 
@@ -17,6 +18,7 @@ export class MapaComponent implements OnInit {
   map: any;
   userMarker: any;
   lugaresActuales: Lugar[] = [];
+  private trackingService = inject(TrackingService);
 
   constructor(private ubicacionService: UbicacionService) {}
 
@@ -109,5 +111,14 @@ export class MapaComponent implements OnInit {
         this.map.addObject(routeLine);
       }
     }, (error: any) => console.error(error));
+  }
+
+  // Función de telemetría para registrar interacción con el mapa
+  alTocarPin(idNegocio: number, nombreNegocio: string) {
+    this.trackingService.registrarEvento('INTERACCION_MAPA', { 
+      accion: 'Tocar Pin',
+      id_negocio: idNegocio,
+      nombre: nombreNegocio
+    });
   }
 }
