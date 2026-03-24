@@ -12,11 +12,10 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { Observable } from 'rxjs';
 
-// Imports de lenguajes y su interceptor
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { authInterceptor } from './app/auth-interceptor';
 import { languageInterceptor } from './app/core/interceptors/language.interceptor';
 
-// 1. Creamos nuestra propia clase Loader
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(
     private http: HttpClient, 
@@ -29,7 +28,6 @@ export class CustomTranslateLoader implements TranslateLoader {
   }
 }
 
-// 2. Actualizamos el Factory para usar nuestra nueva clase
 export function HttpLoaderFactory(http: HttpClient) {
   return new CustomTranslateLoader(http);
 }
@@ -39,15 +37,13 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([authInterceptor])),
     
-    // Tus servicios
-    AuthService,
-    
-    // UNIFICADO: Solo llamamos a provideHttpClient una vez, pasándole tu interceptor
-    provideHttpClient(withInterceptors([languageInterceptor])),
+    provideHttpClient(
+      withInterceptors([authInterceptor, languageInterceptor])
+    ),
 
-    // AGREGADO: La inyección global del módulo de traducciones
+    AuthService,
+
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {

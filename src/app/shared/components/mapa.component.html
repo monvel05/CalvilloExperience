@@ -1,1 +1,13 @@
-<div id="mapContainer" style="width: 100%; height: 100vh; background: #eee;"></div>
+<div class="header-academia">
+  <h2>Calvillo Experience</h2>
+  <select (change)="cambiarCategoria($event)">
+    <option value="">-- Selecciona qué buscar --</option>
+    <option value="cenaduria">Cenadurías</option>
+    <option value="restaurante">Comida Rápida</option>
+    <option value="hotel">Hospedaje</option>
+    <option value="turismo">Atractivos Turísticos</option>
+    <option value="taxi">Transporte</option>
+  </select>
+</div>
+
+<div id="mapContainer" style="width: 100%; height: 90vh;"></div>
