@@ -1,21 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.component.html',
+  styleUrls: ['./mapa.component.scss'],
   standalone: true,
   imports: [CommonModule, IonicModule]
 })
 export class MapaComponent implements OnInit {
-  googleMapsApiKey = environment.apiKey;
 
-  constructor() {}
+  @Input() centro = { lat: 21.8467, lng: -102.7187 };
+
+  constructor() { }
 
   ngOnInit() {
-    console.log('Mapa de Calvillo configurado con la clave:', this.googleMapsApiKey);
+    console.log('Mapa de Calvillo Experience cargado');
+  }
+
+  cambiarCategoria(event: any) {
+    const categoria = event.detail.value;
+    console.log('Filtrando mapa por:', categoria);
   }
 
   // Función de telemetría para registrar interacción con el mapa

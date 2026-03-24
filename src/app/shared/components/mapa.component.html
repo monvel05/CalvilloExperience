@@ -1,13 +1,18 @@
-<div class="header-academia">
-  <h2>Calvillo Experience</h2>
-  <select (change)="cambiarCategoria($event)">
-    <option value="">-- Selecciona qué buscar --</option>
-    <option value="cenaduria">Cenadurías</option>
-    <option value="restaurante">Comida Rápida</option>
-    <option value="hotel">Hospedaje</option>
-    <option value="turismo">Atractivos Turísticos</option>
-    <option value="taxi">Transporte</option>
-  </select>
-</div>
+<div class="map-wrapper">
+  <ion-segment (ionChange)="cambiarCategoria($event)" value="todos" mode="md">
+    <ion-segment-button value="todos">
+      <ion-label>Todos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="artesanos">
+      <ion-label>Artesanos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-<div id="mapContainer" style="width: 100%; height: 90vh;"></div>
+  <div class="map-container">
+    <div id="map">
+      <p style="text-align: center; padding-top: 50px; color: #666;">
+        Cargando mapa de Calvillo...
+      </p>
+    </div>
+  </div>
+</div>
