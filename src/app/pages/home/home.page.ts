@@ -7,8 +7,7 @@ import { MapaComponent } from '../../shared/components/mapa.component';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule, //MapaComponent
-  MapaPage ], 
+  imports: [IonicModule, MapaComponent ], 
 })
 export class HomePage {
   constructor() {}

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from 'src/app/core/core/services/auth';
+import { AuthService } from 'src/app/core/services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { 
