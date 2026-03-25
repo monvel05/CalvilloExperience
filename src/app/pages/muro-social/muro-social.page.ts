@@ -12,7 +12,10 @@ import {
   IonButton, 
   IonIcon 
 } from '@ionic/angular/standalone';
+
 import { CloudinaryService } from '../../core/services/cloudinary-service';
+import { MuroSocialService } from '../../core/services/muro-social.service';
+
 import { addIcons } from 'ionicons';
 import { 
   arrowBackOutline, 
@@ -43,18 +46,15 @@ import {
 })
 export class MuroSocial implements OnInit {
 
-  // --- VARIABLES ---
   publicaciones: any[] = [];
   nombreArchivo: string = '';
-  // Ojo: En tu base de datos, el idUsuario 6 corresponde a "Admin"
-  idUsuario = 6; 
+  idUsuario = 6;
 
-  // --- CONSTRUCTOR ---
   constructor(
     private cloudinary: CloudinaryService,
-    private router: Router
+    private router: Router,
+    private muroService: MuroSocialService
   ) {
-    // Registramos todos los íconos que usamos en el HTML del muro
     addIcons({
       'arrow-back-outline': arrowBackOutline,
       'image-outline': imageOutline,
@@ -65,61 +65,50 @@ export class MuroSocial implements OnInit {
     });
   }
 
-  // --- CICLO DE VIDA DE ANGULAR ---
-  ngOnInit() {
-    // La inicialización queda limpia, Angular maneja los eventos ahora
-  }
+  ngOnInit() {}
 
-  // Se ejecuta cada vez que entras a la pestaña
   ionViewWillEnter() {
     this.cargarPublicaciones();
   }
 
-  // --- FUNCIONES DEL MURO SOCIAL ---
+  // 📥 Cargar publicaciones
   async cargarPublicaciones() {
     try {
-      const response = await fetch("http://localhost:3000/api/publicaciones");
-      const data = await response.json();
-      this.publicaciones = data;
+      this.publicaciones = await this.muroService.getPublicaciones();
     } catch (error) {
       console.error("Error cargando posts", error);
     }
   }
 
+  // 📷 Detectar archivo
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file) {
-      this.nombreArchivo = file.name; // Guardamos el nombre de la imagen
-    } else {
-      this.nombreArchivo = ''; // Si cancela, lo dejamos en blanco
-    }
+    this.nombreArchivo = file ? file.name : '';
   }
 
+  // ❤️ Dar like
   async darLike(id: number) {
     try {
-      await fetch(`http://localhost:3000/api/publicaciones/${id}/like`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idUsuario: this.idUsuario })
-      });
+      await this.muroService.darLike(id, this.idUsuario);
       this.cargarPublicaciones();
     } catch (error) {
       console.error("Error al dar like", error);
     }
   }
 
+  // 🗑 Eliminar publicación
   async eliminarPublicacion(id: number) {
     if (!confirm("¿Estás seguro de que deseas eliminar esta publicación?")) return;
-    
+
     try {
-      await fetch(`http://localhost:3000/api/publicaciones/${id}`, { method: "DELETE" });
+      await this.muroService.eliminarPublicacion(id);
       this.cargarPublicaciones();
     } catch (error) {
       console.error("Error al eliminar", error);
     }
   }
 
-  // Recibimos los elementos HTML directamente gracias a las variables de plantilla (#)
+  // 📤 Publicar
   async publicar(txtInput: HTMLTextAreaElement, imgInput: HTMLInputElement) {
     const descripcion = txtInput.value;
 
@@ -130,41 +119,36 @@ export class MuroSocial implements OnInit {
 
     try {
       let linkFoto = null;
-      
-      // Si el usuario seleccionó una imagen, la subimos a Cloudinary primero
+
+      // Subir imagen si existe
       if (imgInput.files && imgInput.files[0]) {
         const res: any = await this.cloudinary.uploadImage(imgInput.files[0]);
         linkFoto = res.secure_url;
       }
 
-      // Guardamos la publicación en la base de datos
-      await fetch("http://localhost:3000/api/publicaciones", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          descripcion: descripcion,
-          idUsuario: this.idUsuario,
-          idNegocio: 1, // Por ahora está fijo en 1, puedes hacerlo dinámico después
-          linkFoto: linkFoto
-        })
+      // Guardar publicación
+      await this.muroService.crearPublicacion({
+        descripcion,
+        idUsuario: this.idUsuario,
+        idNegocio: 1,
+        linkFoto
       });
 
-      // Limpiamos los campos del formulario después de publicar con éxito
+      // Limpiar inputs
       txtInput.value = "";
       imgInput.value = "";
       this.nombreArchivo = "";
-      
-      // Recargamos el muro para ver la nueva publicación
+
+      // Recargar
       this.cargarPublicaciones();
-      
-    } catch (e) {
-      console.error(e);
-      alert("Hubo un error al intentar publicar. Inténtalo de nuevo.");
+
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al publicar.");
     }
   }
 
   regresarAdmin() {
-    // Te regresa al panel de administrador
     this.router.navigate(['/administrador-inicio']);
   }
 }

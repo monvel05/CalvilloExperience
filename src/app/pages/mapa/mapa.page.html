@@ -1,15 +1,23 @@
 <ion-header>
   <ion-toolbar>
-    <ion-segment value="lugares">
-      <ion-segment-button value="lugares">
-        <ion-label>Lugares</ion-label>
+    <ion-segment [value]="categoriaSeleccionada()" (ionChange)="cambiarCategoria($event)" scrollable="true">
+      
+      <ion-segment-button value="1">
+        <ion-label>Atractivos</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="gastronomia">
-        <ion-label>Gastronomía</ion-label>
+      
+      <ion-segment-button value="2">
+        <ion-label>Cenadurías</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="rutas">
-        <ion-label>Rutas</ion-label>
+      
+      <ion-segment-button value="3">
+        <ion-label>Hospedaje</ion-label>
       </ion-segment-button>
+      
+      <ion-segment-button value="4">
+        <ion-label>Transporte</ion-label>
+      </ion-segment-button>
+
     </ion-segment>
   </ion-toolbar>
 </ion-header>
@@ -17,7 +25,7 @@
 <ion-content>
   
   <google-map height="100%" width="100%" [center]="center" [zoom]="zoom">
-    @for (lugar of lugares(); track lugar.id) {
+    @for (lugar of lugaresFiltrados(); track lugar.id) {
       <map-marker 
         [position]="lugar.coordenadas" 
         [title]="lugar.nombre"
@@ -38,7 +46,8 @@
             
             <div class="info-caja">
               <h2 class="titulo-lugar">{{ lugarSeleccionado()!.nombre }}</h2>
-              <p class="texto-lorem">Lorem ipsum dolor sit amet...</p>
+              <p class="texto-lorem">📍 {{ lugarSeleccionado()!.direccion }}</p>
+              <p class="texto-lorem">📞 {{ lugarSeleccionado()!.telefono }}</p>
               
               <div class="boton-derecha">
                 <ion-button fill="outline" color="dark" size="small">
@@ -68,7 +77,7 @@
       <ion-label>Mapa</ion-label>
     </ion-tab-button>
     
-   <ion-tab-button tab="reservas">
+    <ion-tab-button tab="reservas">
       <ion-icon name="calendar-outline"></ion-icon>
       <ion-label>Reservas</ion-label>
     </ion-tab-button>
