@@ -10,6 +10,8 @@ import {
   timeOutline, mapOutline, addOutline, removeOutline, walkOutline 
 } from 'ionicons/icons';
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
+import { TrackingService } from 'src/app/core/services/tracking-service';
+
 
 @Component({
   selector: 'app-info-negocio',
@@ -22,7 +24,7 @@ export class InfoNegocioPage implements OnInit {
   negocio: DatosNegocio | null = null;
   cargando: boolean = true;
   seccionesAbiertas: boolean[] = [false, false];
-  // Se eliminó la variable imagenPrincipal
+  private trackingService = inject(TrackingService);
 
   constructor() {
     addIcons({
@@ -66,7 +68,9 @@ export class InfoNegocioPage implements OnInit {
     this.seccionesAbiertas[index] = !this.seccionesAbiertas[index];
   }
 
-  iniciarReserva() {
+  iniciarReserva(idNegocio: number) {
+    this.trackingService.registrarEvento('INICIAR_RESERVA', { id_negocio: idNegocio });
     console.log('Navegando al flujo de reserva para:', this.negocio?.nombre);
+    // Redireccionar a la página de reserva (a implementar)
   }
 }

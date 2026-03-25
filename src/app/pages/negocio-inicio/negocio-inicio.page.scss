@@ -1,0 +1,88 @@
+$primary-color: #3880ff;
+$secondary-color: #5260ff;
+$success-color: #2dd36f;
+$light-bg: #f4f5f8;
+
+ion-content {
+  --background: $light-bg;
+}
+
+.welcome-card {
+  border-left: 4px solid $primary-color;
+  margin-bottom: 20px;
+  
+  ion-card-header {
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    
+    ion-card-title {
+      color: white;
+      font-weight: 600;
+    }
+    
+    ion-card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  
+  .stat-number {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: $primary-color;
+    margin-bottom: 5px;
+  }
+  
+  p {
+    font-size: 0.85em;
+    color: #666;
+    margin: 0;
+  }
+}
+
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  
+  ion-icon {
+    margin-right: 10px;
+    color: $primary-color;
+  }
+}
+
+ion-list-header {
+  ion-label {
+    font-weight: 600;
+    color: $primary-color;
+  }
+}
+
+ion-badge {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+}
