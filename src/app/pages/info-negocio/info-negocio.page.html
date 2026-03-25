@@ -79,6 +79,10 @@
               <div class="map-placeholder">
                 <ion-icon name="map-outline"></ion-icon>
                 <span>Google Maps Platform <br> (Lat: {{negocio.ubicacion.latitud}}, Lng: {{negocio.ubicacion.longitud}})</span>
+                <ion-button
+                (click)="irAMapa()">
+                  Ir al Mapa
+                </ion-button>
               </div>
             </div>
           </div>

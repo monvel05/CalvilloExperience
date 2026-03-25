@@ -11,7 +11,8 @@ import {
 } from 'ionicons/icons';
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 import { TrackingService } from 'src/app/core/services/tracking-service';
-import { Router } from 'express';
+import { Router } from '@angular/router';
+import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { Router } from 'express';
 })
 export class InfoNegocioPage implements OnInit {
   negocio: DatosNegocio | null = null;
+  usuario: DatosUsuario | null = null;
   cargando: boolean = true;
   seccionesAbiertas: boolean[] = [false, false];
   private trackingService = inject(TrackingService);
@@ -38,6 +40,8 @@ export class InfoNegocioPage implements OnInit {
   ngOnInit() {
     if (this.negocio==null) {
       this.cargarDatosSimulados();
+    } else {
+      this.cargando = false;
     }
   }
 
@@ -77,5 +81,25 @@ export class InfoNegocioPage implements OnInit {
     this.trackingService.registrarEvento('INICIAR_RESERVA', this.negocio?.idNegocio || 0);
     console.log('Navegando al flujo de reserva para:', this.negocio?.nombre);
     this.router.navigate(['/reserva']);
+  }
+
+  irAMapa() {
+    this.router.navigate(['/mapa']);
+  }
+
+  volver() {
+    switch (this.usuario?.idTipoUsuario) {
+      case 1: // Administrador
+        this.router.navigate(['/administrador-inicio']);
+        break;
+      case 2: // Turista
+        this.router.navigate(['/turista-inicio']);
+        break;
+      case 3: // Negocio
+        this.router.navigate(['/negocio-inicio']);
+        break;
+      default:
+        this.router.navigate(['/home']);
+    }
   }
 }

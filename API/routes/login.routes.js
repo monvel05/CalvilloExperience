@@ -1,16 +1,11 @@
-// Importación de dependencias necesarias
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { connDB } = require("../database");
 
-// --- IMPORTAMOS EL MIDDLEWARE DE VALIDACIÓN ---
-const { validateRegister } = require("../middleware/validate");
-
-// --- APLICAMOS EL MIDDLEWARE EN LA RUTA ---
-// Nota: 'validateRegister' revisa que los datos no estén vacíos o sean inválidos
-router.post("/login", validateRegister, (req, res) => {
+// Nota: Quitamos 'validateRegister' de aquí porque esta es la ruta de login
+router.post("/login", (req, res) => {
     console.log("¡Recibiendo petición de login!");
     const { correo, contraseña } = req.body;
     console.log("Intento de login para:", correo);
@@ -37,13 +32,18 @@ router.post("/login", validateRegister, (req, res) => {
             { expiresIn: "1h" }
         );
 
+        // ¡CORRECCIÓN AQUÍ! 
+        // Devolvemos las variables con los mismos nombres que la interfaz DatosUsuario
         res.json({
             token,
             user: {
-                id: user.idUsuario,
+                idUsuario: user.idUsuario,
                 nombre: user.nombre,
                 correo: user.correo,
-                rol: user.idTipoUsuario
+                idTipoUsuario: user.idTipoUsuario,
+                fechaNacimiento: user.fechaNacimiento,
+                idGenero: user.idGenero,
+                idIdioma: user.idIdioma
             }
         });
     });

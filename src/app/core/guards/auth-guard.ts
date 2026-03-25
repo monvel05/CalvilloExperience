@@ -4,43 +4,52 @@ import { CanActivateFn, Router } from '@angular/router';
 /**
  * @description
  * Guard de autenticación y autorización principal del proyecto.
- * Verifica si el usuario tiene una sesión activa mediante un token en localStorage.
- * Además, valida si el rol del usuario coincide con los permisos requeridos por la ruta.
- * * @param route Información de la ruta solicitada, incluye los 'roles' permitidos en `app.routes.ts`.
- * @param state Estado actual del árbol de rutas de Angular.
- * @returns {boolean} `true` si el acceso es permitido; `false` si es bloqueado (y redirige según el caso).
+ * Verifica si el usuario tiene una sesión activa mediante un token.
+ * Valida si el rol numérico del usuario coincide con los permisos requeridos.
  */
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   
-  // 1. Obtener credenciales del almacenamiento local
-  // ⚠️ IMPORTANTE PARA EL EQUIPO: Deben usar exactamente estas llaves al hacer el login.
-  const token = localStorage.getItem('jwt_token'); 
-  const userRole = localStorage.getItem('user_role'); 
+  // 1. Obtener credenciales con las LLAVES CORRECTAS que usamos en el login
+  const token = localStorage.getItem('token'); 
+  const userString = localStorage.getItem('user'); 
+  
+  // Variable para almacenar el rol (idTipoUsuario)
+  let userRole: number | null = null;
+  
+  if (userString) {
+    try {
+      const user = JSON.parse(userString);
+      userRole = user.idTipoUsuario; // Extraemos el 1 (Admin), 2 (Turista) o 3 (Negocio)
+    } catch (error) {
+      console.error('Error al procesar los datos del usuario:', error);
+    }
+  }
 
   // 2. Validación de Autenticación (¿Inició sesión?)
   if (!token) {
     console.warn('❌ Guard: Bloqueado. No hay sesión activa. Redirigiendo al login...');
-    router.navigate(['/login']);
+    router.navigate(['/login']); // Mandamos al login (que no debe tener guard)
     return false;
   }
 
   // 3. Validación de Autorización (¿Tiene el rol adecuado?)
-  const requiredRoles = route.data?.['roles'] as Array<string>;
+  const requiredRoles = route.data?.['roles'];
 
   if (requiredRoles && requiredRoles.length > 0) {
-    // Si la ruta exige roles, verificamos que el usuario tenga uno válido
-    if (!userRole || !requiredRoles.includes(userRole)) {
-      console.error(`🚫 Guard: Acceso denegado. Rol actual: '${userRole || 'Ninguno'}'. Requerido: '${requiredRoles.join(', ')}'`);
+    // Usamos 'some' y convertimos a Number para que '3' (texto) y 3 (número) sean lo mismo
+    const tienePermiso = requiredRoles.some((rolPermitido: any) => Number(rolPermitido) === Number(userRole));
+
+    if (!tienePermiso) {
+      console.error(`🚫 Guard: Acceso denegado. Rol actual: '${userRole}'. Requerido: '${requiredRoles.join(', ')}'`);
       
-      // Como no tiene permiso, lo regresamos a una ruta segura o simplemente cancelamos.
-      // Puedes cambiar '/home' por una vista genérica de error o el inicio del turista.
-      router.navigate(['/home']); 
+      // ¡ROMPE EL BUCLE! Redirigimos a una ruta libre de guards.
+      router.navigate(['/login']); 
       return false; 
     }
   }
 
   // 4. Todo en orden, se permite el paso
-  // console.log('✅ Guard: Pase autorizado.'); // Comentado para no saturar la consola en producción
+  console.log('✅ Guard: Pase autorizado.'); 
   return true; 
 };
