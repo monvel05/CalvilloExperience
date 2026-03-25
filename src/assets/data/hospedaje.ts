@@ -1,5 +1,4 @@
 export const HOSPEDAJE = [
-  // --- HOTELES ---
   {
     nombre: "Hotel Doña Chela",
     direccion: "Av. B. Juárez 110, Zona Centro",

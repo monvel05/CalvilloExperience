@@ -1,10 +1,13 @@
 <ion-content class="fondo-claro">
   
-  <div class="loader-container" *ngIf="cargando">
+  @if (cargando) {
+  <div class="loader-container">
     <ion-spinner color="success"></ion-spinner>
   </div>
+  }
 
-  <div class="wf-container" *ngIf="!cargando && negocio">
+  @if (!cargando && negocio) {
+  <div class="wf-container">
     
     <div class="header-actions">
       <ion-button fill="clear" color="dark">
@@ -21,9 +24,11 @@
       <div class="gallery-column">
         <div class="main-image-container">
           <img [src]="negocio.imagen" alt="Experiencia principal" class="main-image">
-          <div class="rating-badge" *ngIf="negocio.calificacionMedia">
+          @if (negocio.calificacionMedia) {
+          <div class="rating-badge">
             <ion-icon name="star"></ion-icon> {{ negocio.calificacionMedia }}
           </div>
+          }
         </div>
         </div>
 
@@ -81,20 +86,23 @@
         </div>
 
         <div class="action-section">
-          <ion-button *ngIf="negocio.tieneInventario" 
-                      expand="block" 
+          @if (negocio.tieneInventario) {
+          <ion-button expand="block" 
                       class="reserve-btn" 
                       (click)="iniciarReserva()">
             RESERVAR AHORA
           </ion-button>
-
-          <div class="no-reservation-msg" *ngIf="!negocio.tieneInventario">
+          }
+          @if (!negocio.tieneInventario) {
+          <div class="no-reservation-msg">
             <ion-icon name="walk-outline"></ion-icon>
             <p>Este lugar es de acceso libre o no requiere reserva de inventario. ¡Puedes visitarlo directamente!</p>
           </div>
+          }
         </div>
 
       </div>
     </div>
   </div>
+}
 </ion-content>

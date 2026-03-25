@@ -1,23 +1,97 @@
-<div class="page">
-  <header class="topbar">
-    <h1>Calvillo Experience</h1>
-  </header>
-
-  <main class="feed">
-    <div class="card-publicar">
-      <h3>Comparte tu experiencia</h3>
-      <textarea id="descripcionPublicacion" placeholder="¿Qué descubriste en Calvillo?"></textarea>
+<ion-content [scrollY]="true">
+  <div class="dashboard-container">
+    
+    <div class="main-feed">
       
-      <div class="input-row">
-        <div class="file-wrapper">
-          <input type="file" id="imagenPublicacion" accept="image/*" />
+      <div class="header-muro">
+        <ion-button fill="clear" class="btn-back" (click)="regresarAdmin()">
+          <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <div>
+          <h1>Muro Social</h1>
+          <p>Descubre y comparte lo mejor de Calvillo Experience</p>
         </div>
-        <button class="btn-publicar" onclick="publicar()">Publicar</button>
+      </div>
+
+      <div class="card card-publicar">
+        <div class="perfil-publicar">
+          <h3>Comparte tu experiencia</h3>
+        </div>
+
+        <textarea #txtDescripcion class="input-text" placeholder="¿Qué descubriste hoy en Calvillo?"></textarea>
+
+        <div class="input-row" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 15px; margin-top: 5px; flex-wrap: wrap; gap: 10px;">
+          
+          <div class="file-selection-area" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <label for="imagenPublicacion" class="btn-upload" style="margin: 0;">
+              <ion-icon name="image-outline"></ion-icon>
+              Subir foto
+            </label>
+            
+            <input type="file" #imgPublicacion id="imagenPublicacion" accept="image/*" class="hidden-input" (change)="onFileSelected($event)" />
+            
+            @if (nombreArchivo) {
+              <span class="file-name-badge" style="font-size: 12px; color: #f472b6; font-weight: 600; background: #fff1f2; padding: 4px 10px; border-radius: 20px; border: 1px solid #fecdd3; display: flex; align-items: center; gap: 5px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                {{ nombreArchivo }}
+              </span>
+            }
+          </div>
+
+          <ion-button class="btn-publicar" (click)="publicar(txtDescripcion, imgPublicacion)" style="margin: 0;">
+            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+            Publicar
+          </ion-button>
+
+        </div>
+      </div>
+
+      <div id="contenedorPublicaciones" class="contenedor-publicaciones">
+        
+        @for (pub of publicaciones; track pub.idPublicacion) {
+          <div class="card publicacion" style="margin-top: 20px;">
+            
+            <div class="header-muro" style="margin-bottom: 0;">
+              <div class="avatar-sm" style="background:#cbd5e1; border-radius:50%; width:40px; height:40px; flex-shrink: 0;"></div>
+              <div class="info" style="display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-weight:bold; color:#334155; line-height: 1;">{{ pub.nombre || 'Explorador' }}</span>
+                <span style="font-size:12px; color:#94a3b8; margin-top: 4px;">
+                  {{ pub.fecha ? (pub.fecha | date:'medium') : 'Reciente' }}
+                </span>
+              </div>
+            </div>
+  
+            @if (pub.foto || pub.linkFoto) {
+              <div class="contenedor-foto" style="margin-top: 15px;">
+                <img [src]="pub.foto || pub.linkFoto" style="width:100%; border-radius:10px; max-height: 450px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+              </div>
+            }
+  
+            <div class="contenido-texto" style="margin-top: 15px; color:#475569; font-size: 15px; line-height: 1.5;">
+              <p style="margin: 0;"><strong>{{ pub.nombre || 'Usuario' }}</strong> {{ pub.descripcion }}</p>
+            </div>
+  
+            <div class="acciones" style="margin-top: 15px; border-top: 1px solid #fdf2f8; padding-top: 10px; display:flex; gap:10px;">
+              <ion-button fill="clear" size="small" style="--color:#f472b6; margin:0;" (click)="darLike(pub.idPublicacion)">
+                <ion-icon name="heart" slot="start"></ion-icon>
+                {{ pub.likes || 0 }}
+              </ion-button>
+              
+              <ion-button fill="clear" size="small" style="--color:#94a3b8; margin:0;" (click)="eliminarPublicacion(pub.idPublicacion)">
+                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+            
+          </div>
+          
+        } @empty {
+          <div class="loading-state" style="text-align: center; padding: 60px 20px; color: #94a3b8;">
+            <ion-icon name="images-outline" style="font-size: 56px; opacity: 0.3; margin-bottom: 15px;"></ion-icon>
+            <p>Aún no hay publicaciones. ¡Sé el primero en compartir algo!</p>
+          </div>
+        }
+
       </div>
     </div>
-
-    <div id="contenedorPublicaciones">
-      <p class="loading-text">Cargando muro social...</p>
-    </div>
-  </main>
-</div>
+  </div>
+</ion-content>

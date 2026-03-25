@@ -1,11 +1,15 @@
 export interface Lugar {
-  nombre: string;
-  direccion: string;
-  coords: {
+  title: string;           
+  id: string;              
+  resultType?: string;     
+  address?: {
+    label: string;         
+    city?: string;
+    district?: string;
+  };
+  position: {           
     lat: number;
     lng: number;
   };
-  telefono?: string;
-  precio?: string;
-  categoria?: string;
+  distance?: number;       
 }

@@ -1,82 +1,96 @@
-/* Variables de Estilo Calvillo Experience */
-$primary-color: #6366f1;
-$bg-color: #f0f2f5;
-$text-dark: #262626; // Negro suave tipo Instagram
-$text-muted: #8e8e8e;
-$border-light: #dbdbdb;
-
-.page {
-  background-color: $bg-color;
-  height: 100vh;
-  width: 100%;
-  display: block;
-  /* HABILITAR SCROLL */
-  overflow-y: scroll !important;
-  -webkit-overflow-scrolling: touch;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+.dashboard-container {
+  min-height: 100vh;
+  width: 100vw;
+  font-family: 'Segoe UI', sans-serif;
+  background: #fdfbfb; 
+  display: flex;
+  justify-content: center; /* Centramos el feed */
 }
 
-.topbar {
-  background: #ffffff;
-  padding: 16px;
-  text-align: center;
-  border-bottom: 1px solid $border-light;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  
+.main-feed {
+  width: 100%;
+  max-width: 650px; /* Ancho ideal para un muro tipo red social */
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ENCABEZADO */
+.header-muro {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+
+  .btn-back {
+    --color: #64748b;
+    margin: 0;
+  }
+
   h1 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 24px;
+    color: #334155;
     font-weight: 700;
-    color: $text-dark;
-    letter-spacing: -0.5px;
+  }
+
+  p {
+    margin: 5px 0 0;
+    color: #94a3b8;
+    font-size: 14px;
   }
 }
 
-.feed {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 16px 16px 100px 16px; // Espacio extra abajo para que el scroll no corte el último post
+/* TARJETAS (Heredado del dashboard) */
+.card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2);
+  border: 1px solid #fdf2f8;
+  padding: 20px;
 }
 
-/* Tarjeta de Creación de Post */
+/* ZONA DE PUBLICACIÓN */
 .card-publicar {
-  background: #ffffff;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid $border-light;
-  margin-bottom: 24px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 
-  h3 {
-    margin: 0 0 12px 0;
-    font-size: 0.9rem;
-    color: $text-muted;
-    font-weight: 600;
-  }
+  .perfil-publicar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-  textarea {
-    width: 100%;
-    height: 80px;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 12px;
-    background: #fafafa;
-    /* FIX: FORZAR TEXTO NEGRO AL ESCRIBIR */
-    color: #000000 !important;
-    font-size: 15px;
-    line-height: 1.4;
-    resize: none;
-    
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      background: #ffffff;
+    .avatar-sm {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #fce7f3;
+      object-fit: cover;
     }
 
+    h3 {
+      margin: 0;
+      color: #475569;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .input-text {
+    width: 100%;
+    min-height: 80px;
+    border: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 15px;
+    color: #334155;
+    background: transparent;
+    outline: none;
+
     &::placeholder {
-      color: #999999;
+      color: #cbd5e1;
     }
   }
 
@@ -84,138 +98,55 @@ $border-light: #dbdbdb;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 12px;
-
-    input[type="file"] {
-      font-size: 0.75rem;
-      color: $text-muted;
-      max-width: 60%;
-    }
-
-    .btn-publicar {
-      background: $primary-color;
-      color: #ffffff !important;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
-
-      &:active { opacity: 0.7; }
-      &:disabled { opacity: 0.5; cursor: not-allowed; }
-    }
+    border-top: 1px solid #f1f5f9;
+    padding-top: 15px;
   }
 }
 
-/* Estilos para Publicaciones Inyectadas vía JS (::ng-deep es necesario) */
-::ng-deep .publicacion {
-  background: #ffffff;
-  border: 1px solid $border-light;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  overflow: hidden;
+/* BOTONES DE LA PUBLICACIÓN */
+.hidden-input {
+  display: none;
+}
+
+.btn-upload {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #f472b6;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
 
-  .header {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-
-    .avatar {
-      width: 34px;
-      height: 34px;
-      background: #efefef;
-      border-radius: 50%;
-      margin-right: 10px;
-      border: 1px solid #eee;
-    }
-
-    .info {
-      display: flex;
-      flex-direction: column;
-      .nombre {
-        font-weight: 700;
-        font-size: 14px;
-        color: $text-dark !important;
-      }
-      .fecha {
-        font-size: 11px;
-        color: $text-muted;
-      }
-    }
+  &:hover {
+    background: #fdf2f8;
   }
 
-  .contenedor-foto {
-    width: 100%;
-    background: #f8f8f8;
-    img {
-      width: 100%;
-      display: block;
-      height: auto;
-      max-height: 500px;
-      object-fit: cover;
-    }
-  }
-
-  .contenido-texto {
-    padding: 12px 16px;
-    .descripcion {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.5;
-      color: $text-dark !important;
-      
-      strong {
-        font-weight: 700;
-        margin-right: 6px;
-      }
-    }
-  }
-
-  .acciones {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 16px 14px 16px;
-    border-top: 1px solid #fafafa;
-
-    button {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
-
-    .like-btn {
-      gap: 6px;
-      /* FIX: FORZAR COLOR NEGRO EN EL NÚMERO DE LIKES */
-      color: $text-dark !important;
-      font-weight: 700;
-      
-      span.count {
-        font-size: 14px;
-        color: $text-dark !important;
-      }
-      
-      span.icon {
-        font-size: 1.2rem;
-      }
-    }
-
-    .delete-btn {
-      opacity: 0.3;
-      font-size: 14px;
-      &:hover { opacity: 1; color: #ff4d4d; }
-    }
+  ion-icon {
+    font-size: 20px;
   }
 }
 
-.loading-text {
+.btn-publicar {
+  --background: #f472b6;
+  --color: white;
+  --border-radius: 8px;
+  --box-shadow: none;
+  font-weight: 600;
+  margin: 0;
+  height: 40px;
+}
+
+/* ESTADO DE CARGA */
+.loading-state {
   text-align: center;
-  color: $text-muted;
-  margin-top: 30px;
-  font-size: 0.9rem;
+  padding: 40px 20px;
+  color: #94a3b8;
+
+  ion-spinner {
+    margin-bottom: 10px;
+    transform: scale(1.5);
+  }
 }

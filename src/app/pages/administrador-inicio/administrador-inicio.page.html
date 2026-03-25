@@ -1,13 +1,166 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Administrador_Inicio</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [scrollY]="false">
+  <div class="dashboard-container">
+    
+    <div class="sidebar">
+      <div class="logo">Calvillo Experience</div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Administrador_Inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <div class="perfil">
+        <h3>Admin</h3>
+        <span>Administrador</span>
+      </div>
+
+      <ul>
+        <li [class.active]="vistaActual === 'dashboard'" (click)="cambiarVista('dashboard')">
+          <ion-icon name="grid-outline"></ion-icon> Dashboard
+        </li>
+        <li [class.active]="vistaActual === 'usuarios'" (click)="cambiarVista('usuarios')">
+          <ion-icon name="people-outline"></ion-icon> Usuarios
+        </li>
+        <li [class.active]="vistaActual === 'negocios'" (click)="cambiarVista('negocios')">
+          <ion-icon name="storefront-outline"></ion-icon> Negocios
+        </li>
+        <li (click)="cambiarVista('muro-social')">
+          <ion-icon name="images-outline"></ion-icon> Muro Social
+        </li>
+        <li [class.active]="vistaActual === 'reportes'" (click)="cambiarVista('reportes')">
+          <ion-icon name="bar-chart-outline"></ion-icon> Reportes
+        </li>
+        <li [class.active]="vistaActual === 'configuracion'" (click)="cambiarVista('configuracion')">
+          <ion-icon name="settings-outline"></ion-icon> Configuración
+        </li>
+      </ul>
+    </div>
+
+    <div class="main">
+      <div class="header">
+        <div>
+          <h1 [class.vista-oculta]="vistaActual !== 'dashboard'">Dashboard</h1>
+          <h1 [class.vista-oculta]="vistaActual !== 'usuarios'">Detalle de Usuarios</h1>
+          <h1 [class.vista-oculta]="vistaActual !== 'negocios'">Directorio de Negocios</h1>
+          <h1 [class.vista-oculta]="vistaActual !== 'reportes'">Generación de Reportes</h1>
+          <h1 [class.vista-oculta]="vistaActual !== 'configuracion'">Configuración</h1>
+          <p>Resumen general del sistema</p>
+        </div>
+      </div>
+
+      <div id="contenido-reporte" [class.vista-oculta]="vistaActual !== 'dashboard'" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+        <ion-segment [(ngModel)]="filtro" (ionChange)="cambiarFiltro()" class="custom-segment">
+          <ion-segment-button value="hoy">Hoy</ion-segment-button>
+          <ion-segment-button value="7dias">7 días</ion-segment-button>
+          <ion-segment-button value="mes">Mes</ion-segment-button>
+          <ion-segment-button value="anio">Año</ion-segment-button>
+        </ion-segment>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-header">
+              <p>Usuarios</p>
+              <ion-icon name="people" class="icon-usuarios"></ion-icon>
+            </div>
+            <h2>{{ stats?.usuarios }}</h2>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <p>Turistas</p>
+              <ion-icon name="airplane" class="icon-turistas"></ion-icon>
+            </div>
+            <h2>{{ stats?.turistas }}</h2>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <p>Negocios</p>
+              <ion-icon name="storefront" class="icon-negocios"></ion-icon>
+            </div>
+            <h2>{{ stats?.negocios }}</h2>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <p>Ganancias</p>
+              <ion-icon name="cash" class="icon-ganancias"></ion-icon>
+            </div>
+            <h2>${{ stats?.ganancias }}</h2>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card large">
+            <h3>Ganancias mensuales</h3>
+            <div class="chart-container">
+              <canvas id="graficaLinea"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h3>Membresías</h3>
+            <div class="chart-container">
+              <canvas id="graficaDona"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h3>Top lugares</h3>
+            <div class="chart-container">
+              <canvas id="graficaTop"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'usuarios'" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+        <div class="charts-grid" style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;">
+          <div class="chart-card">
+            <h3 style="text-align: center; margin-bottom: 20px;">Distribución por Género</h3>
+            <div class="chart-container" style="height: 300px;">
+              <canvas id="graficaGeneros"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'negocios'" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+        <div class="negocios-grid">
+          
+          @for (negocio of listaNegocios; track negocio.idNegocio) {
+            <div class="negocio-card">
+              <div class="negocio-info">
+                <ion-icon [name]="getIconoCategoria(negocio.categoria)" class="icon-negocios"></ion-icon>
+                <div>
+                  <h4>{{ negocio.nombre }}</h4>
+                  <p style="text-transform: capitalize;">{{ negocio.categoria }}</p>
+                </div>
+              </div>
+              <span class="badge {{ getClaseMembresia(negocio.membresia) }}">
+                {{ negocio.membresia === 'Sin Membresia' ? 'Sin Membresía' : 'Membresía ' + negocio.membresia }}
+              </span>
+            </div>
+          } @empty {
+            <div style="text-align: center; color: #94a3b8; padding: 20px; width: 100%; grid-column: 1 / -1;">
+              <ion-icon name="storefront-outline" style="font-size: 48px; opacity: 0.5;"></ion-icon>
+              <p>No hay negocios registrados aún.</p>
+            </div>
+          }
+          </div>
+      </div>
+
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'reportes'" style="flex: 1;">
+        <div class="export-buttons" style="justify-content: flex-start; margin-top: 10px;">
+          <ion-button class="btn-export pdf" (click)="exportarPDF()">
+            <ion-icon name="document-text-outline" slot="start"></ion-icon>
+            Exportar PDF
+          </ion-button>
+          <ion-button class="btn-export excel" (click)="exportarExcel()">
+            <ion-icon name="grid-outline" slot="start"></ion-icon>
+            Exportar Excel
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'configuracion'" style="flex: 1; overflow-y: auto;">
+      </div>
+
+    </div>
+  </div>
 </ion-content>

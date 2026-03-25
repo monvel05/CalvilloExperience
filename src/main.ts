@@ -3,7 +3,7 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
 import { authInterceptor } from './app/core/interceptors/auth-interceptor';
-
+import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 // Importaciones de servicios, rutas y componentes
 import { AuthService } from './app/core/services/auth';
@@ -12,11 +12,9 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { Observable } from 'rxjs';
 
-// Imports de lenguajes y su interceptor
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { languageInterceptor } from './app/core/interceptors/language.interceptor';
 
-// 1. Creamos nuestra propia clase Loader
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(
     private http: HttpClient, 
@@ -29,7 +27,6 @@ export class CustomTranslateLoader implements TranslateLoader {
   }
 }
 
-// 2. Actualizamos el Factory para usar nuestra nueva clase
 export function HttpLoaderFactory(http: HttpClient) {
   return new CustomTranslateLoader(http);
 }
@@ -40,14 +37,14 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideCharts(withDefaultRegisterables()), // AGREGADO: Proveedor para ng2-charts
     
-    // Tus servicios
-    AuthService,
-    
-    // UNIFICADO: Solo llamamos a provideHttpClient una vez, pasándole tu interceptor
-    provideHttpClient(withInterceptors([languageInterceptor])),
+    provideHttpClient(
+      withInterceptors([authInterceptor, languageInterceptor])
+    ),
 
-    // AGREGADO: La inyección global del módulo de traducciones
+    AuthService,
+
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
