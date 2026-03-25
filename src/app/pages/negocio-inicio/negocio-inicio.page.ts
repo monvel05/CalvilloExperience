@@ -3,6 +3,16 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../../core/services/database.service';
+import { addIcons } from 'ionicons';
+import { 
+  createOutline, 
+  chevronForwardOutline, 
+  imagesOutline, 
+  starOutline, 
+  pricetagOutline, 
+  addCircleOutline, 
+  logOutOutline 
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-negocio-inicio',
@@ -26,7 +36,17 @@ export class NegocioInicioPage implements OnInit {
   constructor(
     private db: DatabaseService,
     private router: Router
-  ) {}
+  ) {
+    addIcons({ 
+      createOutline, 
+      chevronForwardOutline, 
+      imagesOutline, 
+      starOutline, 
+      pricetagOutline, 
+      addCircleOutline, 
+      logOutOutline 
+    });
+  }
 
   ngOnInit() {
     this.cargarDatos();

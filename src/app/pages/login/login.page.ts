@@ -63,16 +63,16 @@ export class LoginPage implements OnInit {
         // 3. Redirección basada en el rol del usuario
         switch (res.user.idTipoUsuario) {
           case 1:
-            this.router.navigate(['/administrador-inicio']);
+            this.router.navigate(['administrador-inicio'], {replaceUrl: true});
             break;
           case 2:
-            this.router.navigate(['/turista-inicio']);
+            this.router.navigate(['turista-inicio'], {replaceUrl: true});
             break;
           case 3:
-            this.router.navigate(['/negocio-inicio']);
+            this.router.navigate(['negocio-inicio'], {replaceUrl: true});
             break;
           default:
-            this.router.navigate(['/home']);
+            this.router.navigate(['home'], {replaceUrl: true});
             break;
         }
       },
