@@ -46,15 +46,16 @@ export const routes: Routes = [
   {
     path: 'info-negocio',
     loadComponent: () => import('./pages/info-negocio/info-negocio.page').then( m => m.InfoNegocioPage)
-  },{
-    path: "**",
-    redirectTo: "home",
-    pathMatch: "full"
   },
   {
     path: 'reservar',
     loadComponent: () => import('./pages/reservar/reservar.page').then( m => m.ReservarPage)
   },
+  {
+    path: "**",
+    redirectTo: "home",
+    pathMatch: "full"
+  }
 
 
 ];

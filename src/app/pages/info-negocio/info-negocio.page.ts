@@ -11,6 +11,7 @@ import {
 } from 'ionicons/icons';
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 import { TrackingService } from 'src/app/core/services/tracking-service';
+import { Router } from 'express';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class InfoNegocioPage implements OnInit {
   cargando: boolean = true;
   seccionesAbiertas: boolean[] = [false, false];
   private trackingService = inject(TrackingService);
+  private router = inject(Router);
 
   constructor() {
     addIcons({
@@ -34,8 +36,11 @@ export class InfoNegocioPage implements OnInit {
   }
 
   ngOnInit() {
-    this.cargarDatosSimulados();
+    if (this.negocio==null) {
+      this.cargarDatosSimulados();
+    }
   }
+
 
   cargarDatosSimulados() {
     setTimeout(() => {
@@ -68,9 +73,9 @@ export class InfoNegocioPage implements OnInit {
     this.seccionesAbiertas[index] = !this.seccionesAbiertas[index];
   }
 
-  iniciarReserva(idNegocio: number) {
-    this.trackingService.registrarEvento('INICIAR_RESERVA', { id_negocio: idNegocio });
+  iniciarReserva() {
+    this.trackingService.registrarEvento('INICIAR_RESERVA', this.negocio?.idNegocio || 0);
     console.log('Navegando al flujo de reserva para:', this.negocio?.nombre);
-    // Redireccionar a la página de reserva (a implementar)
+    this.router.navigate(['/reserva']);
   }
 }
