@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+<<<<<<< HEAD
 import { AuthService } from '../../core/services/auth'; 
 import { CommonModule } from '@angular/common'; 
+=======
+import { AuthService } from 'src/app/core/services/auth';
+import { CommonModule } from '@angular/common'; // Importante para *ngIf
+>>>>>>> origin/monBranch
 import { addIcons } from 'ionicons';
 import { mailOutline, lockClosedOutline, alertCircleOutline } from 'ionicons/icons';
 import { IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonIcon, IonText } from "@ionic/angular/standalone";
