@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -10,7 +9,8 @@ import {
   IonButtons,      
   IonBackButton,    
   IonButton, 
-  IonIcon 
+  IonIcon,
+  NavController // Solo usaremos este para salir del menú de turistas
 } from '@ionic/angular/standalone';
 
 import { CloudinaryService } from '../../core/services/cloudinary-service';
@@ -23,7 +23,7 @@ import {
   paperPlaneOutline, 
   heart, 
   trashOutline,
-  imagesOutline
+  imagesOutline, checkmarkCircle 
 } from 'ionicons/icons';
 
 @Component({
@@ -52,17 +52,10 @@ export class MuroSocial implements OnInit {
 
   constructor(
     private cloudinary: CloudinaryService,
-    private router: Router,
+    private navCtrl: NavController,
     private muroService: MuroSocialService
   ) {
-    addIcons({
-      'arrow-back-outline': arrowBackOutline,
-      'image-outline': imageOutline,
-      'paper-plane-outline': paperPlaneOutline,
-      'heart': heart,
-      'trash-outline': trashOutline,
-      'images-outline': imagesOutline
-    });
+    addIcons({imageOutline,checkmarkCircle,paperPlaneOutline,heart,trashOutline,imagesOutline,'arrowBackOutline':arrowBackOutline});
   }
 
   ngOnInit() {}
@@ -71,7 +64,18 @@ export class MuroSocial implements OnInit {
     this.cargarPublicaciones();
   }
 
-  // 📥 Cargar publicaciones
+  // ==========================================
+  // 🧭 ÚNICA NAVEGACIÓN (Hacia afuera)
+  // ==========================================
+  
+  regresarAdmin() {
+    this.navCtrl.navigateRoot('/administrador-inicio');
+  }
+
+  // ==========================================
+  // 📱 FUNCIONES DEL MURO SOCIAL
+  // ==========================================
+
   async cargarPublicaciones() {
     try {
       this.publicaciones = await this.muroService.getPublicaciones();
@@ -80,13 +84,11 @@ export class MuroSocial implements OnInit {
     }
   }
 
-  // 📷 Detectar archivo
   onFileSelected(event: any) {
     const file = event.target.files[0];
     this.nombreArchivo = file ? file.name : '';
   }
 
-  // ❤️ Dar like
   async darLike(id: number) {
     try {
       await this.muroService.darLike(id, this.idUsuario);
@@ -96,7 +98,6 @@ export class MuroSocial implements OnInit {
     }
   }
 
-  // 🗑 Eliminar publicación
   async eliminarPublicacion(id: number) {
     if (!confirm("¿Estás seguro de que deseas eliminar esta publicación?")) return;
 
@@ -108,7 +109,6 @@ export class MuroSocial implements OnInit {
     }
   }
 
-  // 📤 Publicar
   async publicar(txtInput: HTMLTextAreaElement, imgInput: HTMLInputElement) {
     const descripcion = txtInput.value;
 
@@ -120,13 +120,11 @@ export class MuroSocial implements OnInit {
     try {
       let linkFoto = null;
 
-      // Subir imagen si existe
       if (imgInput.files && imgInput.files[0]) {
         const res: any = await this.cloudinary.uploadImage(imgInput.files[0]);
         linkFoto = res.secure_url;
       }
 
-      // Guardar publicación
       await this.muroService.crearPublicacion({
         descripcion,
         idUsuario: this.idUsuario,
@@ -134,21 +132,15 @@ export class MuroSocial implements OnInit {
         linkFoto
       });
 
-      // Limpiar inputs
       txtInput.value = "";
       imgInput.value = "";
       this.nombreArchivo = "";
 
-      // Recargar
       this.cargarPublicaciones();
 
     } catch (error) {
       console.error(error);
       alert("Hubo un error al publicar.");
     }
-  }
-
-  regresarAdmin() {
-    this.router.navigate(['/administrador-inicio']);
   }
 }

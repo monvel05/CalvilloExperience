@@ -76,5 +76,8 @@ export class LoginPage implements OnInit {
         alert(mensaje);
       }
     });
+
   }
+
+  
 }

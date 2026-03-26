@@ -1,66 +1,63 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
 google-map {
   display: block;
   height: 100%;
   width: 100%;
 }
 
-/* Estilos para igualar tu boceto a mano */
-.tarjeta-boceto {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  margin-top: 10px;
-
-  .imagen-caja {
-    width: 100px;
-    height: 100px;
-    background-color: #f4f5f8;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    ion-icon {
-      font-size: 40px;
-      color: #aaa;
-    }
-  }
-
-  .info-caja {
-    flex: 1;
-
-    .titulo-lugar {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 0 4px 0;
-      color: #000;
-    }
-
-    .texto-lorem {
-      font-size: 14px;
-      color: #666;
-      margin: 0 0 12px 0;
-    }
-
-    .boton-derecha {
-      display: flex;
-      justify-content: flex-end;
-
-      ion-button {
-        --border-color: #000;
-        --border-width: 1.5px;
-        --border-radius: 6px;
-        --color: #000;
-        text-transform: none;
-        font-weight: bold;
-        margin: 0;
-      }
-    }
-  }
+ion-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
 }
 
-.tab-selected {
-  color: var(--ion-color-primary); /* Toma el color principal de tu app */
-  font-weight: bold;
+/* =========================================
+   DISEÑO ELEGANTE DEL MODAL
+========================================= */
+/* 📦 Contenedor */
+.contenido {
+  padding: 15px 10px 10px 10px;
+}
+
+/* 🏷️ Título */
+.titulo {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+/* 📍 Info */
+.info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 14px;
+}
+
+.info ion-icon {
+  font-size: 18px;
+  color: var(--ion-color-primary);
+}
+
+/* 🔘 Botones */
+.acciones {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+ion-button {
+  height: 45px;
+  font-weight: 600;
+  border-radius: 12px;
 }

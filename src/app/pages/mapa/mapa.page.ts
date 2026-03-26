@@ -1,13 +1,18 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButton, IonCard, IonCardContent, IonIcon, IonSegment, IonLabel, IonSegmentButton, IonFooter, IonTabBar, IonTabButton } from '@ionic/angular/standalone';
-import { PuntoInteres } from 'src/app/shared/interfaces/punto-interes';
+import {
+  IonContent, IonHeader, IonToolbar, IonModal, IonButton, IonIcon,
+  IonSegment, IonLabel, IonSegmentButton, IonFooter, IonTabBar, IonTabButton
+} from '@ionic/angular/standalone';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { environment } from '../../../env/env';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { homeOutline, location, heartOutline, personOutline, imageOutline, imagesOutline, calendarOutline } from 'ionicons/icons';
+import {
+  homeOutline, location, personOutline, imageOutline,
+  imagesOutline, calendarOutline, call, locationOutline, callOutline
+} from 'ionicons/icons';
 import { MapaService } from 'src/app/core/services/mapa.service';
 
 @Component({
@@ -16,33 +21,37 @@ import { MapaService } from 'src/app/core/services/mapa.service';
   styleUrls: ['./mapa.page.scss'],
   standalone: true,
   imports: [
-    IonSegment, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, 
-    IonButton, IonCard, IonCardContent, CommonModule, FormsModule, GoogleMapsModule,
-    IonSegmentButton, IonLabel, IonFooter, IonTabBar, IonTabButton
+    IonSegment, IonIcon, IonContent, IonHeader, IonToolbar,
+    IonModal, IonButton, CommonModule, FormsModule,
+    GoogleMapsModule, IonSegmentButton, IonLabel,
+    IonFooter, IonTabBar, IonTabButton
   ]
 })
 export class MapaPage implements OnInit {
 
-  constructor(private router: Router, private mapaService: MapaService ) { 
-    addIcons({imageOutline,homeOutline,location,calendarOutline,imagesOutline,personOutline,heartOutline});
+  constructor(
+    private router: Router,
+    private mapaService: MapaService,
+    private ngZone: NgZone
+  ) {
+    addIcons({
+      locationOutline, callOutline, homeOutline, location,
+      calendarOutline, imagesOutline, personOutline, call, imageOutline
+    });
   }
 
-  // Centro de Calvillo (Ajuste a coordenadas reales)
   center: any = { lat: 21.8469, lng: -102.7184 };
   zoom = 14;
   modalAbierto = false;
 
-  // Signal para almacenar todos los lugares de la BD
   lugares = signal<any[]>([]);
   lugarSeleccionado = signal<any | null>(null);
-
-  // Filtro activo: Iniciamos con '1' que corresponde a "Atractivos"
   categoriaSeleccionada = signal<string>('1');
 
-  // Filtra automáticamente dependiendo de la pestaña seleccionada
   lugaresFiltrados = computed(() => {
-    const subtipoId = this.categoriaSeleccionada();
-    return this.lugares().filter(lugar => lugar.idSubtipo === subtipoId);
+    return this.lugares().filter(
+      lugar => lugar.idSubtipo === this.categoriaSeleccionada()
+    );
   });
 
   ngOnInit() {
@@ -55,6 +64,7 @@ export class MapaPage implements OnInit {
 
   cargarGoogleMaps() {
     if (typeof google !== 'undefined') return;
+
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apis.mapsApiKey}`;
     script.async = true;
@@ -62,46 +72,94 @@ export class MapaPage implements OnInit {
     document.head.appendChild(script);
   }
 
-  // --- CONEXIÓN A LA BASE DE DATOS ---
   async cargarLugaresDesdeBD() {
     try {
-      const data = await this.mapaService.obtenerNegociosMapa(); // Llamada a tu servicio
+      const data = await this.mapaService.obtenerNegociosMapa();
 
       const lugaresMapeados = data.map((negocio: any) => {
+        const lat = parseFloat(negocio.latitud);
+        const lng = parseFloat(negocio.longitud);
+
+        if (isNaN(lat) || isNaN(lng)) return null;
+
+        const subtipoId = String(negocio.idSubtipo_Negocio);
+
+        let iconUrl = '';
+        switch (subtipoId) {
+          case '1':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+            break;
+          case '2':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+            break;
+          case '3':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+            break;
+          case '4':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+            break;
+          default:
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+        }
+
         return {
           id: negocio.idNegocio,
           nombre: negocio.nombre,
-          idSubtipo: String(negocio.idSubtipo_Negocio), // Convertimos el ID numérico a texto para el filtro
-          coordenadas: { 
-            lat: parseFloat(negocio.latitud), 
-            lng: parseFloat(negocio.longitud) 
+          idSubtipo: subtipoId,
+          coordenadas: { lat, lng },
+          markerOptions: {
+            icon: iconUrl,
+            title: negocio.nombre
           },
           direccion: `${negocio.calle} ${negocio.numero}, ${negocio.colonia}`,
           telefono: negocio.telefono || 'Sin teléfono'
         };
-      });
+      }).filter((l: any) => l !== null);
 
       this.lugares.set(lugaresMapeados);
+
     } catch (error) {
-      console.error("Error al cargar los lugares de la BD:", error);
+      console.error('Error al cargar lugares:', error);
     }
   }
 
   cambiarCategoria(event: any) {
-    this.categoriaSeleccionada.set(event.detail.value); // Cambia entre '1', '2', '3' y '4'
-    this.cerrarModal(); // Cierra la tarjeta flotante al cambiar de pestaña
+    this.categoriaSeleccionada.set(event.detail.value);
+    this.cerrarModal();
   }
 
   onMarcadorClick(lugar: any) {
-    this.lugarSeleccionado.set(lugar);
-    this.modalAbierto = true;
+    this.ngZone.run(() => {
+      this.lugarSeleccionado.set(lugar);
+      this.modalAbierto = true;
+    });
   }
 
   cerrarModal() {
     this.modalAbierto = false;
+    this.lugarSeleccionado.set(null);
   }
 
-  irAMuroSocial() {
-    this.router.navigate(['/muro-social']); 
+  navegar(ruta: string) {
+    this.ngZone.run(() => {
+      this.router.navigate([`/${ruta}`], { replaceUrl: true });
+    });
+  }
+
+  irAReservas() {
+    this.ngZone.run(() => {
+      this.router.navigate(['/reservar'], { replaceUrl: true });
+    });
+  }
+
+  irComoLlegar(lugar: any) {
+    if (!lugar) return;
+
+    const destinoLat = lugar.coordenadas.lat;
+    const destinoLng = lugar.coordenadas.lng;
+
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${destinoLat},${destinoLng}&travelmode=driving`;
+
+    window.open(url, '_blank');
   }
 }
