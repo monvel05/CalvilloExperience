@@ -252,3 +252,36 @@ app.get('/api/dashboard/lista-negocios', (req, res) => {
         res.json(results);
     });
 });
+
+// ==========================================
+// MAPA
+// ====
+app.post('/logs', (req, res) => {
+  res.status(200).send({ status: 'ok' });
+});
+
+// Obtener negocios con coordenadas exactas para los pines del mapa
+app.get('/api/negocios-mapa', (req, res) => {
+    const query = `
+        SELECT 
+            n.idNegocio, 
+            n.nombre, 
+            n.telefono, 
+            n.idSubtipo_Negocio, 
+            u.latitud, 
+            u.longitud, 
+            u.calle, 
+            u.numero, 
+            u.colonia
+        FROM negocios n
+        JOIN ubicacion u ON n.idUbicacion = u.idUbicacion
+    `;
+    
+    connDB.query(query, (err, results) => {
+        if (err) {
+            console.error("Error al obtener datos para el mapa:", err);
+            return res.status(500).json({ message: "Error al obtener datos", error: err });
+        }
+        res.json(results);
+    });
+});

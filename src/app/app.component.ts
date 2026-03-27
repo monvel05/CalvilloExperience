@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core'; // <-- 1. Agregamos OnInit
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { TranslateService } from '@ngx-translate/core';
 
 // <-- 2. Importamos tu archivo de environments (verifica que la ruta sea correcta para tu proyecto)
@@ -11,7 +11,7 @@ import { filter } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet],
+  imports: [IonLabel, IonIcon, IonTabButton, IonTabBar, IonTabs, IonApp, IonRouterOutlet],
 })
 export class AppComponent implements OnInit { // <-- 3. Implementamos la interfaz OnInit
   // Inyectamos servicios

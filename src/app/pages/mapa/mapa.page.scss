@@ -1,0 +1,63 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+google-map {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+ion-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+/* =========================================
+   DISEÑO ELEGANTE DEL MODAL
+========================================= */
+/* 📦 Contenedor */
+.contenido {
+  padding: 15px 10px 10px 10px;
+}
+
+/* 🏷️ Título */
+.titulo {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+/* 📍 Info */
+.info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 14px;
+}
+
+.info ion-icon {
+  font-size: 18px;
+  color: var(--ion-color-primary);
+}
+
+/* 🔘 Botones */
+.acciones {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+ion-button {
+  height: 45px;
+  font-weight: 600;
+  border-radius: 12px;
+}

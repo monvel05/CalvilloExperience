@@ -1,9 +1,19 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButton, IonCard, IonCardContent } from '@ionic/angular/standalone';
-import { PuntoInteres } from 'src/app/shared/interfaces/punto-interes';
+import {
+  IonContent, IonHeader, IonToolbar, IonModal, IonButton, IonIcon,
+  IonSegment, IonLabel, IonSegmentButton, IonFooter, IonTabBar, IonTabButton
+} from '@ionic/angular/standalone';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { environment } from '../../../env/env';
+import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import {
+  homeOutline, location, personOutline, imageOutline,
+  imagesOutline, calendarOutline, call, locationOutline, callOutline
+} from 'ionicons/icons';
+import { MapaService } from 'src/app/core/services/mapa.service';
 
 @Component({
   selector: 'app-mapa',
@@ -11,72 +21,145 @@ import { GoogleMapsModule } from '@angular/google-maps';
   styleUrls: ['./mapa.page.scss'],
   standalone: true,
   imports: [
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonModal,
-    IonButton,
-    IonCard,
-    IonCardContent,
-    CommonModule,
-    FormsModule,
-    GoogleMapsModule
+    IonSegment, IonIcon, IonContent, IonHeader, IonToolbar,
+    IonModal, IonButton, CommonModule, FormsModule,
+    GoogleMapsModule, IonSegmentButton, IonLabel,
+    IonFooter, IonTabBar, IonTabButton
   ]
 })
 export class MapaPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private mapaService: MapaService,
+    private ngZone: NgZone
+  ) {
+    addIcons({
+      locationOutline, callOutline, homeOutline, location,
+      calendarOutline, imagesOutline, personOutline, call, imageOutline
+    });
+  }
 
-  center: google.maps.LatLngLiteral = { lat: 21.8469, lng: -102.7184 };
+  center: any = { lat: 21.8469, lng: -102.7184 };
   zoom = 14;
-
-  // Control del modal
   modalAbierto = false;
 
-  // Signal para almacenar la lista de lugares
-  lugares = signal<PuntoInteres[]>([]);
+  lugares = signal<any[]>([]);
+  lugarSeleccionado = signal<any | null>(null);
+  categoriaSeleccionada = signal<string>('1');
 
-  // Lugar seleccionado
-  lugarSeleccionado = signal<PuntoInteres | null>(null);
+  lugaresFiltrados = computed(() => {
+    return this.lugares().filter(
+      lugar => lugar.idSubtipo === this.categoriaSeleccionada()
+    );
+  });
 
   ngOnInit() {
-    this.cargarDatosSimulados();
+    this.cargarGoogleMaps();
   }
 
-  cargarDatosSimulados() {
-    this.lugares.set([
-      { 
-        id: 1,
-        nombre: 'Museo Nacional de los Pueblos Mágicos',
-        categoria: 'museo',
-        coordenadas: { lat: 21.8465, lng: -102.7190 },
-        iconoUrl: 'assets/icons/museo.svg'
-      },
-      { 
-        id: 2,
-        nombre: 'Presa de Malpaso',
-        categoria: 'presa',
-        coordenadas: { lat: 21.8600, lng: -102.6500 },
-        iconoUrl: 'assets/icons/presa.svg'
-      }
-    ]);
+  ionViewWillEnter() {
+    this.cargarLugaresDesdeBD();
   }
 
-  // Cuando el usuario toca un marcador
-  onMarcadorClick(lugar: PuntoInteres) {
+  cargarGoogleMaps() {
+    if (typeof google !== 'undefined') return;
 
-    this.lugarSeleccionado.set(lugar);
-
-    // Abrir el modal
-    this.modalAbierto = true;
-
-    console.log('El usuario seleccionó:', lugar.nombre);
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apis.mapsApiKey}`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
   }
 
-  // Cerrar modal
+  async cargarLugaresDesdeBD() {
+    try {
+      const data = await this.mapaService.obtenerNegociosMapa();
+
+      const lugaresMapeados = data.map((negocio: any) => {
+        const lat = parseFloat(negocio.latitud);
+        const lng = parseFloat(negocio.longitud);
+
+        if (isNaN(lat) || isNaN(lng)) return null;
+
+        const subtipoId = String(negocio.idSubtipo_Negocio);
+
+        let iconUrl = '';
+        switch (subtipoId) {
+          case '1':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+            break;
+          case '2':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+            break;
+          case '3':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+            break;
+          case '4':
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+            break;
+          default:
+            iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+        }
+
+        return {
+          id: negocio.idNegocio,
+          nombre: negocio.nombre,
+          idSubtipo: subtipoId,
+          coordenadas: { lat, lng },
+          markerOptions: {
+            icon: iconUrl,
+            title: negocio.nombre
+          },
+          direccion: `${negocio.calle} ${negocio.numero}, ${negocio.colonia}`,
+          telefono: negocio.telefono || 'Sin teléfono'
+        };
+      }).filter((l: any) => l !== null);
+
+      this.lugares.set(lugaresMapeados);
+
+    } catch (error) {
+      console.error('Error al cargar lugares:', error);
+    }
+  }
+
+  cambiarCategoria(event: any) {
+    this.categoriaSeleccionada.set(event.detail.value);
+    this.cerrarModal();
+  }
+
+  onMarcadorClick(lugar: any) {
+    this.ngZone.run(() => {
+      this.lugarSeleccionado.set(lugar);
+      this.modalAbierto = true;
+    });
+  }
+
   cerrarModal() {
     this.modalAbierto = false;
+    this.lugarSeleccionado.set(null);
   }
 
+  navegar(ruta: string) {
+    this.ngZone.run(() => {
+      this.router.navigate([`/${ruta}`], { replaceUrl: true });
+    });
+  }
+
+  irAReservas() {
+    this.ngZone.run(() => {
+      this.router.navigate(['/reservar'], { replaceUrl: true });
+    });
+  }
+
+  irComoLlegar(lugar: any) {
+    if (!lugar) return;
+
+    const destinoLat = lugar.coordenadas.lat;
+    const destinoLng = lugar.coordenadas.lng;
+
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${destinoLat},${destinoLng}&travelmode=driving`;
+
+    window.open(url, '_blank');
+  }
 }

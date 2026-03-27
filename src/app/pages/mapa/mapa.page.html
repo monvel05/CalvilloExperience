@@ -1,53 +1,120 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Mapa de Calvillo</ion-title>
+    <ion-segment
+      [value]="categoriaSeleccionada()"
+      (ionChange)="cambiarCategoria($event)"
+      scrollable="true"
+    >
+      <ion-segment-button value="1">
+        <ion-label>Atractivos</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="2">
+        <ion-label>Restaurantes</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="3">
+        <ion-label>Hospedaje</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="4">
+        <ion-label>Transporte</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [scrollY]="false">
+  <google-map height="100%" width="100%" [center]="center" [zoom]="zoom">
 
-  <google-map height="500px" width="100%" [center]="center" [zoom]="zoom">
-
-    @if (lugares()[0]) {
-      <map-marker 
-        [position]="lugares()[0].coordenadas" 
-        [title]="lugares()[0].nombre"
-        (mapClick)="onMarcadorClick(lugares()[0])">
-      </map-marker>
-    }
-
-    @if (lugares()[1]) {
-      <map-marker 
-        [position]="lugares()[1].coordenadas" 
-        [title]="lugares()[1].nombre"
-        (mapClick)="onMarcadorClick(lugares()[1])">
+    @for (lugar of lugaresFiltrados(); track lugar.id) {
+      <map-marker
+        [position]="lugar.coordenadas"
+        [options]="lugar.markerOptions"
+        (mapClick)="onMarcadorClick(lugar)"
+      >
       </map-marker>
     }
 
   </google-map>
-
-  <ion-modal [isOpen]="modalAbierto" [breakpoints]="[0, 0.4, 0.8]" [initialBreakpoint]="0.4">
-    <ng-template>
-      @if (lugarSeleccionado()) {
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>{{ lugarSeleccionado()!.nombre }}</ion-title>
-          </ion-toolbar>
-        </ion-header>
-
-        <ion-content class="ion-padding">
-          <ion-card>
-            <ion-card-content>
-              Categoría: {{ lugarSeleccionado()!.categoria }}
-            </ion-card-content>
-          </ion-card>
-
-          <ion-button expand="block" (click)="cerrarModal()">
-            Cerrar
-          </ion-button>
-        </ion-content>
-      }
-    </ng-template>
-  </ion-modal>
-
 </ion-content>
+
+<ion-modal
+  [isOpen]="modalAbierto"
+  [breakpoints]="[0, 0.35, 0.7]"
+  [initialBreakpoint]="0.35"
+  (didDismiss)="cerrarModal()"
+>
+  <ion-content class="modal-content">
+
+    @if (lugarSeleccionado()) {
+      <div class="contenido">
+
+        <h2 class="titulo">
+          {{ lugarSeleccionado()?.nombre }}
+        </h2>
+
+        <div class="info">
+          <ion-icon name="location"></ion-icon>
+          <span>{{ lugarSeleccionado()?.direccion }}</span>
+        </div>
+
+        <div class="info">
+          <ion-icon name="call"></ion-icon>
+          <span>
+            {{ lugarSeleccionado()?.telefono !== 'Sin teléfono'
+              ? lugarSeleccionado()?.telefono
+              : 'No disponible' }}
+          </span>
+        </div>
+
+        <div class="acciones">
+          <ion-button expand="block" fill="solid">
+            Ver detalles
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            fill="outline"
+            (click)="irComoLlegar(lugarSeleccionado())"
+          >
+            Cómo llegar
+          </ion-button>
+        </div>
+
+      </div>
+    }
+
+  </ion-content>
+</ion-modal>
+
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button (click)="navegar('inicio')">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="navegar('mapa')" class="tab-selected">
+      <ion-icon name="location"></ion-icon>
+      <ion-label>Mapa</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="irAReservas()">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <ion-label>Reservas</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="navegar('muro-social')">
+      <ion-icon name="images-outline"></ion-icon>
+      <ion-label>Muro Social</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="navegar('perfil')">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-footer>

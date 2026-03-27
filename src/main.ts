@@ -1,9 +1,23 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
+import { importProvidersFrom } from '@angular/core';
 import { authInterceptor } from './app/core/interceptors/auth-interceptor';
-import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+
+// 👇 ICONOS (AGREGADO)
+import { addIcons } from 'ionicons';
+import { 
+  locationOutline, 
+  calendarOutline, 
+  timeOutline,
+  chevronDownOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+  cardOutline,
+  callOutline,
+  mailOutline
+} from 'ionicons/icons';
 
 // Importaciones de servicios, rutas y componentes
 import { AuthService } from './app/core/services/auth';
@@ -14,6 +28,19 @@ import { Observable } from 'rxjs';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { languageInterceptor } from './app/core/interceptors/language.interceptor';
+
+// 👇 REGISTRO DE ICONOS (AGREGADO)
+addIcons({
+  'location-outline': locationOutline,
+  'calendar-outline': calendarOutline,
+  'time-outline': timeOutline,
+  'chevron-down-outline': chevronDownOutline,
+  'chevron-back-outline': chevronBackOutline,
+  'chevron-forward-outline': chevronForwardOutline,
+  'card-outline': cardOutline,
+  'call-outline': callOutline,
+  'mail-outline': mailOutline
+});
 
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(
@@ -36,13 +63,13 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    provideCharts(withDefaultRegisterables()), // AGREGADO: Proveedor para ng2-charts
-    
+
+    // 👇 UNIFICADO (ANTES estaba duplicado)
     provideHttpClient(
       withInterceptors([authInterceptor, languageInterceptor])
     ),
 
+    provideCharts(withDefaultRegisterables()),
     AuthService,
 
     importProvidersFrom(
