@@ -1,13 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { IonContent, NavController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { 
-  IonContent, IonHeader, IonTitle, IonToolbar, 
-  IonButton, IonIcon, IonCard, IonCardContent, 
-  IonGrid, IonRow, IonCol, IonBadge 
-} from '@ionic/angular/standalone';
-import { TrackingService } from 'src/app/core/services/tracking-service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-turista-inicio',
@@ -16,69 +10,73 @@ import { TrackingService } from 'src/app/core/services/tracking-service';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    IonButton, 
-    IonIcon, 
-    IonCard, 
-    IonCardContent, 
-    IonGrid, 
-    IonRow, 
-    IonCol,
-    IonBadge
-  ]
+    IonicModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class TuristaInicioPage implements OnInit {
-  private trackingService = inject(TrackingService);
-  private router = inject(Router);
+export class TuristaInicioPage {
+  @ViewChild(IonContent) content!: IonContent;
 
-  constructor() { }
+  categoriaSeleccionada: string = 'todos';
+  dropdownAbierto: boolean = false;
+  
+  // Mapeo de categorías a nombres e iconos
+  private categoriasMap: { [key: string]: { nombre: string, icono: string } } = {
+    'todos': { nombre: 'Todos', icono: 'apps-outline' },
+    'restaurantes': { nombre: 'Restaurantes', icono: 'restaurant-outline' },
+    'artesanos': { nombre: 'Artesanos', icono: 'color-palette-outline' },
+    'hospedaje': { nombre: 'Hospedaje', icono: 'bed-outline' },
+    'atractivos': { nombre: 'Atractivos', icono: 'map-outline' },
+    'transporte': { nombre: 'Transporte', icono: 'car-outline' }
+  };
 
-  ngOnInit() {
+  constructor(private navCtrl: NavController) {}
+
+  get categoriaNombre(): string {
+    return this.categoriasMap[this.categoriaSeleccionada]?.nombre || 'Todos';
   }
 
-  // Funcion para la barra de busqueda, se ejecuta cada vez que el turista escribe algo
-  onBuscar(evento: any) {
-    const termino = evento.target.value;
-    if (termino) {
-      this.trackingService.registrarEvento('BUSQUEDA_TURISTA', { termino_busqueda: termino });
-    }
+  get categoriaIcono(): string {
+    return this.categoriasMap[this.categoriaSeleccionada]?.icono || 'apps-outline';
   }
 
-  // Funcion para cuando el turista hace click en un negocio, se ejecuta cada vez que el turista hace click en un negocio
-  verDetalles(idNegocio: number, nombreNegocio: string) {
-    this.trackingService.registrarEvento('CLICK_VER_NEGOCIO', { 
-      id_negocio: idNegocio, 
-      nombre: nombreNegocio 
-    });
+  toggleDropdown() {
+    this.dropdownAbierto = !this.dropdownAbierto;
+  }
+
+  seleccionarCategoria(categoriaId: string) {
+    this.categoriaSeleccionada = categoriaId;
+    this.dropdownAbierto = false;
     
-    // Redireccionar a la página de detalles del negocio
-    this.router.navigate(['/info-negocio', idNegocio]);
-  }
-  irAlMapa() {
-    this.router.navigate(['/mapa']);
-  }
-
-  irACenadurias() {
-    this.router.navigate(['/cenadurias']);
+    // Scroll suave hacia la sección de negocios
+    setTimeout(() => {
+      const element = document.querySelector('.negocios-section:not(.hidden)');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }
 
-  irAComidaRapida() {
-    this.router.navigate(['/comida-rapida']);
+  verTodos() {
+    this.seleccionarCategoria('todos');
   }
 
-  irAHospedaje() {
-    this.router.navigate(['/hospedaje']);
+  irANegocio(id: number) {
+    this.navCtrl.navigateForward(`/info-negocio/${id}`);
   }
 
-  irAAtractivos() {
-    this.router.navigate(['/atractivos']);
+  irAPerfil() {
+    this.navCtrl.navigateForward('/perfil-turista');
   }
 
-  irAlLogin() {
-    this.router.navigate(['/login']);
+  scrollToTop() {
+    this.content.scrollToTop(500);
+  }
+
+  // Cerrar dropdown al hacer scroll
+  onScroll() {
+    if (this.dropdownAbierto) {
+      this.dropdownAbierto = false;
+    }
   }
 }
