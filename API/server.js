@@ -91,6 +91,24 @@ app.get('/negocios', (req, res) => {
     });
 });
 
+// Obtener todos los datos de un negocio por su ID
+app.get('/negocios/:id', (req, res) => {
+    const query = `
+        SELECT n.*, u.municipio, u.estado, sn.nombre AS subtipo, cn.nombre AS categoria
+        FROM Negocios n
+        LEFT JOIN Ubicacion u ON n.idUbicacion = u.idUbicacion
+        LEFT JOIN SubtiposNegocios sn ON n.idSubtipo = sn.idSubtipo
+        LEFT JOIN CategoriasNegocios cn ON n.idCategoria = cn.idCategoria
+        WHERE n.idNegocio = ?
+    `;
+
+    connDB.query(query, [req.params.id], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json(result[0]);
+    });
+});
+
+
 // ==========================================
 // RUTAS DE RESERVAS
 // ==========================================

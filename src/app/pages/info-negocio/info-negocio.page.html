@@ -1,16 +1,12 @@
 <ion-content class="fondo-claro">
-  
   @if (cargando) {
   <div class="loader-container">
     <ion-spinner color="success"></ion-spinner>
   </div>
-  }
-
-  @if (!cargando && negocio) {
+  } @if (!cargando && negocio) {
   <div class="wf-container">
-    
     <div class="header-actions">
-      <ion-button fill="clear" color="dark">
+      <ion-button fill="clear" color="dark" (click)="volver()">
         <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
         Volver
       </ion-button>
@@ -23,41 +19,49 @@
     <div class="main-grid">
       <div class="gallery-column">
         <div class="main-image-container">
-          <img [src]="negocio.imagen" alt="Experiencia principal" class="main-image">
+          <img
+            [src]="negocio.imagen"
+            alt="Experiencia principal"
+            class="main-image"
+          />
           @if (negocio.calificacionMedia) {
           <div class="rating-badge">
             <ion-icon name="star"></ion-icon> {{ negocio.calificacionMedia }}
           </div>
           }
         </div>
-        </div>
+      </div>
 
       <div class="info-column">
-        
         <div class="title-section">
           <p class="subtitle">EXPERIENCIA LOCAL</p>
           <div class="title-row">
             <h1 class="business-name">{{ negocio.nombre }}</h1>
-            
+
             @if (negocio.verificado) {
-              <ion-icon name="checkmark-circle" color="primary" class="verified-icon"></ion-icon>
+            <ion-icon
+              name="checkmark-circle"
+              color="primary"
+              class="verified-icon"
+            ></ion-icon>
             }
           </div>
         </div>
-        
+
         <div class="business-description">
           <p>{{ negocio.descripcion }}</p>
         </div>
 
         <div class="info-accordions">
-          
           <div class="accordion">
             <div class="accordion-header" (click)="toggleSeccion(0)">
               <div class="header-title">
                 <ion-icon name="time-outline"></ion-icon>
                 <span>Horarios y Contacto</span>
               </div>
-              <ion-icon [name]="seccionesAbiertas[0] ? 'remove-outline' : 'add-outline'"></ion-icon>
+              <ion-icon
+                [name]="seccionesAbiertas[0] ? 'remove-outline' : 'add-outline'"
+              ></ion-icon>
             </div>
             <div class="accordion-content" [class.open]="seccionesAbiertas[0]">
               <p><strong>Apertura:</strong> {{ negocio.horario }}</p>
@@ -71,42 +75,63 @@
                 <ion-icon name="map-outline"></ion-icon>
                 <span>Ubicación y Mapa</span>
               </div>
-              <ion-icon [name]="seccionesAbiertas[1] ? 'remove-outline' : 'add-outline'"></ion-icon>
+              <ion-icon
+                [name]="seccionesAbiertas[1] ? 'remove-outline' : 'add-outline'"
+              ></ion-icon>
             </div>
+
             <div class="accordion-content" [class.open]="seccionesAbiertas[1]">
-              <p>{{ negocio.ubicacion.direccionCompleta }}</p>
-              
-              <div class="map-placeholder">
-                <ion-icon name="map-outline"></ion-icon>
-                <span>Google Maps Platform <br> (Lat: {{negocio.ubicacion.latitud}}, Lng: {{negocio.ubicacion.longitud}})</span>
-                <ion-button
-                (click)="irAMapa()">
-                  Ir al Mapa
-                </ion-button>
+              <p class="address-text">
+                {{ negocio?.ubicacion?.direccionCompleta }}
+              </p>
+
+              <div style="width: 100%; margin-bottom: 15px; display: block">
+                <div
+                  #mapaElement
+                  style="
+                    width: 100%;
+                    height: 200px;
+                    background-color: #e0e0e0;
+                    border-radius: 12px;
+                    display: block;
+                  "
+                ></div>
               </div>
+
+              <ion-button
+                expand="block"
+                fill="outline"
+                class="btn-direcciones"
+                (click)="irAMapa()"
+              >
+                <ion-icon name="map-outline" slot="start"></ion-icon>
+                Cómo llegar
+              </ion-button>
             </div>
           </div>
-
         </div>
 
         <div class="action-section">
           @if (negocio.tieneInventario) {
-          <ion-button expand="block" 
-                      class="reserve-btn" 
-                      (click)="iniciarReserva()">
+          <ion-button
+            expand="block"
+            class="reserve-btn"
+            (click)="iniciarReserva()"
+          >
             RESERVAR AHORA
           </ion-button>
-          }
-          @if (!negocio.tieneInventario) {
+          } @if (!negocio.tieneInventario) {
           <div class="no-reservation-msg">
             <ion-icon name="walk-outline"></ion-icon>
-            <p>Este lugar es de acceso libre o no requiere reserva de inventario. ¡Puedes visitarlo directamente!</p>
+            <p>
+              Este lugar es de acceso libre o no requiere reserva de inventario.
+              ¡Puedes visitarlo directamente!
+            </p>
           </div>
           }
         </div>
-
       </div>
     </div>
   </div>
-}
+  }
 </ion-content>
