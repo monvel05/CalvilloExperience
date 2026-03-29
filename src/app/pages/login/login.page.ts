@@ -19,11 +19,11 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
     RouterLink,
     CommonModule
   ]
-  // ELIMINADO: providers: [AuthService] 
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
-  usuario: DatosUsuario | null = null;
+  // Ya no necesitamos guardar el usuario en una variable local del componente, 
+  // porque se destruirá al cambiar de página.
 
   constructor(
     private fb: FormBuilder,
@@ -50,17 +50,14 @@ export class LoginPage implements OnInit {
 
     this.authService.login(correo, contraseña).subscribe({
       next: (res: any) => {
-        console.log("Login exitoso, rol recibido:", res.user.idTipoUsuario);
+        // Asegúrate de que el backend (res.user) devuelva todos los campos de DatosUsuario:
+        // idUsuario, nombre, fechaNacimiento, correo, idTipoUsuario, idGenero, idIdioma
         
-        // 1. Guardamos los datos directamente en la interfaz del componente
-        this.usuario = res.user as DatosUsuario;
-        
-        // 2. Guardamos la sesión en el almacenamiento local
-        // (Nota: Si tu AuthService ya hace esto en el pipe(tap(...)), puedes borrar estas dos líneas)
-        localStorage.setItem('token', res.token);
+        // Guardamos TODA la info del usuario en localStorage
         localStorage.setItem('user', JSON.stringify(res.user));
+        localStorage.setItem('token', res.token);
         
-        // 3. Redirección basada en el rol del usuario
+        // Redirección
         switch (res.user.idTipoUsuario) {
           case 1:
             this.router.navigate(['administrador-inicio'], {replaceUrl: true});
@@ -77,13 +74,9 @@ export class LoginPage implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error("Error detectado en servidor:", err);
         const mensaje = err.status === 400 ? err.error.message : "Correo o contraseña incorrectos.";
         alert(mensaje);
       }
     });
-
   }
-
-  
 }

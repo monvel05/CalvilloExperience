@@ -1,0 +1,81 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="volver()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'PROFILE.TITLE' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <div class="profile-header">
+    <div class="avatar-circle">
+      <ion-icon name="person-outline"></ion-icon>
+    </div>
+    <h2>{{ 'PROFILE.SUBTITLE' | translate }}</h2>
+  </div>
+
+  <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="profile-form">
+    
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label position="stacked">{{ 'PROFILE.FULL_NAME' | translate }}</ion-label>
+      <ion-input formControlName="nombre" [placeholder]="'PROFILE.NAME_PLACEHOLDER' | translate"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      <ion-label position="stacked">{{ 'PROFILE.EMAIL' | translate }}</ion-label>
+      <ion-input formControlName="correo" type="email" placeholder="tu@correo.com"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      <ion-label position="stacked">{{ 'PROFILE.BIRTH_DATE' | translate }}</ion-label>
+      <ion-input formControlName="fechaNacimiento" type="date"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="male-female-outline" slot="start"></ion-icon>
+      <ion-label position="stacked">{{ 'PROFILE.GENDER' | translate }}</ion-label>
+      <ion-select formControlName="idGenero" interface="popover">
+        <ion-select-option value="1">{{ 'PROFILE.GEN_MALE' | translate }}</ion-select-option>
+        <ion-select-option value="2">{{ 'PROFILE.GEN_FEMALE' | translate }}</ion-select-option>
+        <ion-select-option value="3">{{ 'PROFILE.GEN_PREFER_NOT_TO_SAY' | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="language-outline" slot="start"></ion-icon>
+      <ion-label position="stacked">{{ 'PROFILE.PREFERRED_LANGUAGE' | translate }}</ion-label>
+      <ion-select formControlName="idIdioma" interface="popover">
+        <ion-select-option value="1">{{ 'PROFILE.LANG_SPANISH' | translate }}</ion-select-option>
+        <ion-select-option value="2">{{ 'PROFILE.LANG_ENGLISH' | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button 
+      expand="block" 
+      type="submit" 
+      class="save-button ion-margin-top"
+      [disabled]="perfilForm.invalid || guardando">
+      @if (guardando) {
+        <ion-spinner name="dots"></ion-spinner>
+      } @else {
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        {{ 'PROFILE.SAVE_BUTTON' | translate }}
+      }
+    </ion-button>
+  </form>
+
+  <ion-toast
+    [isOpen]="mostrarToast"
+    [message]="mensajeToast"
+    duration="2500"
+    (didDismiss)="mostrarToast = false"
+  ></ion-toast>
+
+</ion-content>

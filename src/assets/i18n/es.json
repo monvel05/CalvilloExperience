@@ -9,5 +9,24 @@
     "WELCOME": "Descubre la magia de Calvillo",
     "BOOK_NOW": "Reservar Ahora",
     "REVIEWS": "Reseñas"
+  },
+  "PROFILE": {
+    "TITLE": "Mi Perfil",
+    "SUBTITLE": "Actualiza tus datos",
+    "FULL_NAME": "Nombre completo",
+    "NAME_PLACEHOLDER": "Tu nombre",
+    "EMAIL": "Correo electrónico",
+    "BIRTH_DATE": "Fecha de nacimiento",
+    "GENDER": "Género",
+    "GEN_MALE": "Hombre",
+    "GEN_FEMALE": "Mujer",
+    "GEN_PREFER_NOT_TO_SAY": "Prefiero no decirlo",
+    "PREFERRED_LANGUAGE": "Idioma de preferencia",
+    "LANG_SPANISH": "Español",
+    "LANG_ENGLISH": "Inglés",
+    "SAVE_BUTTON": "Guardar Cambios",
+    "MSG_SUCCESS": "Perfil actualizado correctamente",
+    "MSG_ERROR": "Hubo un error al actualizar el perfil",
+    "MSG_NO_SESSION": "Sesión no encontrada. Por favor, inicia sesión de nuevo."
   }
 }

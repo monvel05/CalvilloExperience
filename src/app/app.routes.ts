@@ -52,10 +52,15 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/reservar/reservar.page').then( m => m.ReservarPage)
   },
   {
+    path: 'perfil',
+    loadComponent: () => import('./pages/perfil/perfil.page').then( m => m.PerfilPage)
+  },
+  {
     path: "**",
     redirectTo: "home",
     pathMatch: "full"
-  },
+  }
+
 
 
 ];

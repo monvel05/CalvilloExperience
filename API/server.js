@@ -66,11 +66,64 @@ app.post('/usuarios', async (req, res) => {
 });
 
 // Obtener un usuario por ID
+// Obtener un usuario por ID
 app.get('/usuarios/:id', (req, res) => {
-    const query = `SELECT idUsuario, nombre, correo, idTipoUsuario FROM Usuarios WHERE idUsuario = ?`;
+    // Ahora sí pedimos todos los datos necesarios para el perfil
+    const query = `
+        SELECT idUsuario, nombre, fechaNacimiento, correo, idTipoUsuario, idGenero, idIdioma 
+        FROM Usuarios 
+        WHERE idUsuario = ?
+    `;
+    
     connDB.query(query, [req.params.id], (err, result) => {
         if (err) return res.status(500).send(err);
+        
+        // Si no se encuentra el usuario, es buena práctica devolver un 404
+        if (!result || result.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        
         res.json(result[0]);
+    });
+});
+
+// Actualizar perfil de un usuario existente
+app.put('/usuarios/:id', (req, res) => {
+    const idUsuario = req.params.id;
+    const { nombre, fechaNacimiento, correo, idGenero, idIdioma } = req.body;
+
+    // 1. Validación básica de campos obligatorios
+    if (!nombre || !correo) {
+        return res.status(400).json({ message: "El nombre y el correo son obligatorios" });
+    }
+
+    // 2. Parseo de IDs a formato numérico para MySQL
+    const generoId = parseInt(idGenero);
+    const idiomaId = parseInt(idIdioma);
+
+    // 3. Query de actualización
+    const query = `
+        UPDATE Usuarios 
+        SET nombre = ?, fechaNacimiento = ?, correo = ?, idGenero = ?, idIdioma = ? 
+        WHERE idUsuario = ?
+    `;
+
+    connDB.query(query, [nombre, fechaNacimiento, correo, generoId, idiomaId, idUsuario], (err, result) => {
+        if (err) {
+            // Manejo de error si el usuario intenta ponerse un correo que ya es de otra persona
+            if (err.code === 'ER_DUP_ENTRY') {
+                return res.status(400).json({ message: "Este correo electrónico ya está siendo utilizado por otra cuenta" });
+            }
+            console.error("Error al actualizar perfil:", err);
+            return res.status(500).json({ message: "Error interno al actualizar el perfil", error: err });
+        }
+
+        // Si la consulta fue exitosa pero no afectó ninguna fila, significa que el ID no existe
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.status(200).json({ message: "Perfil actualizado correctamente" });
     });
 });
 

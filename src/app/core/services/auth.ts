@@ -8,7 +8,7 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 
 // Interfaz exclusiva para el registro, añade la contraseña que no está en DatosUsuario
 export interface RegistroUsuario extends Omit<DatosUsuario, 'idUsuario'> {
-  contrasena: string;
+  contraseña: string; 
 }
 
 @Injectable({
@@ -32,7 +32,7 @@ export class AuthService {
     // Aseguramos que el backend reciba la propiedad 'contraseña' con 'ñ'
     const bodyEnvio = {
       ...datos,
-      contraseña: datos.contrasena 
+      contraseña: datos.contraseña 
     };
     return this.http.post(`${environment.apiUrl}/usuarios`, bodyEnvio);
   }

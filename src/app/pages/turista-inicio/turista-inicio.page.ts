@@ -66,7 +66,7 @@ export class TuristaInicioPage {
   }
 
   irAPerfil() {
-    this.navCtrl.navigateForward('/perfil-turista');
+    this.navCtrl.navigateForward('/perfil');
   }
 
   scrollToTop() {

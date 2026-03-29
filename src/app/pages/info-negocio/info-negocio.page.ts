@@ -38,7 +38,7 @@ export class InfoNegocioPage implements OnInit {
   private trackingService = inject(TrackingService);
   private router = inject(Router);
   private route = inject(ActivatedRoute); // Para leer parámetros de la URL
-  private negocioService = inject(NegocioService); // Tu nuevo servicio
+  private negocioService = inject(NegocioService);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
 
