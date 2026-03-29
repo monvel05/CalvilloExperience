@@ -1,17 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DatabaseService } from '../../core/services/database.service';
+
+import { DatosNegocio } from '../../shared/interfaces/guardar-negocio'; // <-- Verifica esta ruta
+import { 
+  IonContent, IonHeader, IonToolbar, IonTitle, IonButton, 
+  IonIcon, IonItem, IonLabel, IonInput, IonToggle, IonTextarea,
+  IonCard, IonSpinner, IonButtons, IonAvatar,
+  IonSelect, IonSelectOption // <-- IMPORTANTÍSIMO TENER ESTOS AQUÍ
+} from '@ionic/angular/standalone';
+
 import { addIcons } from 'ionicons';
 import { 
-  createOutline, 
-  chevronForwardOutline, 
-  imagesOutline, 
-  starOutline, 
-  pricetagOutline, 
-  addCircleOutline, 
-  logOutOutline 
+  storefrontOutline, locationOutline, timeOutline, 
+  callOutline, checkmarkCircle, imageOutline, saveOutline,
+  eyeOutline, calendarOutline, personCircleOutline, arrowBackOutline, 
+  settingsOutline, pricetagOutline, calendarNumberOutline 
 } from 'ionicons/icons';
 
 @Component({
@@ -19,72 +24,67 @@ import {
   templateUrl: './negocio-inicio.page.html',
   styleUrls: ['./negocio-inicio.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [
+    CommonModule, FormsModule, IonContent, IonHeader, IonToolbar, 
+    IonTitle, IonButton, IonIcon, IonItem, IonLabel, IonInput, 
+    IonToggle, IonTextarea, IonCard, IonSpinner, IonButtons, 
+    IonSelect, IonSelectOption // <-- ESTO QUITA LOS ERRORES DEL HTML
+  ]
 })
 export class NegocioInicioPage implements OnInit {
-  
-  datosNegocio: any = {
-    nombre: '',
-    visitas: 0,
-    contactos: 0,
-    rating: 0,
-    resenas: 0,
-    promociones: 0
-  };
-  idUsuario: number = 1;
+  private router = inject(Router);
 
-  constructor(
-    private db: DatabaseService,
-    private router: Router
-  ) {
-    addIcons({ 
-      createOutline, 
-      chevronForwardOutline, 
-      imagesOutline, 
-      starOutline, 
-      pricetagOutline, 
-      addCircleOutline, 
-      logOutOutline 
+  // Variables necesarias para el HTML
+  usuario: any = { fotoPerfil: null }; 
+  cargando: boolean = false; // Lo ponemos en false para ver la interfaz
+  guardando: boolean = false;
+  imagenPredeterminada: string = 'https://i.pinimg.com/736x/c0/55/a4/c055a4384e5b71030800dc56e2a9a07f.jpg';
+
+  // Objeto negocio inicializado
+  negocio: DatosNegocio = {
+    idNegocio: 0,
+    nombre: '',
+    descripcion: '',
+    idSubtipo_Negocio: 1,
+    verificado: false,
+    horario: '',
+    telefono: '',
+    calificacionMedia: 0,
+    imagen: [],
+    idUsuario: 0,
+    idUbicacion: 0,
+    ubicacion: {
+      direccionCompleta: '',
+      municipio: '',
+      latitud: '',
+      longitud: ''
+    },
+    tieneInventario: false,
+    permitirReservas: false
+  };
+
+  constructor() {
+    addIcons({
+      personCircleOutline, imageOutline, storefrontOutline, 
+      pricetagOutline, timeOutline, callOutline, 
+      calendarOutline, locationOutline, saveOutline, calendarNumberOutline
     });
   }
 
   ngOnInit() {
-    this.cargarDatos();
+    console.log('Componente inicializado visualmente');
   }
 
-  cargarDatos() {
-    this.db.getPerfilNegocio(this.idUsuario).subscribe({
-      next: (res: any) => {
-        this.datosNegocio = res;
-        console.log('¡Lo logramos¡:', res);
-      },
-      error: (err: any) => {
-        console.error('Error al cargar datos:', err);
-      }
-    });
+  // Funciones que reclama el HTML
+  irAPerfil() {
+    console.log('irAPerfil clickeado');
   }
 
-  editarInformacion() {
-    this.router.navigate(['/negocio-iniciao/editar']);
+  cambiarImagen() {
+    console.log('cambiarImagen clickeado');
   }
 
-  verGaleria() {
-    this.router.navigate(['/negocio-iniciao/galeria']);
-  }
-
-  verResenas() {
-    this.router.navigate(['/negocio-iniciao/resenas']);
-  }
-
-  verPromociones() {
-    this.router.navigate(['/negocio-iniciao/promociones']);
-  }
-
-  agregarProducto() {
-    this.router.navigate(['/negocio-iniciao/agregar-producto']);
-  }
-
-  cerrarSesion() {
-    this.router.navigate(['/login']);
+  guardarCambios() {
+    console.log('guardarCambios clickeado');
   }
 }

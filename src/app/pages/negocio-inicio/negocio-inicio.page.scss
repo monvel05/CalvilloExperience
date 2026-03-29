@@ -1,88 +1,120 @@
-$primary-color: #3880ff;
-$secondary-color: #5260ff;
-$success-color: #2dd36f;
-$light-bg: #f4f5f8;
-
-ion-content {
-  --background: $light-bg;
-}
-
-.welcome-card {
-  border-left: 4px solid $primary-color;
-  margin-bottom: 20px;
-  
-  ion-card-header {
-    background: linear-gradient(135deg, $primary-color, $secondary-color);
-    color: white;
-    border-radius: 8px 8px 0 0;
-    
-    ion-card-title {
-      color: white;
-      font-weight: 600;
-    }
-    
-    ion-card-subtitle {
-      color: rgba(255, 255, 255, 0.8);
-    }
+.custom-header {
+  ion-toolbar {
+    --background: #000; // Negro
+    --color: #fff;      // Texto blanco
   }
-}
 
-.stats-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 10px 0;
-}
-
-.stat-item {
-  text-align: center;
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  
-  .stat-number {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: $primary-color;
-    margin-bottom: 5px;
+  ion-title {
+    font-weight: 700;
+    font-size: 1.2rem;
   }
-  
-  p {
-    font-size: 0.85em;
-    color: #666;
-    margin: 0;
-  }
-}
 
-ion-item {
-  --padding-start: 0;
-  --padding-end: 0;
-  
   ion-icon {
-    margin-right: 10px;
-    color: $primary-color;
+    font-size: 1.8rem;
+    color: #fff;
   }
 }
 
-ion-list-header {
-  ion-label {
-    font-weight: 600;
-    color: $primary-color;
+// Contenedor principal
+.split-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @media (min-width: 992px) {
+    flex-direction: row;
   }
 }
 
-ion-badge {
+// Columna de la imagen (Izquierda)
+.image-sidebar {
+  position: relative;
+  width: 100%;
+  height: 300px; // Altura para móvil
+
+  @media (min-width: 992px) {
+    width: 40%; // Mismo ancho que en tu imagen de referencia
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    ion-button {
+      --background: rgba(255, 255, 255, 0.9);
+      --color: #333;
+      --border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+// Columna de datos (Derecha)
+.form-content {
+  flex: 1;
+  background: white;
+  padding: 40px 20px;
+
+  @media (min-width: 992px) {
+    padding: 60px 80px;
+    overflow-y: auto;
+  }
+
+  .form-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+// Estilos de los elementos (Inspirado en imagen 2)
+.business-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.section-label {
+  font-size: 1.1rem;
   font-weight: 600;
+  margin: 30px 0 15px 0;
+  color: #444;
 }
 
-@media (max-width: 768px) {
-  .stats-container {
-    grid-template-columns: repeat(2, 1fr);
+.custom-input {
+  --background: #f8f9fa;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #eee;
+
+  ion-label {
+    color: var(--ion-color-primary) !important;
+    font-weight: 600;
+    margin-bottom: 4px;
   }
 }
 
-@media (max-width: 480px) {
-  .stats-container {
-    grid-template-columns: 1fr;
-  }
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.btn-save {
+  --background: #006437; // Verde similar al de tu referencia
+  --border-radius: 8px;
+  margin-top: 40px;
+  height: 50px;
+  font-weight: 700;
 }

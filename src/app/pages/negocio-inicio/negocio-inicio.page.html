@@ -1,80 +1,86 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Panel de Negocio</ion-title>
+<ion-header class="custom-header">
+  <ion-toolbar>
+    <ion-title>Calvillo Experience</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Tarjeta de Bienvenida -->
-  <ion-card color="light" class="welcome-card">
-    <ion-card-header>
-      <ion-card-title>¡Bienvenido!</ion-card-title>
-      <ion-card-subtitle>{{ datosNegocio.nombre || 'Tu Negocio' }}</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <p>Gestiona tu presencia en Calvillo Experience</p>
-    </ion-card-content>
-  </ion-card>
+<ion-content>
+  <div class="split-view">
+    <div class="image-sidebar">
+      <img [src]="(negocio.imagen && negocio.imagen.length > 0) ? negocio.imagen[0] : imagenPredeterminada" 
+           alt="Portada del negocio" />
+      <div class="image-overlay">
+        <ion-button fill="clear" (click)="cambiarImagen()">
+          <ion-icon name="image-outline" slot="start"></ion-icon>
+          CAMBIAR PORTADA
+        </ion-button>
+      </div>
+    </div>
 
-  <!-- Estadísticas del Día -->
-  <ion-card color="light">
-    <ion-card-header>
-      <ion-card-title>Estadísticas del Día</ion-card-title>
-      <ion-card-subtitle>Calvillo Experience</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <div class="stats-container">
-        <div class="stat-item">
-          <div class="stat-number">{{ datosNegocio.visitas || 150 }}</div>
-          <p>Visitas a tu perfil</p>
+    <div class="form-content">
+      <div class="form-inner">
+        <div class="header-section">
+          <h1 class="business-title">Edita tu negocio</h1>
+          <p class="business-subtitle">Gestiona la información que ven los turistas en Calvillo.</p>
         </div>
-        <div class="stat-item">
-          <div class="stat-number">{{ datosNegocio.contactos || 42 }}</div>
-          <p>Nuevos contactos</p>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">{{ datosNegocio.rating || '4.8' }}</div>
-          <p>Calificación</p>
+
+        <section class="form-group">
+          <h2 class="section-label">Información General</h2>
+          <ion-item lines="none" class="custom-input">
+            <ion-label position="stacked">Nombre del Negocio</ion-label>
+            <ion-input [(ngModel)]="negocio.nombre" placeholder="Ej. Cenaduría Doña Lupe"></ion-input>
+          </ion-item>
+        </section>
+
+        <section class="form-group">
+          <h2 class="section-label">Clasificación</h2>
+          <ion-item lines="none" class="custom-input">
+            <ion-label position="stacked">Categoría (Subtipo)</ion-label>
+            <ion-select [(ngModel)]="negocio.idSubtipo_Negocio" interface="popover">
+              <ion-select-option [value]="1">Atractivo Turístico</ion-select-option>
+              <ion-select-option [value]="2">Gastronomía</ion-select-option>
+              <ion-select-option [value]="3">Hospedaje</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </section>
+
+        <section class="form-group">
+          <h2 class="section-label">Contacto y Horarios</h2>
+          <div class="grid-row">
+            <ion-item lines="none" class="custom-input">
+              <ion-label position="stacked">Horario</ion-label>
+              <ion-input [(ngModel)]="negocio.horario" placeholder="9:00 AM - 6:00 PM"></ion-input>
+            </ion-item>
+            <ion-item lines="none" class="custom-input">
+              <ion-label position="stacked">Teléfono</ion-label>
+              <ion-input [(ngModel)]="negocio.telefono" type="tel"></ion-input>
+            </ion-item>
+          </div>
+        </section>
+
+        <section class="form-group">
+          <h2 class="section-label">Configuración</h2>
+          <ion-item lines="none" class="toggle-item">
+            <ion-label>
+              <h3>Permitir Reservaciones</h3>
+              <p>{{ negocio.permitirReservas ? 'Activo' : 'Desactivado' }}</p>
+            </ion-label>
+            <ion-toggle [(ngModel)]="negocio.permitirReservas" color="success"></ion-toggle>
+          </ion-item>
+        </section>
+
+        <div class="action-footer">
+          <ion-button expand="block" (click)="guardarCambios()" class="btn-save">
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+            GUARDAR CAMBIOS EN EL PERFIL
+          </ion-button>
         </div>
       </div>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- Opciones del Negocio -->
-  <ion-list lines="inset">
-    <ion-list-header>
-      <ion-label>Gestión del Negocio</ion-label>
-    </ion-list-header>
-    <ion-item button (click)="editarInformacion()">
-      <ion-icon name="create-outline" slot="start"></ion-icon>
-      <ion-label>Editar Información del Local</ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item button (click)="verGaleria()">
-      <ion-icon name="images-outline" slot="start"></ion-icon>
-      <ion-label>Galería de Fotos</ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item button (click)="verResenas()">
-      <ion-icon name="star-outline" slot="start"></ion-icon>
-      <ion-label>Ver Reseñas</ion-label>
-      <ion-badge slot="end">{{ datosNegocio.resenas || 0 }}</ion-badge>
-    </ion-item>
-    <ion-item button (click)="verPromociones()">
-      <ion-icon name="pricetag-outline" slot="start"></ion-icon>
-      <ion-label>Promociones Activas</ion-label>
-      <ion-badge slot="end" color="success">{{ datosNegocio.promociones || 0 }}</ion-badge>
-    </ion-item>
-  </ion-list>
-
-  <!-- Botones de Acción -->
-  <ion-button expand="block" color="primary" class="ion-margin-top" (click)="agregarProducto()">
-    <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-    Agregar Producto/Servicio
-  </ion-button>
-
-  <ion-button expand="block" color="danger" class="ion-margin-top" (click)="cerrarSesion()">
-    <ion-icon name="log-out-outline" slot="start"></ion-icon>
-    Cerrar Sesión
-  </ion-button>
+    </div>
+  </div>
 </ion-content>

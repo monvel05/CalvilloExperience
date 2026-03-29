@@ -1,7 +1,18 @@
-import { Component, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IonContent, NavController } from '@ionic/angular';
+import { Component, ViewChild, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { 
+  NavController, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonButtons, 
+  IonAvatar, 
+  IonIcon, 
+  IonContent 
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons'; 
+import { personCircle } from 'ionicons/icons';
 
 @Component({
   selector: 'app-turista-inicio',
@@ -9,8 +20,14 @@ import { IonicModule } from '@ionic/angular';
   styleUrls: ['./turista-inicio.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    IonicModule
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonButtons, 
+    IonAvatar, 
+    IonIcon, 
+    IonContent
+  
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -30,7 +47,9 @@ export class TuristaInicioPage {
     'transporte': { nombre: 'Transporte', icono: 'car-outline' }
   };
 
-  constructor(private navCtrl: NavController) {}
+  constructor(private navCtrl: NavController) {
+    addIcons({ personCircle });
+  }
 
   get categoriaNombre(): string {
     return this.categoriasMap[this.categoriaSeleccionada]?.nombre || 'Todos';
