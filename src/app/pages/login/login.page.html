@@ -1,5 +1,13 @@
 <ion-content class="login-background">
   <div class="login-wrapper">
+    
+    <div class="language-switcher" style="position: absolute; top: 20px; right: 20px; z-index: 10;">
+      <ion-chip color="primary" (click)="toggleLanguage()" mode="ios">
+        <ion-icon name="globe-outline"></ion-icon>
+        <ion-label>{{ currentLang === 'es' ? 'Español' : 'English' }}</ion-label>
+      </ion-chip>
+    </div>
+
     <div class="login-card">
 
       <div class="login-header">
@@ -14,15 +22,14 @@
           <ion-input 
             type="email" 
             formControlName="correo" 
-            placeholder="Correo electrónico"
+            [placeholder]="'LOGIN_PAGE.EMAIL_PLACEHOLDER' | translate"
             [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched"
           >
           </ion-input>
         </ion-item>
-        <!-- Mensaje de error opcional -->
         <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error-message">
           <ion-icon name="alert-circle-outline"></ion-icon>
-          <span>Correo electrónico válido requerido</span>
+          <span>{{ 'LOGIN_PAGE.EMAIL_REQUIRED' | translate }}</span>
         </div>
 
         <ion-item lines="none" class="custom-input" [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched">
@@ -30,15 +37,14 @@
           <ion-input 
             type="password" 
             formControlName="contraseña" 
-            placeholder="Contraseña"
+            [placeholder]="'LOGIN_PAGE.PASSWORD_PLACEHOLDER' | translate"
             [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched"
           >
           </ion-input>
         </ion-item>
-        <!-- Mensaje de error opcional -->
         <div *ngIf="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched" class="error-message">
           <ion-icon name="alert-circle-outline"></ion-icon>
-          <span>La contraseña debe tener al menos 6 caracteres</span>
+          <span>{{ 'LOGIN_PAGE.PASSWORD_MIN_LENGTH' | translate }}</span>
         </div>
 
         <ion-button 
@@ -47,15 +53,15 @@
           class="login-button"
           [disabled]="loginForm.invalid"
         >
-          Iniciar Sesión
+          {{ 'LOGIN_PAGE.SUBMIT_BUTTON' | translate }}
         </ion-button>
       </form>
 
       <div class="login-footer">
-        <p>¿No tienes cuenta?
+        <p>{{ 'LOGIN_PAGE.NO_ACCOUNT' | translate }}
           <span class="register-link">
             <a routerLink="/registrarse">
-              Regístrate
+              {{ 'LOGIN_PAGE.REGISTER_LINK' | translate }}
             </a>
           </span>
         </p>

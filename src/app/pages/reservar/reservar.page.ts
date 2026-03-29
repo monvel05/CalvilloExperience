@@ -3,21 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReservasService } from '../../core/services/reservas.service';
 import { 
-  IonContent, 
-  IonHeader, 
-  IonTitle, 
-  IonToolbar, 
-  IonButtons, 
-  IonBackButton,
-  IonSelect,
-  IonSelectOption,
-  IonDatetime,
-  IonDatetimeButton,
-  IonModal,
-  IonIcon,
-  IonLabel,
-  IonButton // Asegúrate de incluir IonButton en los imports
+  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
+  IonSelect, IonSelectOption, IonDatetime, 
+  IonDatetimeButton, IonModal, IonIcon, IonLabel, IonButton,
+  NavController 
 } from '@ionic/angular/standalone';
+import { 
+  arrowBackOutline, locationOutline, calendarOutline, timeOutline, 
+  calendarClearOutline, chevronDownOutline, chevronBackOutline, 
+  chevronForwardOutline, checkmarkCircleOutline, cardOutline, 
+  callOutline, mailOutline 
+} from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 
 @Component({
   selector: 'app-reservar',
@@ -25,22 +25,12 @@ import {
   styleUrls: ['./reservar.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, // Necesario para ngFor y ngIf
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    IonButtons, 
-    IonBackButton,
-    IonSelect,
-    IonSelectOption,
-    IonDatetime,
-    IonDatetimeButton,
-    IonModal,
-    IonIcon,
-    IonLabel,
-    IonButton,
-    FormsModule 
+    CommonModule, 
+    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
+    IonSelect, IonSelectOption, IonDatetime, 
+    IonDatetimeButton, IonModal, IonIcon, IonLabel, IonButton, 
+    FormsModule,
+    TranslateModule
   ]
 })
 export class ReservarPage implements OnInit {
@@ -53,10 +43,9 @@ export class ReservarPage implements OnInit {
   exitTimeValue: string = '';
   numeroPersonas: string = '';
   
-  // Variables del calendario
-  currentMonth: string = '';
-  currentYear: number = 2026;
-  monthNames: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  // Lógica del calendario optimizada con índices (0-11)
+  currentMonthIndex: number;
+  currentYear: number;
   selectedDay: any = null;
   calendarDays: any[] = [];
   
@@ -64,21 +53,39 @@ export class ReservarPage implements OnInit {
   currentDate: string = new Date().toISOString();
   currentTime: string = new Date().toISOString();
 
-  // Inyectamos el servicio respetando el orden de carpetas de tu equipo
-  constructor(private reservasService: ReservasService) {
-    
+  constructor(
+    private reservasService: ReservasService,
+    private translate: TranslateService,
+    private navCtrl: NavController 
+  ) {
+    addIcons({
+      locationOutline, calendarOutline, timeOutline, calendarClearOutline, 
+      chevronDownOutline, chevronBackOutline, chevronForwardOutline, 
+      checkmarkCircleOutline, cardOutline, callOutline, mailOutline, arrowBackOutline
+    }); 
+
     const today = new Date();
-    this.currentMonth = this.monthNames[today.getMonth()];
+    this.currentMonthIndex = today.getMonth(); // 0 al 11
     this.currentYear = today.getFullYear();
-    this.generateCalendar();
+    this.generarCalendario();
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    const usuarioStr = localStorage.getItem('user');
+    if (usuarioStr) {
+      const usuario = JSON.parse(usuarioStr) as DatosUsuario;
+      const idioma = usuario.idIdioma === 2 ? 'en' : 'es';
+      this.translate.use(idioma);
+    }
+  }
 
-  generateCalendar() {
-    const monthIndex = this.monthNames.indexOf(this.currentMonth);
-    const firstDayOfMonth = new Date(this.currentYear, monthIndex, 1);
-    const daysInMonth = new Date(this.currentYear, monthIndex + 1, 0).getDate();
+  volver() {
+    this.navCtrl.back();
+  }
+
+  generarCalendario() {
+    const firstDayOfMonth = new Date(this.currentYear, this.currentMonthIndex, 1);
+    const daysInMonth = new Date(this.currentYear, this.currentMonthIndex + 1, 0).getDate();
     const startingDayOfWeek = firstDayOfMonth.getDay();
     
     const unavailableDays: number[] = [1, 15, 20, 25];
@@ -95,112 +102,108 @@ export class ReservarPage implements OnInit {
         available: isAvailable,
         isSelected: false,
         empty: false,
-        fullDate: new Date(this.currentYear, monthIndex, i)
+        fullDate: new Date(this.currentYear, this.currentMonthIndex, i)
       });
     }
   }
   
-  selectDay(day: any) {
+  seleccionarDia(day: any) {
     if (day.empty || !day.available) return;
     this.calendarDays.forEach(d => d.isSelected = false);
     day.isSelected = true;
     this.selectedDay = day;
   }
   
-  acceptDate() {
+  aceptarFecha() {
     if (this.selectedDay) {
       const day = this.selectedDay.date.toString().padStart(2, '0');
-      const monthIndex = (this.monthNames.indexOf(this.currentMonth) + 1).toString().padStart(2, '0');
+      const monthForDB = (this.currentMonthIndex + 1).toString().padStart(2, '0');
       const year = this.currentYear;
       
-      // Formato YYYY-MM-DD que espera MySQL
-      this.selectedDate = `${year}-${monthIndex}-${day}`;
-      this.currentDate = new Date(year, parseInt(monthIndex) - 1, parseInt(day)).toISOString();
+      this.selectedDate = `${year}-${monthForDB}-${day}`;
+      this.currentDate = new Date(year, this.currentMonthIndex, parseInt(day)).toISOString();
       
       this.selectedDay.isSelected = false;
       this.selectedDay = null;
     }
   }
   
-  openExitTimeModal() {
+  abrirModalHoraSalida() {
     this.exitTimeModal.present();
   }
   
-  onExitTimeChange(event: any) {
+  alCambiarHoraSalida(event: any) {
     const selectedTime = event.detail.value;
     if (selectedTime) {
       const date = new Date(selectedTime);
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
-      this.exitTime = `${hours}:${minutes}:00`; // Formato HH:mm:ss
+      this.exitTime = `${hours}:${minutes}:00`; 
       this.exitTimeValue = selectedTime;
     }
     this.exitTimeModal.dismiss();
   }
   
-  onDateChange(event: any) {
+  alCambiarFecha(event: any) {
     const selectedDate = event.detail.value;
     if (selectedDate) {
       const date = new Date(selectedDate);
-      this.selectedDate = date.toISOString().split('T')[0]; // Extrae YYYY-MM-DD
+      this.selectedDate = date.toISOString().split('T')[0]; 
       this.currentDate = selectedDate;
     }
   }
   
-  onTimeChange(event: any) {
+  alCambiarHora(event: any) {
     const selectedTime = event.detail.value;
     if (selectedTime) {
       const date = new Date(selectedTime);
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
-      this.selectedTime = `${hours}:${minutes}:00`; // Formato HH:mm:ss
+      this.selectedTime = `${hours}:${minutes}:00`; 
       this.currentTime = selectedTime;
     }
   }
 
-  // Navegación de meses
-  prevMonth() {
-    const currentMonthIndex = this.monthNames.indexOf(this.currentMonth);
-    let newMonthIndex = currentMonthIndex - 1;
-    if (newMonthIndex < 0) { newMonthIndex = 11; this.currentYear--; }
-    this.currentMonth = this.monthNames[newMonthIndex];
-    this.generateCalendar();
+  mesAnterior() {
+    this.currentMonthIndex--;
+    if (this.currentMonthIndex < 0) {
+      this.currentMonthIndex = 11;
+      this.currentYear--;
+    }
+    this.generarCalendario();
   }
   
-  nextMonth() {
-    const currentMonthIndex = this.monthNames.indexOf(this.currentMonth);
-    let newMonthIndex = currentMonthIndex + 1;
-    if (newMonthIndex > 11) { newMonthIndex = 0; this.currentYear++; }
-    this.currentMonth = this.monthNames[newMonthIndex];
-    this.generateCalendar();
+  mesSiguiente() {
+    this.currentMonthIndex++;
+    if (this.currentMonthIndex > 11) {
+      this.currentMonthIndex = 0;
+      this.currentYear++;
+    }
+    this.generarCalendario();
   }
   
-  // FUNCIONALIDAD: Guardar en Base de Datos
   confirmarReserva() {
     if (!this.selectedDate || !this.selectedTime || !this.numeroPersonas) {
-      alert('Por favor, completa la fecha, hora de entrada y número de personas.');
+      alert(this.translate.instant('RESERVE_PAGE.ALERT_MISSING_FIELDS'));
       return;
     }
 
-    // Adaptado exactamente al server.js de tu compañero
     const datosReserva = {
       fechaEntrada: this.selectedDate,
       fechaSalida: this.selectedDate,
       horaEntrada: this.selectedTime,
-      horaSalida: this.exitTime || this.selectedTime, // Si no hay salida, usamos la de entrada
-      idUsuario: 1,  // ID estático por ahora
-      idNegocio: 1,  // ID para Cenaduría Doña Lupe
-      idEstatus: 1   // 1 = Activa
+      horaSalida: this.exitTime || this.selectedTime, 
+      idUsuario: 1,  
+      idNegocio: 1,  
+      idEstatus: 1  
     };
 
     this.reservasService.enviarReserva(datosReserva).subscribe({
       next: (res) => {
-        console.log('✅ Reserva guardada:', res);
-        alert('Reserva creada con éxito en Calvillo Experience');
+        alert(this.translate.instant('RESERVE_PAGE.ALERT_SUCCESS'));
       },
       error: (err) => {
-        console.error('❌ Error al guardar:', err);
-        alert('Hubo un problema al conectar con el servidor.');
+        alert(this.translate.instant('RESERVE_PAGE.ALERT_ERROR'));
       }
     });
   }

@@ -8,7 +8,7 @@
     <div class="header-actions">
       <ion-button fill="clear" color="dark" (click)="volver()">
         <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-        Volver
+        {{ 'INFO_NEGOCIO.BACK' | translate }}
       </ion-button>
       <div class="location-badge">
         <ion-icon name="location-outline"></ion-icon>
@@ -34,7 +34,7 @@
 
       <div class="info-column">
         <div class="title-section">
-          <p class="subtitle">EXPERIENCIA LOCAL</p>
+          <p class="subtitle">{{ 'INFO_NEGOCIO.LOCAL_EXPERIENCE' | translate }}</p>
           <div class="title-row">
             <h1 class="business-name">{{ negocio.nombre }}</h1>
 
@@ -57,15 +57,15 @@
             <div class="accordion-header" (click)="toggleSeccion(0)">
               <div class="header-title">
                 <ion-icon name="time-outline"></ion-icon>
-                <span>Horarios y Contacto</span>
+                <span>{{ 'INFO_NEGOCIO.HOURS_CONTACT' | translate }}</span>
               </div>
               <ion-icon
                 [name]="seccionesAbiertas[0] ? 'remove-outline' : 'add-outline'"
               ></ion-icon>
             </div>
             <div class="accordion-content" [class.open]="seccionesAbiertas[0]">
-              <p><strong>Apertura:</strong> {{ negocio.horario }}</p>
-              <p><strong>Teléfono:</strong> {{ negocio.telefono }}</p>
+              <p><strong>{{ 'INFO_NEGOCIO.OPENING' | translate }}:</strong> {{ negocio.horario }}</p>
+              <p><strong>{{ 'INFO_NEGOCIO.PHONE' | translate }}:</strong> {{ negocio.telefono }}</p>
             </div>
           </div>
 
@@ -73,7 +73,7 @@
             <div class="accordion-header" (click)="toggleSeccion(1)">
               <div class="header-title">
                 <ion-icon name="map-outline"></ion-icon>
-                <span>Ubicación y Mapa</span>
+                <span>{{ 'INFO_NEGOCIO.LOCATION_MAP' | translate }}</span>
               </div>
               <ion-icon
                 [name]="seccionesAbiertas[1] ? 'remove-outline' : 'add-outline'"
@@ -105,7 +105,7 @@
                 (click)="irAMapa()"
               >
                 <ion-icon name="map-outline" slot="start"></ion-icon>
-                Cómo llegar
+                {{ 'INFO_NEGOCIO.GET_DIRECTIONS' | translate }}
               </ion-button>
             </div>
           </div>
@@ -118,15 +118,12 @@
             class="reserve-btn"
             (click)="iniciarReserva()"
           >
-            RESERVAR AHORA
+            {{ 'INFO_NEGOCIO.BOOK_NOW' | translate }}
           </ion-button>
           } @if (!negocio.tieneInventario) {
           <div class="no-reservation-msg">
             <ion-icon name="walk-outline"></ion-icon>
-            <p>
-              Este lugar es de acceso libre o no requiere reserva de inventario.
-              ¡Puedes visitarlo directamente!
-            </p>
+            <p>{{ 'INFO_NEGOCIO.NO_RESERVATION_MSG' | translate }}</p>
           </div>
           }
         </div>

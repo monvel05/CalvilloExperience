@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { 
   IonContent, IonButton, IonIcon, IonBadge, IonSpinner 
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { 
   arrowBackOutline, locationOutline, star, checkmarkCircle, 
@@ -37,10 +37,11 @@ export class InfoNegocioPage implements OnInit {
 
   private trackingService = inject(TrackingService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute); // Para leer parámetros de la URL
+  private route = inject(ActivatedRoute); 
   private negocioService = inject(NegocioService);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
+  private translate = inject(TranslateService); // Inyectamos el servicio de traducción
 
   constructor() {
     addIcons({
@@ -50,6 +51,16 @@ export class InfoNegocioPage implements OnInit {
   }
 
   ngOnInit() {
+    // 1. Inicializamos el usuario para el idioma y el botón "Volver"
+    const usuarioLogueadoStr = localStorage.getItem('user');
+    if (usuarioLogueadoStr) {
+      this.usuario = JSON.parse(usuarioLogueadoStr) as DatosUsuario;
+      const idiomaActual = this.usuario.idIdioma === 2 ? 'en' : 'es';
+      this.translate.use(idiomaActual);
+    } else {
+      this.translate.use('es'); // Idioma por defecto
+    }
+
     // Leemos el estado de la navegación por si mandamos el objeto completo o el ID
     const state = history.state;
     
@@ -76,16 +87,15 @@ export class InfoNegocioPage implements OnInit {
       const data = await this.negocioService.obtenerNegocioPorId(id);
       
       if (data) {
-        // Mapeamos los datos de Express a la interfaz DatosNegocio
+        // Usamos translate.instant() para textos de respaldo si la API no devuelve data
         this.negocio = {
           idNegocio: data.idNegocio,
           nombre: data.nombre,
-          // Rellenamos temporalmente lo que la consulta SQL aún no trae
-          descripcion: data.descripcion || 'Descripción pendiente...', 
+          descripcion: data.descripcion || this.translate.instant('INFO_NEGOCIO.PENDING_DESC'), 
           verificado: data.verificado === 1,
-          horario: data.horario || 'Horarios no disponibles',
-          telefono: data.telefono || 'Sin teléfono',
-          calificacionMedia: 5.0, // Pendiente de calcular con reseñas
+          horario: data.horario || this.translate.instant('INFO_NEGOCIO.NO_HOURS'),
+          telefono: data.telefono || this.translate.instant('INFO_NEGOCIO.NO_PHONE'),
+          calificacionMedia: 5.0, 
           imagen: 'https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&q=80&w=800',
           ubicacion: {
             direccionCompleta: `${data.calle || ''} ${data.numero || ''}, ${data.colonia || ''}`.trim(),
@@ -93,10 +103,9 @@ export class InfoNegocioPage implements OnInit {
             latitud: data.latitud?.toString() || '0',
             longitud: data.longitud?.toString() || '0'
           },
-          tieneInventario: false // Pendiente de cruzar con tabla de inventario
+          tieneInventario: false 
         } as unknown as DatosNegocio;
       } else {
-        // Si la API no devuelve nada, usamos los simulados como respaldo
         this.cargarDatosSimulados();
       }
     } catch (error) {
@@ -213,7 +222,6 @@ export class InfoNegocioPage implements OnInit {
     const lat = this.negocio.ubicacion.latitud;
     const lng = this.negocio.ubicacion.longitud;
     
-    // URL pulida para evitar fallos en móviles
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
     window.open(url, '_system');
   }

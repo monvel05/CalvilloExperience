@@ -4,9 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth';
 import { CommonModule } from '@angular/common'; 
 import { addIcons } from 'ionicons';
-import { mailOutline, lockClosedOutline, alertCircleOutline } from 'ionicons/icons';
-import { IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonIcon, IonText } from "@ionic/angular/standalone";
+import { 
+  mailOutline, 
+  lockClosedOutline, 
+  alertCircleOutline,
+  globeOutline // <-- Ícono para el chip de idioma agregado
+} from 'ionicons/icons';
+import { 
+  IonHeader, IonLabel, IonItem, IonInput, IonContent, 
+  IonToolbar, IonTitle, IonButton, IonIcon, IonText, 
+  IonChip // <-- Componente Chip agregado
+} from "@ionic/angular/standalone";
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
+
+// IMPORTAMOS LOS MÓDULOS DE TRADUCCIÓN
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +26,26 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    IonIcon, IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonText,
+    IonIcon, IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonText, 
+    IonChip, // <-- Componente Chip agregado a los imports
     ReactiveFormsModule,
     RouterLink,
-    CommonModule
+    CommonModule,
+    TranslateModule // <-- Agregado para usar el pipe en el HTML
   ]
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
-  // Ya no necesitamos guardar el usuario en una variable local del componente, 
-  // porque se destruirá al cambiar de página.
+  currentLang: string = 'es'; // <-- Variable para controlar el idioma actual del chip
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService // <-- Inyectado para traducir las alertas
   ) {
-    addIcons({mailOutline, alertCircleOutline, lockClosedOutline});
+    // Añadimos globeOutline
+    addIcons({mailOutline, alertCircleOutline, lockClosedOutline, globeOutline});
 
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]], 
@@ -38,7 +53,16 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Tomar el idioma actual al cargar la pantalla
+    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'es';
+  }
+
+  // Función para cambiar el idioma global de la app al hacer clic
+  toggleLanguage() {
+    this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
+    this.translate.use(this.currentLang);
+  }
 
   iniciarSesion() {
     if (this.loginForm.invalid) {
@@ -50,9 +74,6 @@ export class LoginPage implements OnInit {
 
     this.authService.login(correo, contraseña).subscribe({
       next: (res: any) => {
-        // Asegúrate de que el backend (res.user) devuelva todos los campos de DatosUsuario:
-        // idUsuario, nombre, fechaNacimiento, correo, idTipoUsuario, idGenero, idIdioma
-        
         // Guardamos TODA la info del usuario en localStorage
         localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
@@ -74,7 +95,9 @@ export class LoginPage implements OnInit {
         }
       },
       error: (err: any) => {
-        const mensaje = err.status === 400 ? err.error.message : "Correo o contraseña incorrectos.";
+        // Traducimos el mensaje de error o usamos el que manda el backend
+        const mensajeTraducido = this.translate.instant('LOGIN_PAGE.ERROR_CREDENTIALS');
+        const mensaje = err.status === 400 ? err.error.message : mensajeTraducido;
         alert(mensaje);
       }
     });
