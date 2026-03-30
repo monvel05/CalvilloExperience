@@ -1,0 +1,53 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar style="--background: #fdfcf9;">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/turista-inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="text-title-elegant ion-text-center">Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="--background: #fdfcf9;">
+  
+  <div class="ion-text-center" style="margin-top: 20px; margin-bottom: 30px;">
+    <ion-icon name="person-circle-outline" style="font-size: 120px; color: #555;"></ion-icon>
+  </div>
+
+  <ion-list style="background: transparent;">
+    
+    <ion-item style="--background: transparent;">
+      <ion-input label="Nombre" labelPlacement="floating" placeholder="Escribe tu nombre"></ion-input>
+    </ion-item>
+
+    <ion-row class="ion-align-items-center" style="margin-top: 15px;">
+      <ion-col size="4">
+        <ion-item lines="none" style="--background: transparent;">
+          <ion-input type="number" label="Edad:" labelPlacement="start" placeholder="00" style="border: 1px solid #ccc; border-radius: 5px; padding-left: 5px;"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-radio-group value="M">
+          <ion-row class="ion-align-items-center">
+            <ion-col size="auto"><ion-label>Sexo:</ion-label></ion-col>
+            <ion-col>
+              <ion-radio value="M" labelPlacement="end">M</ion-radio>
+            </ion-col>
+            <ion-col>
+              <ion-radio value="H" labelPlacement="end">H</ion-radio>
+            </ion-col>
+          </ion-row>
+        </ion-radio-group>
+      </ion-col>
+    </ion-row>
+
+    <ion-item style="--background: transparent; margin-top: 15px;">
+      <ion-select label="Idioma:" labelPlacement="start" placeholder="Seleccionar">
+        <ion-select-option value="es">Español</ion-select-option>
+        <ion-select-option value="en">Inglés</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, 
-  IonButton, IonIcon, IonCard, IonCardContent, 
+  IonButton, IonButtons, IonIcon, IonCard, IonCardContent,  // <-- Aquí agregué IonButtons
   IonGrid, IonRow, IonCol, IonBadge 
 } from '@ionic/angular/standalone';
 import { TrackingService } from 'src/app/core/services/tracking-service';
@@ -21,7 +21,8 @@ import { TrackingService } from 'src/app/core/services/tracking-service';
     IonHeader, 
     IonTitle, 
     IonToolbar, 
-    IonButton, 
+    IonButton,
+    IonButtons, // <-- Y aquí también
     IonIcon, 
     IonCard, 
     IonCardContent, 
@@ -58,6 +59,7 @@ export class TuristaInicioPage implements OnInit {
     // Redireccionar a la página de detalles del negocio
     this.router.navigate(['/info-negocio', idNegocio]);
   }
+  
   irAlMapa() {
     this.router.navigate(['/mapa']);
   }
@@ -80,5 +82,10 @@ export class TuristaInicioPage implements OnInit {
 
   irAlLogin() {
     this.router.navigate(['/login']);
+  }
+
+  // Icono de la esquina superior derecha para ir al perfil del turista
+  irAPerfil() {
+    this.router.navigate(['/turista-perfil']);
   }
 }

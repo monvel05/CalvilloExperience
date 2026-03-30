@@ -1,9 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-import { importProvidersFrom } from '@angular/core'; // <-- AGREGADO: Necesario para cargar módulos clásicos
-import { authInterceptor } from './app/core/interceptors/auth-interceptor';
-import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
+import { importProvidersFrom } from '@angular/core'; 
+
+//  1. RUTA CORREGIDA HACIA TU CARPETA INTERCEPTOR 
+import { authInterceptor } from './app/core/interceptors/auth.interceptor';
 
 // Importaciones de servicios, rutas y componentes
 import { AuthService } from './app/core/services/auth';
@@ -36,14 +37,13 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    provideCharts(withDefaultRegisterables()), // AGREGADO: Proveedor para ng2-charts
     
-    provideHttpClient(
-      withInterceptors([authInterceptor, languageInterceptor])
-    ),
-
+    // Tus servicios
     AuthService,
+    
+    // 👇 2. INTERCEPTORES UNIFICADOS 👇
+    // Aquí metemos a trabajar en equipo el de tu compañero (idioma) y el tuyo (seguridad)
+    provideHttpClient(withInterceptors([languageInterceptor, authInterceptor])),
 
     importProvidersFrom(
       TranslateModule.forRoot({

@@ -37,10 +37,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, 
-    IonHeader, 
-    IonToolbar, 
-    IonTitle, 
+    ReactiveFormsModule,
     IonContent, 
     IonItem, 
     IonLabel, 
@@ -49,8 +46,6 @@ import { CommonModule } from '@angular/common';
     IonIcon, 
     IonSelect, 
     IonSelectOption,
-    IonButtons,
-    IonBackButton,
     RouterLink
   ]
 })

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <ion-content [scrollY]="false">
   <div class="dashboard-container">
     
@@ -162,5 +163,34 @@
       </div>
 
     </div>
+=======
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Administrador_Inicio</ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="cerrarSesion()">Salir</ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Administrador_Inicio</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ion-padding" style="text-align: center; margin-top: 50px;">
+    <h2>¡Bienvenido al Panel!</h2>
+    <p>Has ingresado de forma segura.</p>
+
+    <br>
+
+    <ion-button expand="block" color="danger" (click)="cerrarSesion()">
+      Cerrar Sesión
+    </ion-button>
+>>>>>>> Stashed changes
   </div>
 </ion-content>

@@ -2,46 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; 
-
-import { addIcons } from 'ionicons'; 
-import { 
-  gridOutline, 
-  peopleOutline, 
-  storefrontOutline, 
-  mapOutline, 
-  barChartOutline, 
-  settingsOutline,
-  people,
-  airplane,
-  storefront,
-  cash,
-  documentTextOutline,
-  imagesOutline,
-  restaurantOutline,
-  bedOutline,
-  busOutline,
-  cameraOutline
-} from 'ionicons/icons';
-
-import { DashboardService } from '../../core/services/dashboard.service';
-import { Chart, registerables } from 'chart.js';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons } from '@ionic/angular/standalone';
 
-Chart.register(...registerables);
+import { AuthService } from '../../services/auth';
+import { DashboardService } from 'src/app/core/services/dashboard.service';
+import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { gridOutline, peopleOutline, storefrontOutline, mapOutline, barChartOutline, settingsOutline, people, airplane, storefront, cash, documentTextOutline, imagesOutline, restaurantOutline, bedOutline, busOutline, cameraOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-administrador-inicio',
   templateUrl: './administrador-inicio.page.html',
   styleUrls: ['./administrador-inicio.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonButtons]
 })
 export class AdministradorInicioPage implements OnInit {
 
   vistaActual: string = 'dashboard';
+
+  cambiarVista(vista: string) {
+    this.vistaActual = vista;
+  }
 
   stats: any = {
     usuarios: 0,
@@ -61,6 +45,7 @@ export class AdministradorInicioPage implements OnInit {
   listaNegocios: any[] = [];
 
   constructor(
+    private authService: AuthService, 
     private dashboardService: DashboardService,
     private router: Router
   ) {
@@ -83,196 +68,14 @@ export class AdministradorInicioPage implements OnInit {
       'camera-outline': cameraOutline
     });
   }
-
   ngOnInit() {
-    this.cargarDatos();
-  }
-
-  cambiarVista(vista: string) {
-    if (vista === 'muro-social') {
-      this.router.navigate(['/muro-social']);
-    } else {
-      this.vistaActual = vista;
-      if (vista === 'dashboard' || vista === 'usuarios') {
-        setTimeout(() => this.crearGraficas(), 100);
-      }
-    }
-  }
-
-  getIconoCategoria(categoria: string): string {
-    const cat = categoria.toLowerCase();
-    if (cat.includes('cenaduria')) return 'restaurant-outline';
-    if (cat.includes('hospedaje')) return 'bed-outline';
-    if (cat.includes('transporte')) return 'bus-outline';
-    if (cat.includes('atractivo')) return 'camera-outline';
-    return 'storefront-outline'; // Ícono por defecto
-  }
-
-  getClaseMembresia(membresia: string): string {
-    const mem = membresia.toLowerCase();
-    if (mem.includes('vip')) return 'badge-vip';
-    if (mem.includes('premium')) return 'badge-premium';
-    if (mem.includes('basica') || mem.includes('básica')) return 'badge-basica';
-    return 'badge-ninguna';
-  }
-
-  // Ahora cargarDatos y cambiarFiltro usan 'this.filtro'
-  cambiarFiltro() {
-    this.cargarDatos();
-  }
-
-  cargarDatos() {
-    // Nota: Tu DashboardService ahora debería recibir 'this.filtro' para hacer la consulta correcta a la BD
     
-    this.dashboardService.getUsuarios().subscribe(res => {
-      this.stats.usuarios = res?.total || 0;
-    });
-
-    this.dashboardService.getTuristas().subscribe(res => {
-      this.stats.turistas = res?.total || 0;
-    });
-
-    this.dashboardService.getNegocios().subscribe(res => {
-      this.stats.negocios = res?.total || 0;
-    });
-
-    this.dashboardService.getGanancias().subscribe(res => {
-      this.stats.ganancias = res?.total || 0;
-    });
-
-    this.dashboardService.getMembresias().subscribe(res => {
-      const data = { basica: 0, premium: 0, vip: 0 };
-      if (res && Array.isArray(res)) {
-        res.forEach((m: any) => {
-          if (m.tipo_membresia === 'Basica') data.basica = m.total;
-          if (m.tipo_membresia === 'Premium') data.premium = m.total;
-          if (m.tipo_membresia === 'VIP') data.vip = m.total;
-        });
-      }
-      this.stats.membresias = data;
-
-      setTimeout(() => {
-        if (this.vistaActual === 'dashboard') {
-          this.crearGraficas();
-        }
-      }, 100);
-    });
-
-    this.dashboardService.getGeneros().subscribe(res => {
-      const data = { hombres: 0, mujeres: 0, prefieroNoDecirlo: 0 };
-      if (res && Array.isArray(res)) {
-        res.forEach((g: any) => {
-          if (g.genero === 'Hombre') data.hombres = g.total;
-          if (g.genero === 'Mujer') data.mujeres = g.total;
-          if (g.genero === 'Prefiero no decirlo') data.prefieroNoDecirlo = g.total;
-        });
-      }
-      this.stats.generos = data;
-    });
-
-    this.dashboardService.getListaNegocios().subscribe(res => {
-      this.listaNegocios = res;
-    });
   }
 
-  crearGraficas() {
-    this.charts.forEach(chart => chart.destroy());
-    this.charts = [];
-
-    const canvasLinea = document.getElementById('graficaLinea') as HTMLCanvasElement;
-    if (canvasLinea) {
-      this.dashboardService.getGananciasMensuales().subscribe(res => {
-        const labels = res.map((r: any) => `Mes ${r.mes}`);
-        const data = res.map((r: any) => r.total);
-
-        const chartLinea = new Chart(canvasLinea, {
-          type: 'line',
-          data: {
-            labels,
-            datasets: [{
-              label: 'Ganancias',
-              data,
-              borderColor: '#f472b6', 
-              backgroundColor: 'rgba(244, 114, 182, 0.2)',
-              fill: true,
-              tension: 0.4
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-        this.charts.push(chartLinea);
-      });
-    }
-
-    const canvasDona = document.getElementById('graficaDona') as HTMLCanvasElement;
-    if (canvasDona) {
-      const chartDona = new Chart(canvasDona, {
-        type: 'doughnut',
-        data: {
-          labels: ['Básica', 'Premium', 'VIP'],
-          datasets: [{
-            data: [
-              this.stats.membresias.basica,
-              this.stats.membresias.premium,
-              this.stats.membresias.vip
-            ],
-            backgroundColor: ['#a7f3d0', '#fbcfe8', '#fcd34d']
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-      this.charts.push(chartDona);
-    }
-
-    const canvasTop = document.getElementById('graficaTop') as HTMLCanvasElement;
-    if (canvasTop) {
-      const top = [
-        { nombre: 'Mirador Santa Cruz', visitas: 11 },
-        { nombre: 'Hotel Gloria Calvillo', visitas: 9 },
-        { nombre: 'Manglar Parque Acuático', visitas: 8 }
-      ];
-
-      const chartTop = new Chart(canvasTop, {
-        type: 'bar',
-        data: {
-          labels: top.map(l => l.nombre),
-          datasets: [{
-            label: 'Visitas',
-            data: top.map(l => l.visitas),
-            backgroundColor: '#a7f3d0'
-          }]
-        },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
-      });
-      this.charts.push(chartTop);
-    }
-
-    const canvasGeneros = document.getElementById('graficaGeneros') as HTMLCanvasElement;
-    if (canvasGeneros) {
-      const chartGeneros = new Chart(canvasGeneros, {
-        type: 'doughnut',
-        data: {
-          labels: ['Mujeres', 'Hombres', 'Prefiero no decirlo'],
-          datasets: [{
-            // Aquí inyectamos los datos dinámicos:
-            data: [
-              this.stats.generos.mujeres, 
-              this.stats.generos.hombres, 
-              this.stats.generos.prefieroNoDecirlo
-            ], 
-            backgroundColor: ['#fbcfe8', '#bfdbfe', '#e2e8f0'],
-            borderWidth: 0
-          }]
-        },
-        options: { 
-          responsive: true, 
-          maintainAspectRatio: false,
-          cutout: '65%' 
-        }
-      });
-      this.charts.push(chartGeneros);
-    }
+cerrarSesion() {
+  this.authService.logout();
 }
+
 exportarPDF() {
     const doc = new jsPDF();
     const fecha = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
