@@ -1,9 +1,9 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/mapa"></ion-back-button>
+      <ion-back-button (click)="volver()"></ion-back-button>
     </ion-buttons>
-    <ion-title>Nueva Reserva</ion-title>
+    <ion-title>{{ 'RESERVE_PAGE.TITLE' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,7 +16,7 @@
         <p class="hero-subtitle">Calvillo Experience</p>
         <div class="hero-location">
           <ion-icon name="location-outline"></ion-icon>
-          <span>Centro Histórico, Calvillo</span>
+          <span>{{ 'RESERVE_PAGE.LOCATION' | translate }}</span>
         </div>
       </div>
     </div>
@@ -28,14 +28,14 @@
 
           <div class="dates-row">
             <div class="date-field">
-              <div class="field-label">LLEGADA</div>
+              <div class="field-label">{{ 'RESERVE_PAGE.ARRIVAL_DATE' | translate }}</div>
               <div class="field-value">
                 <ion-icon name="calendar-outline"></ion-icon>
                 <ion-datetime-button datetime="date"></ion-datetime-button>
               </div>
             </div>
             <div class="date-field">
-              <div class="field-label">HORA DE ENTRADA</div>
+              <div class="field-label">{{ 'RESERVE_PAGE.ARRIVAL_TIME' | translate }}</div>
               <div class="field-value">
                 <ion-icon name="time-outline"></ion-icon>
                 <ion-datetime-button datetime="time"></ion-datetime-button>
@@ -61,53 +61,59 @@
           }
 
           <div class="people-field">
-            <div class="field-label">NÚMERO DE PERSONAS</div>
+            <div class="field-label">{{ 'RESERVE_PAGE.NUM_PEOPLE' | translate }}</div>
             <div class="field-value-select">
-              <ion-select [(ngModel)]="numeroPersonas" placeholder="Seleccionar" interface="popover" class="custom-select">
-                <ion-select-option value="1">1 Persona</ion-select-option>
-                <ion-select-option value="2">2 Personas</ion-select-option>
-                <ion-select-option value="3">3 Personas</ion-select-option>
-                <ion-select-option value="4">4 Personas</ion-select-option>
-                <ion-select-option value="5">5 Personas</ion-select-option>
-                <ion-select-option value="6">6 Personas</ion-select-option>
-                <ion-select-option value="7">7 Personas</ion-select-option>
-                <ion-select-option value="8">8+ Personas</ion-select-option>
+              <ion-select [(ngModel)]="numeroPersonas" [placeholder]="'RESERVE_PAGE.SELECT_PLACEHOLDER' | translate" interface="popover" class="custom-select">
+                <ion-select-option value="1">{{ 'RESERVE_PAGE.PERSON_1' | translate }}</ion-select-option>
+                <ion-select-option value="2">2 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                <ion-select-option value="3">3 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                <ion-select-option value="4">4 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                <ion-select-option value="5">5 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                <ion-select-option value="6">6 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                <ion-select-option value="7">7 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                <ion-select-option value="8">{{ 'RESERVE_PAGE.PERSON_8_PLUS' | translate }}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" class="select-icon"></ion-icon>
             </div>
           </div>
 
           <div class="exit-time-field">
-            <div class="field-label">HORA DE SALIDA</div>
-            <div class="field-value" (click)="openExitTimeModal()">
+            <div class="field-label">{{ 'RESERVE_PAGE.DEPARTURE_TIME' | translate }}</div>
+            <div class="field-value" (click)="abrirModalHoraSalida()">
               <ion-icon name="time-outline"></ion-icon>
-              <span>{{ exitTime || 'Seleccionar hora de salida' }}</span>
+              <span>{{ exitTime || ('RESERVE_PAGE.SELECT_DEPARTURE_TIME' | translate) }}</span>
             </div>
           </div>
 
           <button class="btn-reservar" expand="block" (click)="confirmarReserva()">
-            RESERVAR AHORA
+            {{ 'RESERVE_PAGE.BOOK_NOW' | translate }}
           </button>
         </div>
       </div>
 
       <div class="calendar-section">
         <div class="calendar-card">
-          <h3 class="section-title">Disponibilidad</h3>
+          <h3 class="section-title">{{ 'RESERVE_PAGE.AVAILABILITY' | translate }}</h3>
 
           <div class="calendar-container">
             <div class="calendar-header">
-              <button class="calendar-nav" (click)="prevMonth()">
+              <button class="calendar-nav" (click)="mesAnterior()">
                 <ion-icon name="chevron-back-outline"></ion-icon>
               </button>
-              <span class="calendar-month">{{ currentMonth }} {{ currentYear }}</span>
-              <button class="calendar-nav" (click)="nextMonth()">
+              <span class="calendar-month">{{ 'RESERVE_PAGE.MONTH_' + currentMonthIndex | translate }} {{ currentYear }}</span>
+              <button class="calendar-nav" (click)="mesSiguiente()">
                 <ion-icon name="chevron-forward-outline"></ion-icon>
               </button>
             </div>
 
             <div class="calendar-weekdays">
-              <span>D</span><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.SUN' | translate }}</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.MON' | translate }}</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.TUE' | translate }}</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.WED' | translate }}</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.THU' | translate }}</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.FRI' | translate }}</span>
+              <span>{{ 'RESERVE_PAGE.WEEKDAYS.SAT' | translate }}</span>
             </div>
 
             <div class="calendar-days">
@@ -117,7 +123,7 @@
                   [class.selected]="day.isSelected" 
                   [class.disabled]="!day.available && !day.empty"
                   [class.empty]="day.empty" 
-                  (click)="selectDay(day)">
+                  (click)="seleccionarDia(day)">
                   {{ day.date }}
                 </div>
               }
@@ -125,9 +131,9 @@
 
             @if (selectedDay) {
               <div class="accept-button-container">
-                <button class="btn-accept" (click)="acceptDate()">
+                <button class="btn-accept" (click)="aceptarFecha()">
                   <ion-icon name="checkmark-circle-outline"></ion-icon>
-                  ACEPTAR
+                  {{ 'RESERVE_PAGE.ACCEPT' | translate }}
                 </button>
               </div>
             }
@@ -135,28 +141,28 @@
             <div class="calendar-legend">
               <div class="legend-item">
                 <span class="legend-dot available-dot"></span>
-                <span>Disponible</span>
+                <span>{{ 'RESERVE_PAGE.LEGEND_AVAILABLE' | translate }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot selected-dot"></span>
-                <span>Seleccionado</span>
+                <span>{{ 'RESERVE_PAGE.LEGEND_SELECTED' | translate }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot unavailable-dot"></span>
-                <span>No disponible</span>
+                <span>{{ 'RESERVE_PAGE.LEGEND_UNAVAILABLE' | translate }}</span>
               </div>
             </div>
           </div>
 
           <div class="hours-section">
-            <h4 class="hours-title">Horarios de atención</h4>
+            <h4 class="hours-title">{{ 'RESERVE_PAGE.BUSINESS_HOURS_TITLE' | translate }}</h4>
             <div class="hours-grid">
               <div class="hour-item">
-                <span class="hour-day">Lunes a Jueves</span>
+                <span class="hour-day">{{ 'RESERVE_PAGE.HOURS_MON_THU' | translate }}</span>
                 <span class="hour-time">6:00 PM - 11:00 PM</span>
               </div>
               <div class="hour-item">
-                <span class="hour-day">Viernes a Domingo</span>
+                <span class="hour-day">{{ 'RESERVE_PAGE.HOURS_FRI_SUN' | translate }}</span>
                 <span class="hour-time">5:00 PM - 12:00 AM</span>
               </div>
             </div>
@@ -167,13 +173,13 @@
 
     <div class="footer-info">
       <div class="payment-methods">
-        <span class="payment-label">FORMAS DE PAGO</span>
+        <span class="payment-label">{{ 'RESERVE_PAGE.PAYMENT_METHODS' | translate }}</span>
         <div class="payment-icons">
           <ion-icon name="card-outline"></ion-icon>
           <span>Visa</span>
           <span>Mastercard</span>
           <span>Amex</span>
-          <span>Efectivo</span>
+          <span>{{ 'RESERVE_PAGE.CASH' | translate }}</span>
         </div>
       </div>
 
@@ -192,22 +198,19 @@
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="date" presentation="date" [(ngModel)]="currentDate" (ionChange)="onDateChange($event)">
-      </ion-datetime>
+      <ion-datetime id="date" presentation="date" [(ngModel)]="currentDate" (ionChange)="alCambiarFecha($event)"></ion-datetime>
     </ng-template>
   </ion-modal>
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="time" presentation="time" [(ngModel)]="currentTime" (ionChange)="onTimeChange($event)">
-      </ion-datetime>
+      <ion-datetime id="time" presentation="time" [(ngModel)]="currentTime" (ionChange)="alCambiarHora($event)"></ion-datetime>
     </ng-template>
   </ion-modal>
 
   <ion-modal #exitTimeModal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime presentation="time" [(ngModel)]="exitTimeValue" (ionChange)="onExitTimeChange($event)">
-      </ion-datetime>
+      <ion-datetime presentation="time" [(ngModel)]="exitTimeValue" (ionChange)="alCambiarHoraSalida($event)"></ion-datetime>
     </ng-template>
   </ion-modal>
 </ion-content>

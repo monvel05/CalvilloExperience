@@ -60,7 +60,7 @@ ion-content.fondo-claro {
       object-fit: cover;
       aspect-ratio: 4/5;
       background-color: #fff;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
     .rating-badge {
@@ -85,7 +85,9 @@ ion-content.fondo-claro {
     overflow-x: auto;
     padding-bottom: 8px;
 
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+      display: none;
+    }
     scrollbar-width: none;
 
     .thumbnail-img {
@@ -98,7 +100,8 @@ ion-content.fondo-claro {
       opacity: 0.6;
       transition: all 0.2s ease;
 
-      &.active, &:hover {
+      &.active,
+      &:hover {
         opacity: 1;
         border-color: $color-primario;
       }
@@ -110,7 +113,7 @@ ion-content.fondo-claro {
 .info-column {
   .title-section {
     margin-bottom: 1.5rem;
-    
+
     .subtitle {
       text-transform: uppercase;
       letter-spacing: 1.5px;
@@ -125,7 +128,7 @@ ion-content.fondo-claro {
       gap: 10px;
 
       .business-name {
-        font-family: 'Merriweather', serif;
+        font-family: "Merriweather", serif;
         font-size: 2.2rem;
         color: #111;
         margin: 0;
@@ -134,7 +137,7 @@ ion-content.fondo-claro {
 
       .verified-icon {
         font-size: 1.8rem;
-        color: #008751; 
+        color: #008751;
       }
     }
   }
@@ -169,7 +172,7 @@ ion-content.fondo-claro {
         font-weight: 600;
         color: $color-texto;
         font-size: 1rem;
-        
+
         ion-icon {
           color: $color-primario;
           font-size: 1.2rem;
@@ -180,7 +183,9 @@ ion-content.fondo-claro {
     .accordion-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease, padding 0.3s ease;
+      transition:
+        max-height 0.3s ease,
+        padding 0.3s ease;
       color: #555;
       font-size: 0.95rem;
 
@@ -201,7 +206,7 @@ ion-content.fondo-claro {
         gap: 8px;
         color: $color-primario;
         font-weight: 500;
-        
+
         ion-icon {
           font-size: 2rem;
         }
@@ -235,7 +240,38 @@ ion-content.fondo-claro {
     font-size: 0.95rem;
     border-left: 4px solid $color-primario;
 
-    ion-icon { font-size: 1.5rem; }
-    p { margin: 0; line-height: 1.4; }
+    ion-icon {
+      font-size: 1.5rem;
+    }
+    p {
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+
+  .address-text {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: var(--ion-color-dark);
+  }
+
+  .map-container {
+  width: 100%;
+  padding: 5px 0;
+  margin-bottom: 15px;
+  display: block; /* Asegura que no tenga comportamientos extraños de flexbox ocultos */
+
+  .mini-mapa {
+    width: 100%;
+    height: 200px !important; /* El !important fuerza la altura incluso si Ionic intenta colapsarlo */
+    border-radius: 12px;
+    background-color: #e0e0e0;
+  }
+}
+
+  .btn-direcciones {
+    --border-radius: 8px;
+    --border-color: var(--ion-color-primary);
+    margin-top: 10px;
   }
 }

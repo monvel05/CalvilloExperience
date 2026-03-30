@@ -4,9 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth';
 import { CommonModule } from '@angular/common'; 
 import { addIcons } from 'ionicons';
-import { mailOutline, lockClosedOutline, alertCircleOutline } from 'ionicons/icons';
-import { IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonIcon, IonText } from "@ionic/angular/standalone";
+import { 
+  mailOutline, 
+  lockClosedOutline, 
+  alertCircleOutline,
+  globeOutline // <-- Ícono para el chip de idioma agregado
+} from 'ionicons/icons';
+import { 
+  IonHeader, IonLabel, IonItem, IonInput, IonContent, 
+  IonToolbar, IonTitle, IonButton, IonIcon, IonText, 
+  IonChip // <-- Componente Chip agregado
+} from "@ionic/angular/standalone";
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
+
+// IMPORTAMOS LOS MÓDULOS DE TRADUCCIÓN
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +26,26 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    IonIcon, IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonText,
+    IonIcon, IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonText, 
+    IonChip, // <-- Componente Chip agregado a los imports
     ReactiveFormsModule,
     RouterLink,
-    CommonModule
+    CommonModule,
+    TranslateModule // <-- Agregado para usar el pipe en el HTML
   ]
-  // ELIMINADO: providers: [AuthService] 
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
-  usuario: DatosUsuario | null = null;
+  currentLang: string = 'es'; // <-- Variable para controlar el idioma actual del chip
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService // <-- Inyectado para traducir las alertas
   ) {
-    addIcons({mailOutline, alertCircleOutline, lockClosedOutline});
+    // Añadimos globeOutline
+    addIcons({mailOutline, alertCircleOutline, lockClosedOutline, globeOutline});
 
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]], 
@@ -38,7 +53,16 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Tomar el idioma actual al cargar la pantalla
+    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'es';
+  }
+
+  // Función para cambiar el idioma global de la app al hacer clic
+  toggleLanguage() {
+    this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
+    this.translate.use(this.currentLang);
+  }
 
   iniciarSesion() {
     if (this.loginForm.invalid) {
@@ -50,17 +74,11 @@ export class LoginPage implements OnInit {
 
     this.authService.login(correo, contraseña).subscribe({
       next: (res: any) => {
-        console.log("Login exitoso, rol recibido:", res.user.idTipoUsuario);
-        
-        // 1. Guardamos los datos directamente en la interfaz del componente
-        this.usuario = res.user as DatosUsuario;
-        
-        // 2. Guardamos la sesión en el almacenamiento local
-        // (Nota: Si tu AuthService ya hace esto en el pipe(tap(...)), puedes borrar estas dos líneas)
-        localStorage.setItem('token', res.token);
+        // Guardamos TODA la info del usuario en localStorage
         localStorage.setItem('user', JSON.stringify(res.user));
+        localStorage.setItem('token', res.token);
         
-        // 3. Redirección basada en el rol del usuario
+        // Redirección
         switch (res.user.idTipoUsuario) {
           case 1:
             this.router.navigate(['administrador-inicio'], {replaceUrl: true});
@@ -77,13 +95,11 @@ export class LoginPage implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error("Error detectado en servidor:", err);
-        const mensaje = err.status === 400 ? err.error.message : "Correo o contraseña incorrectos.";
+        // Traducimos el mensaje de error o usamos el que manda el backend
+        const mensajeTraducido = this.translate.instant('LOGIN_PAGE.ERROR_CREDENTIALS');
+        const mensaje = err.status === 400 ? err.error.message : mensajeTraducido;
         alert(mensaje);
       }
     });
-
   }
-
-  
 }
