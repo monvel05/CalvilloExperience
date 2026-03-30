@@ -1,13 +1,63 @@
-<ion-header [translucent]="true">
+<ion-header class="custom-header">
   <ion-toolbar>
-    <ion-title>negocio_presentacion</ion-title>
+    <ion-title>Calvillo Experience.</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="irAPerfil()">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+<h2><ion-title class="ion-text-center">Mis Negocios...</ion-title></h2>
+<ion-content class="main-content-dark ion-padding">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">negocio_presentacion</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="cards-grid">
+    @for (negocio of misNegocios; track negocio.id) {
+      <ion-card class="compact-card">
+        <div class="card-image-box">
+          @if (negocio.imagen) {
+            <img [src]="negocio.imagen" [alt]="negocio.nombre" class="business-img">
+          } @else {
+            <ion-icon name="image-outline" class="placeholder-icon"></ion-icon>
+          }
+        </div>
+
+        <ion-card-header>
+          <ion-card-title class="bright-title">{{ negocio.nombre }}</ion-card-title>
+          <ion-card-subtitle class="electric-subtitle">{{ negocio.categoria | uppercase }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content class="description-text">
+          {{ negocio.descripcion }}
+        </ion-card-content>
+
+        <div class="card-action-footer">
+          <ion-button fill="clear" color="primary" (click)="editarNegocio(negocio)" class="btn-subtle">
+            <ion-icon slot="start" name="pencil-outline"></ion-icon>
+            Editar
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="borrarNegocio(negocio)" class="btn-subtle">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            Borrar
+          </ion-button>
+        </div>
+      </ion-card>
+    }
+
+    <ion-card class="compact-card create-card" (click)="irANegocioInicio()" title="Crear un nuevo negocio">
+      <div class="create-content">
+        <div class="icon-circle">
+          <ion-icon name="add"></ion-icon>
+        </div>
+        <p class="create-text">Crear un nuevo negocio</p>
+      </div>
+    </ion-card>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="success" (click)="irANegocioInicio()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

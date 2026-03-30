@@ -181,7 +181,7 @@ export class PerfilPage {
         this.router.navigate(['turista-inicio'], {replaceUrl: true});
         break;
       case 3:
-        this.router.navigate(['negocio-inicio'], {replaceUrl: true});
+        this.router.navigate(['negocio-presentacion'], {replaceUrl: true});
         break;
       default:
         this.router.navigate(['login'], {replaceUrl: true});

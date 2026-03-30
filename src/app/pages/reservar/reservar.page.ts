@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReservasService } from '../../core/services/reservas.service';
@@ -27,7 +28,8 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
   imports: [
     CommonModule, 
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
-    IonSelect, IonSelectOption, IonDatetime, 
+    IonSelect, IonSelectOption, IonDatetime,IonicModule, 
+    CommonModule,
     IonDatetimeButton, IonModal, IonIcon, IonLabel, IonButton, 
     FormsModule,
     TranslateModule

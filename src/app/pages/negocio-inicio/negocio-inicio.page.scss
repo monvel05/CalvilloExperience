@@ -1,120 +1,206 @@
-.custom-header {
-  ion-toolbar {
-    --background: #000; // Negro
-    --color: #fff;      // Texto blanco
-  }
+/* negocio-inicio.page.scss */
 
-  ion-title {
-    font-weight: 700;
-    font-size: 1.2rem;
-  }
+$dark-charcoal: #121212;   /* Fondo de la página */
+$dark-slate: #1c1c1e;      /* Fondo de la card */
+$electric-blue: #3880ff;   /* Color de acento para subtítulos */
+$pure-white: #ffffff;      /* Títulos principales */
+$soft-white: #b0b0b2;      /* Texto de descripción */
+$border-subtle: #2c2c2e;   /* Borde sutil */
+$accent-gray: #f5f5f7;     /* Color de acento claro de las imágenes */
 
-  ion-icon {
-    font-size: 1.8rem;
-    color: #fff;
-  }
+/* Colores cálidos */
+$warm-beige: #fdf6e3;       /* Fondo general */
+$warm-card: #fce5cd;        /* Fondo de las cards */
+$accent-orange: #ff8c42;    /* Color de acento */
+$dark-header: #000000;      /* Header negro */
+$soft-brown: #6b4f3f;       /* Texto secundario cálido */
+
+ion-content {
+  --padding-bottom: 120px;
+  --offset-bottom: 0px !important;
 }
 
-// Contenedor principal
-.split-view {
+.main-content-dark {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-
-  @media (min-width: 992px) {
-    flex-direction: row;
-  }
+  --background: #{$warm-beige}; 
 }
 
-// Columna de la imagen (Izquierda)
-.image-sidebar {
-  position: relative;
-  width: 100%;
-  height: 300px; // Altura para móvil
+/* Encabezado */
+.custom-header ion-toolbar {
+  --background: #{$dark-header}; 
+  --color: #fff;
+  ion-icon { font-size: 28px; color: white; }
+}
 
-  @media (min-width: 992px) {
-    width: 40%; // Mismo ancho que en tu imagen de referencia
-    height: 100vh;
-    position: sticky;
-    top: 0;
-  }
+/* COLUMNA DE IMAGEN */
+.image-column {
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-image-container {
+  width: 100%;
+  height: 200px; 
+  position: relative;
+  background-color: #f7e1b5;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-  }
-
-  .image-overlay {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    ion-button {
-      --background: rgba(255, 255, 255, 0.9);
-      --color: #333;
-      --border-radius: 8px;
-      font-weight: bold;
-      font-size: 0.75rem;
-    }
+    object-fit: cover; 
   }
 }
 
-// Columna de datos (Derecha)
-.form-content {
-  flex: 1;
-  background: white;
-  padding: 40px 20px;
-
-  @media (min-width: 992px) {
-    padding: 60px 80px;
-    overflow-y: auto;
-  }
-
-  .form-inner {
-    max-width: 600px;
-    margin: 0 auto;
+/* Botón flotante para cambiar imagen */
+.change-image-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: #2c2c2e;
+  border-radius: 12px;
+  font-size: 0.9em;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  
+  ion-icon {
+    font-size: 1.2em;
+    margin-right: 5px;
   }
 }
 
-// Estilos de los elementos (Inspirado en imagen 2)
-.business-title {
-  font-size: 2.2rem;
+/* Cards y formularios */
+.form-main-title {
+  color: #000000;
   font-weight: 700;
-  margin-bottom: 8px;
-  color: #1a1a1a;
+  font-size: 1.8em;
 }
 
-.section-label {
-  font-size: 1.1rem;
+.form-main-subtitle {
+  color: #000000;
+  margin-bottom: 30px;
+}
+
+.compact-card {
+  --background: #{$warm-card};
+  background: #{$warm-card};
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: 1px solid #{$border-subtle};
+}
+
+.electric-subtitle {
+  color: #{$accent-orange}; 
   font-weight: 600;
-  margin: 30px 0 15px 0;
-  color: #444;
+  font-size: 1em;
 }
 
-.custom-input {
-  --background: #f8f9fa;
-  --border-radius: 12px;
-  --padding-start: 16px;
-  margin-bottom: 12px;
-  border: 1px solid #eee;
+.input-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #000000;
 
-  ion-label {
-    color: var(--ion-color-primary) !important;
-    font-weight: 600;
-    margin-bottom: 4px;
+  .input-icon {
+    font-size: 24px;
+    color: #000000
+  }
+
+  .input-labels-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
 }
 
-.grid-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+.input-top-label {
+  font-size: 0.85em;
+  color: #000000;
+  margin-bottom: 4px;
 }
 
-.btn-save {
-  --background: #006437; // Verde similar al de tu referencia
-  --border-radius: 8px;
-  margin-top: 40px;
-  height: 50px;
-  font-weight: 700;
+ion-input, ion-textarea, ion-select {
+  --background: transparent;
+  --color: #000000
+  --padding-start: 0;
+  --padding-end: 0;
+  font-size: 1.1em;
+}
+
+ion-select {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.textarea-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  .textarea-top-label {
+    font-size: 0.85em;
+    color: #000000;
+  }
+
+  ion-textarea {
+    min-height: 100px;
+    border: 1px solid #{$border-subtle};
+    border-radius: 8px;
+    padding: 12px;
+  }
+}
+
+.highlight-card {
+  border-style: dotted;
+}
+
+.reservation-config {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+
+  .main-icon {
+    font-size: 32px;
+    color: #000000;
+  }
+
+  .text-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bright-title {
+    color: #000000;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .description-text {
+    margin: 0;
+    font-size: 0.9em;
+  }
+}
+
+ion-toggle {
+  --background: transparent;
+}
+
+.text-dimmed {
+  color: #000000;
+}
+
+.save-button-container {
+  padding: 20px 10px;
+  background: #ae9be1; /* ✅ Fondo cálido */
 }

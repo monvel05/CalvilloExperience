@@ -87,7 +87,7 @@ export class LoginPage implements OnInit {
             this.router.navigate(['turista-inicio'], {replaceUrl: true});
             break;
           case 3:
-            this.router.navigate(['negocio-inicio'], {replaceUrl: true});
+            this.router.navigate(['negocio-presentacion'], {replaceUrl: true});
             break;
           default:
             this.router.navigate(['home'], {replaceUrl: true});
