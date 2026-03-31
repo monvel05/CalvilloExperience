@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { TrackingService } from 'src/app/core/services/tracking.service';
+import { TrackingService } from 'src/app/core/services/tracking-service';
 
 @Component({
   selector: 'app-mapa',

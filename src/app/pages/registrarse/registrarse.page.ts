@@ -1,20 +1,38 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from 'src/app/core/services/auth';
 import { Router, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { 
-  personOutline, calendarOutline, mailOutline, lockClosedOutline,
-  peopleOutline, maleFemaleOutline, languageOutline, alertCircleOutline, globeOutline 
+  personOutline, 
+  calendarOutline, 
+  mailOutline, 
+  lockClosedOutline,
+  peopleOutline,
+  maleFemaleOutline,
+  languageOutline,
+  alertCircleOutline,
+  globeOutline // <-- Ícono para el chip de idioma
 } from 'ionicons/icons';
 import { 
-  IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, 
-  IonInput, IonButton, IonIcon, IonSelect, IonSelectOption,
-  IonButtons, IonBackButton, IonChip, ToastController 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonItem, 
+  IonLabel, 
+  IonInput, 
+  IonButton, 
+  IonIcon, 
+  IonSelect, 
+  IonSelectOption,
+  IonButtons,
+  IonBackButton,
+  IonChip // <-- Importar el componente Chip
 } from "@ionic/angular/standalone";
+import { CommonModule } from '@angular/common';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-registrarse',
@@ -22,27 +40,46 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./registrarse.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, 
-    IonContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, 
-    IonSelect, IonSelectOption, IonButtons, IonBackButton, IonChip, 
-    RouterLink, TranslateModule 
+    CommonModule,
+    ReactiveFormsModule, 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonContent, 
+    IonItem, 
+    IonLabel, 
+    IonInput, 
+    IonButton, 
+    IonIcon, 
+    IonSelect, 
+    IonSelectOption,
+    IonButtons,
+    IonBackButton,
+    IonChip, // <-- Añadido
+    RouterLink,
+    TranslateModule 
   ]
 })
 export class RegistrarsePage implements OnInit {
   registroForm: FormGroup;
-  currentLang: string = 'es'; 
+  currentLang: string = 'es'; // Variable para controlar el chip
 
-  // Inyección moderna de dependencias
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private translate = inject(TranslateService);
-  private toastCtrl = inject(ToastController);
-
-  constructor() {
+  constructor(
+    private fb: FormBuilder, 
+    private authService: AuthService,
+    private router: Router,
+    private translate: TranslateService 
+  ) {
     addIcons({ 
-      personOutline, calendarOutline, mailOutline, lockClosedOutline,
-      peopleOutline, maleFemaleOutline, languageOutline, alertCircleOutline, globeOutline 
+      personOutline, 
+      calendarOutline, 
+      mailOutline, 
+      lockClosedOutline,
+      peopleOutline,
+      maleFemaleOutline,
+      languageOutline,
+      alertCircleOutline,
+      globeOutline // <-- Añadido
     });
 
     this.registroForm = this.fb.group({
@@ -58,6 +95,7 @@ export class RegistrarsePage implements OnInit {
       validators: this.passwordMatchValidator 
     });
 
+    // UX: Si el usuario cambia el idioma manualmente en el select (1 o 2), actualizar la página y el chip
     this.registroForm.get('idIdioma')?.valueChanges.subscribe(valor => {
       if (valor) {
         this.currentLang = valor === '1' ? 'es' : 'en';
@@ -67,13 +105,17 @@ export class RegistrarsePage implements OnInit {
   }
 
   ngOnInit() {
+    // Tomar el idioma actual del servicio al entrar a la página
     this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'es';
+    // Sincronizar el select por defecto
     this.registroForm.get('idIdioma')?.setValue(this.currentLang === 'es' ? '1' : '2', { emitEvent: false });
   }
 
+  // UX: Función para el chip. Si dan clic, cambiamos el idioma global y el del formulario
   toggleLanguage() {
     this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
     this.translate.use(this.currentLang);
+    // Sincronizamos con el select interno
     this.registroForm.get('idIdioma')?.setValue(this.currentLang === 'es' ? '1' : '2', { emitEvent: false });
   }
 
@@ -88,20 +130,19 @@ export class RegistrarsePage implements OnInit {
     return null;
   }
 
-  async mostrarToast(mensaje: string, color: string = 'danger') {
-    const toast = await this.toastCtrl.create({
-      message: mensaje,
-      duration: 3000,
-      color: color,
-      position: 'top'
-    });
-    await toast.present();
-  }
-
   registrar() {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
-      this.mostrarToast(this.translate.instant('REGISTER_PAGE.ERROR_MISSING_FIELDS'));
+      
+      const missingFields = [];
+      if (this.registroForm.get('nombre')?.invalid) missingFields.push(this.translate.instant('REGISTER_PAGE.FULL_NAME'));
+      if (this.registroForm.get('fechaNacimiento')?.invalid) missingFields.push(this.translate.instant('REGISTER_PAGE.BIRTH_DATE'));
+      if (this.registroForm.get('correo')?.invalid) missingFields.push(this.translate.instant('REGISTER_PAGE.EMAIL'));
+      if (this.registroForm.get('contraseña')?.invalid) missingFields.push(this.translate.instant('REGISTER_PAGE.PASSWORD'));
+      if (this.registroForm.get('idGenero')?.invalid) missingFields.push(this.translate.instant('REGISTER_PAGE.GENDER'));
+      
+      const msgErrorBase = this.translate.instant('REGISTER_PAGE.ERROR_MISSING_FIELDS');
+      alert(`${msgErrorBase} ${missingFields.join(', ')}`);
       return;
     }
 
@@ -115,15 +156,19 @@ export class RegistrarsePage implements OnInit {
     };
     
     this.authService.registrarUsuario(datosFinales).subscribe({
-      next: () => {
-        this.mostrarToast(this.translate.instant('REGISTER_PAGE.SUCCESS_MSG'), 'success');
-        // Tras registrarse, se envía al login para que ingrese sus credenciales
-        setTimeout(() => this.router.navigate(['/login']), 1500);
+      next: (res: any) => {
+        alert(this.translate.instant('REGISTER_PAGE.SUCCESS_MSG'));
+        
+        if (datosFinales.idTipoUsuario === 1) {
+          this.router.navigate(['/admin-dashboard']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: (err) => {
         const fallbackMsg = this.translate.instant('REGISTER_PAGE.ERROR_DEFAULT');
         const mensajeError = err.error?.message || fallbackMsg;
-        this.mostrarToast(mensajeError);
+        alert(mensajeError);
       }
     });
   }

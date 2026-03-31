@@ -20,7 +20,7 @@ import {
 } from 'ionicons/icons';
 
 // Importaciones de servicios, rutas y componentes
-import { AuthService } from './app/core/services/auth.service';
+import { AuthService } from './app/core/services/auth';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';

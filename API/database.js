@@ -1,24 +1,20 @@
-// API/database.js
-const mysql = require("mysql2/promise");
+const mysql = require("mysql2");
+// Importamos el objeto environment desde tu carpeta env
 const { environment } = require("../src/env/env.ts"); 
 
-const pool = mysql.createPool({
+const connDB = mysql.createConnection({
   host: environment.database.host,
   user: environment.database.user,
   password: environment.database.password,
   database: environment.database.database,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
 });
 
-pool.getConnection()
-  .then(conn => {
-    console.log("¡Conectado a la base de datos exitosamente mediante Pool!");
-    conn.release();
-  })
-  .catch(error => {
-    console.log("Error conectando a la base de datos: ", error);
-  });
+connDB.connect((error) => {
+  if (error) {
+    console.log("Error connecting to database: ", error);
+  } else {
+    console.log("Connected to database successfully!");
+  }
+});
 
-exports.connDB = pool;
+exports.connDB = connDB;

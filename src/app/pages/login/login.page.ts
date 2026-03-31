@@ -1,19 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth';
 import { CommonModule } from '@angular/common'; 
 import { addIcons } from 'ionicons';
 import { 
-  mailOutline, lockClosedOutline, alertCircleOutline, globeOutline 
+  mailOutline, 
+  lockClosedOutline, 
+  alertCircleOutline,
+  globeOutline // <-- Ícono para el chip de idioma agregado
 } from 'ionicons/icons';
 import { 
   IonHeader, IonLabel, IonItem, IonInput, IonContent, 
   IonToolbar, IonTitle, IonButton, IonIcon, IonText, 
-  IonChip, ToastController
+  IonChip // <-- Componente Chip agregado
 } from "@ionic/angular/standalone";
+import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 
+// IMPORTAMOS LOS MÓDULOS DE TRADUCCIÓN
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,22 +27,25 @@ import { AuthService } from 'src/app/core/services/auth.service';
   standalone: true,
   imports: [
     IonIcon, IonHeader, IonLabel, IonItem, IonInput, IonContent, IonToolbar, IonTitle, IonButton, IonText, 
-    IonChip, ReactiveFormsModule, RouterLink, CommonModule, TranslateModule
+    IonChip, // <-- Componente Chip agregado a los imports
+    ReactiveFormsModule,
+    RouterLink,
+    CommonModule,
+    TranslateModule // <-- Agregado para usar el pipe en el HTML
   ]
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
-  currentLang: string = 'es'; 
+  currentLang: string = 'es'; // <-- Variable para controlar el idioma actual del chip
 
-  // Inyección moderna de dependencias
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private authService = inject(AuthService);
-  private translate = inject(TranslateService);
-  private toastCtrl = inject(ToastController);
-
-  constructor() {
-    addIcons({ mailOutline, alertCircleOutline, lockClosedOutline, globeOutline });
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private translate: TranslateService // <-- Inyectado para traducir las alertas
+  ) {
+    // Añadimos globeOutline
+    addIcons({mailOutline, alertCircleOutline, lockClosedOutline, globeOutline});
 
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]], 
@@ -46,22 +54,14 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+    // Tomar el idioma actual al cargar la pantalla
     this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'es';
   }
 
+  // Función para cambiar el idioma global de la app al hacer clic
   toggleLanguage() {
     this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
     this.translate.use(this.currentLang);
-  }
-
-  async mostrarToast(mensaje: string, color: string = 'danger') {
-    const toast = await this.toastCtrl.create({
-      message: mensaje,
-      duration: 3000,
-      color: color,
-      position: 'top'
-    });
-    await toast.present();
   }
 
   iniciarSesion() {
@@ -74,7 +74,11 @@ export class LoginPage implements OnInit {
 
     this.authService.login(correo, contraseña).subscribe({
       next: (res: any) => {
-        // Redirección inteligente basada en el rol del usuario (1, 2 o 3)
+        // Guardamos TODA la info del usuario en localStorage
+        localStorage.setItem('user', JSON.stringify(res.user));
+        localStorage.setItem('token', res.token);
+        
+        // Redirección
         switch (res.user.idTipoUsuario) {
           case 1:
             this.router.navigate(['administrador-inicio'], {replaceUrl: true});
@@ -83,17 +87,18 @@ export class LoginPage implements OnInit {
             this.router.navigate(['turista-inicio'], {replaceUrl: true});
             break;
           case 3:
-            this.router.navigate(['negocio-inicio'], {replaceUrl: true});
+            this.router.navigate(['negocio-presentacion'], {replaceUrl: true});
             break;
           default:
-            this.router.navigate(['login'], {replaceUrl: true});
+            this.router.navigate(['home'], {replaceUrl: true});
             break;
         }
       },
       error: (err: any) => {
+        // Traducimos el mensaje de error o usamos el que manda el backend
         const mensajeTraducido = this.translate.instant('LOGIN_PAGE.ERROR_CREDENTIALS');
         const mensaje = err.status === 400 ? err.error.message : mensajeTraducido;
-        this.mostrarToast(mensaje);
+        alert(mensaje);
       }
     });
   }

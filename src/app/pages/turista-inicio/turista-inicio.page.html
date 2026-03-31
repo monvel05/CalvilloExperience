@@ -1,102 +1,532 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-button (click)="irAMuro()" title="Muro Social">
-        <ion-icon name="chatbubbles-outline"></ion-icon>
-      </ion-button>
-      <ion-button (click)="irAMapa()" title="Mapa">
-        <ion-icon name="map-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <ion-title class="ion-text-center">Calvillo Experience</ion-title>
-
+<ion-header class="ion-no-border" [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="titulo-principal">
+      Calvillo Experience
+    </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="irAPerfil()" title="Mi Perfil">
-        <ion-icon name="person-circle-outline"></ion-icon>
-      </ion-button>
-      <ion-button (click)="logout()" title="Cerrar Sesión">
-        <ion-icon name="log-out-outline"></ion-icon>
-      </ion-button>
+      <ion-avatar class="perfil-avatar" (click)="irAPerfil()">
+        <ion-icon name="person-circle" class="icono-perfil-default"></ion-icon>
+      </ion-avatar>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  
-  <div class="welcome-section ion-padding">
-    <h2>{{ 'TOURISM.WELCOME' | translate }}</h2>
-    <p>Explora experiencias únicas en el pueblo de la guayaba</p>
+<ion-content [fullscreen]="true" #content>
+  <!-- Sección de bienvenida -->
+  <div class="welcome-section">
+    <h2 class="welcome-title">¡Descubre Calvillo!</h2>
+    <p class="welcome-subtitle">Explora experiencias únicas en el pueblo de la guayaba</p>
   </div>
 
-  <ion-segment scrollable (ionChange)="filtrarCategoria($event)" value="todos" mode="md" class="ion-margin-bottom">
-    <ion-segment-button value="todos">
-      <ion-label>Todos</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="gastronomía">
-      <ion-label>Gastronomía</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="hospedaje">
-      <ion-label>Hospedaje</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="atractivos">
-      <ion-label>Atractivos</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="artesanías">
-      <ion-label>Artesanías</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
-  @if (cargando) {
-    <div class="ion-padding">
-      @for (i of [1,2,3]; track i) {
-        <ion-card class="ion-margin-bottom">
-          <ion-skeleton-text animated style="width: 100%; height: 180px;"></ion-skeleton-text>
-          <ion-card-header>
-            <ion-skeleton-text animated style="width: 50%; height: 20px;"></ion-skeleton-text>
-            <ion-skeleton-text animated style="width: 80%; height: 25px;"></ion-skeleton-text>
-          </ion-card-header>
-        </ion-card>
-      }
+  <!-- Dropdown de categorías -->
+  <div class="dropdown-container">
+    <div class="dropdown-header" (click)="toggleDropdown()">
+      <div class="dropdown-selected">
+        <ion-icon [name]="categoriaIcono" class="selected-icon"></ion-icon>
+        <span class="selected-text">{{ categoriaNombre }}</span>
+      </div>
+      <ion-icon [name]="dropdownAbierto ? 'chevron-up-outline' : 'chevron-down-outline'" class="dropdown-arrow">
+      </ion-icon>
     </div>
-  } @else {
-    <div class="cards-container ion-padding-horizontal">
-      
-      @for (negocio of negociosFiltrados; track negocio.idNegocio) {
-        <ion-card class="negocio-card ion-margin-bottom" (click)="irANegocio(negocio.idNegocio)" button="true">
-          
-          <ion-img [src]="negocio.imagen?.[0] || 'assets/images/placeholder.jpg'" alt="{{ negocio.nombre }}"></ion-img>
-          
-          <ion-card-header>
-            <ion-card-subtitle color="secondary">
-              {{ negocio.categoria }} • {{ negocio.subcategoria }}
-            </ion-card-subtitle>
-            <ion-card-title>{{ negocio.nombre }}</ion-card-title>
-          </ion-card-header>
 
-          <ion-card-content>
-            <p class="ion-margin-bottom">
-              {{ negocio.descripcion || ('INFO_NEGOCIO.PENDING_DESC' | translate) }}
-            </p>
-            
-            @if (negocio.calificacionMedia) {
-              <div class="rating-badge">
-                <ion-icon name="star" color="warning"></ion-icon>
-                <span> {{ negocio.calificacionMedia }}</span>
-              </div>
-            }
-          </ion-card-content>
+    <div class="dropdown-menu" [class.dropdown-open]="dropdownAbierto">
+      <div class="dropdown-option" (click)="seleccionarCategoria('todos')">
+        <ion-icon name="apps-outline"></ion-icon>
+        <span>Todos</span>
+      </div>
+      <div class="dropdown-option" (click)="seleccionarCategoria('Atractivo turistico')">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <span>Restaurantes</span>
+      </div>
+      <div class="dropdown-option" (click)="seleccionarCategoria('Gatronomia')">
+        <ion-icon name="color-palette-outline"></ion-icon>
+        <span>Artesanos</span>
+      </div>
+      <div class="dropdown-option" (click)="seleccionarCategoria('Transporte')">
+        <ion-icon name="bed-outline"></ion-icon>
+        <span>Hospedaje</span>
+      </div>
+      <div class="dropdown-option" (click)="seleccionarCategoria('Hospedaje')">
+        <ion-icon name="map-outline"></ion-icon>
+        <span>Atractivos</span>
+      </div>
+      <div class="dropdown-option" (click)="seleccionarCategoria('Eventos')">
+        <ion-icon name="car-outline"></ion-icon>
+        <span>Transporte</span>
+      </div>
+    </div>
+  </div>
 
-        </ion-card>
-      } @empty {
-        <div class="ion-text-center ion-padding" style="margin-top: 40px; color: var(--ion-color-medium);">
-          <ion-icon name="search-outline" style="font-size: 64px; opacity: 0.5;"></ion-icon>
-          <h3>Sin resultados</h3>
-          <p>Aún no hay negocios en esta categoría.</p>
+  <!-- Sección de negocios - TODOS -->
+  <div class="negocios-section" [class.hidden]="categoriaSeleccionada !== 'todos'">
+    <div class="section-header">
+      <h3>Descubre lo mejor de Calvillo</h3>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card 1 - Taller de Dulces -->
+      <ion-card class="negocio-card" (click)="irANegocio(1)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/artesano-dulces.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.8</span>
+          </div>
         </div>
-      }
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Taller de Dulces Tradicionales</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="color-palette-outline" class="categoria-icon"></ion-icon>
+            Artesanos
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Centro Histórico, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Lun-Dom 9:00 - 18:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$150</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
+      <!-- Card 2 - Restaurante La Guayabera -->
+      <ion-card class="negocio-card" (click)="irANegocio(2)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/restaurante-guayabera.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.6</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Restaurante La Guayabera</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="restaurant-outline" class="categoria-icon"></ion-icon>
+            Restaurantes
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Av. Principal #123, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Mar-Dom 12:00 - 22:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$250</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Card 3 - Hotel Jardín Calvillo -->
+      <ion-card class="negocio-card" (click)="irANegocio(3)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/hotel-jardin.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.5</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Hotel Jardín Calvillo</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="bed-outline" class="categoria-icon"></ion-icon>
+            Hospedaje
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Calle Juárez #45, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Check-in 15:00 / Check-out 12:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$800</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Card 4 - Mirador de los Guayabos -->
+      <ion-card class="negocio-card" (click)="irANegocio(4)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/mirador-guayabos.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.9</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Mirador de los Guayabos</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="map-outline" class="categoria-icon"></ion-icon>
+            Atractivos
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Cerro del Mirador, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Lun-Dom 8:00 - 18:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$30</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Card 5 - Taxi Ejecutivo Calvillo -->
+      <ion-card class="negocio-card" (click)="irANegocio(5)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/taxi-calvillo.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.4</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Taxi Ejecutivo Calvillo</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="car-outline" class="categoria-icon"></ion-icon>
+            Transporte
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Servicio a domicilio</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>24 horas</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$80</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Card 6 - Cenaduría Doña Chole -->
+      <ion-card class="negocio-card" (click)="irANegocio(6)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/cenaduria-chole.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.7</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Cenaduría Doña Chole</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="restaurant-outline" class="categoria-icon"></ion-icon>
+            Restaurantes
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Plaza Principal #8, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Mar-Dom 18:00 - 23:30</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$120</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
     </div>
-  }
+  </div>
+
+  <!-- Sección de negocios - RESTAURANTES -->
+  <div class="negocios-section" [class.hidden]="categoriaSeleccionada !== 'restaurantes'">
+    <div class="section-header">
+      <h3>Restaurantes en Calvillo</h3>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card - Restaurante La Guayabera -->
+      <ion-card class="negocio-card" (click)="irANegocio(2)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/restaurante-guayabera.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.6</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Restaurante La Guayabera</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="restaurant-outline" class="categoria-icon"></ion-icon>
+            Restaurantes
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Av. Principal #123, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Mar-Dom 12:00 - 22:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$250</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Card - Cenaduría Doña Chole -->
+      <ion-card class="negocio-card" (click)="irANegocio(6)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/cenaduria-chole.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.7</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Cenaduría Doña Chole</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="restaurant-outline" class="categoria-icon"></ion-icon>
+            Restaurantes
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Plaza Principal #8, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Mar-Dom 18:00 - 23:30</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$120</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Sección de negocios - ARTESANOS -->
+  <div class="negocios-section" [class.hidden]="categoriaSeleccionada !== 'artesanos'">
+    <div class="section-header">
+      <h3>Artesanos en Calvillo</h3>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card - Taller de Dulces -->
+      <ion-card class="negocio-card" (click)="irANegocio(1)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/artesano-dulces.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.8</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Taller de Dulces Tradicionales</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="color-palette-outline" class="categoria-icon"></ion-icon>
+            Artesanos
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Centro Histórico, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Lun-Dom 9:00 - 18:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$150</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Sección de negocios - HOSPEDAJE -->
+  <div class="negocios-section" [class.hidden]="categoriaSeleccionada !== 'hospedaje'">
+    <div class="section-header">
+      <h3>Hospedaje en Calvillo</h3>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card - Hotel Jardín -->
+      <ion-card class="negocio-card" (click)="irANegocio(3)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/hotel-jardin.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.5</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Hotel Jardín Calvillo</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="bed-outline" class="categoria-icon"></ion-icon>
+            Hospedaje
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Calle Juárez #45, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Check-in 15:00 / Check-out 12:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$800</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Sección de negocios - ATRACTIVOS -->
+  <div class="negocios-section" [class.hidden]="categoriaSeleccionada !== 'atractivos'">
+    <div class="section-header">
+      <h3>Atractivos en Calvillo</h3>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card - Mirador -->
+      <ion-card class="negocio-card" (click)="irANegocio(4)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/mirador-guayabos.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.9</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Mirador de los Guayabos</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="map-outline" class="categoria-icon"></ion-icon>
+            Atractivos
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Cerro del Mirador, Calvillo</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Lun-Dom 8:00 - 18:00</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$30</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Sección de negocios - TRANSPORTE -->
+  <div class="negocios-section" [class.hidden]="categoriaSeleccionada !== 'transporte'">
+    <div class="section-header">
+      <h3>Transporte en Calvillo</h3>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card - Taxi -->
+      <ion-card class="negocio-card" (click)="irANegocio(5)">
+        <div class="card-image-container">
+          <ion-img src="assets/images/taxi-calvillo.jpg" class="card-image"></ion-img>
+          <div class="card-rating">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span>4.4</span>
+          </div>
+        </div>
+        <ion-card-header>
+          <ion-card-title class="negocio-nombre">Taxi Ejecutivo Calvillo</ion-card-title>
+          <ion-card-subtitle class="negocio-categoria">
+            <ion-icon name="car-outline" class="categoria-icon"></ion-icon>
+            Transporte
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="negocio-info">
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>Servicio a domicilio</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>24 horas</span>
+            </div>
+          </div>
+          <div class="precio-container">
+            <span class="precio-label">Desde</span>
+            <span class="precio-valor">$80</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Botón flotante para scroll al inicio -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="scrollToTop()">
+    <ion-fab-button class="scroll-fab">
+      <ion-icon name="arrow-up-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- ESPACIADOR: Evita que el contenido quede debajo del FAB -->
+  <div class="footer-spacer"></div>
 
 </ion-content>

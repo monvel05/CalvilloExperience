@@ -1,117 +1,134 @@
 <ion-content class="fondo-claro">
-  
   @if (cargando) {
-    <div class="loader-container ion-padding ion-text-center">
-      <ion-spinner color="primary" name="crescent"></ion-spinner>
-      <p>Cargando información...</p>
+  <div class="loader-container">
+    <ion-spinner color="success"></ion-spinner>
+  </div>
+  } @if (!cargando && negocio) {
+  <div class="wf-container">
+    <div class="header-actions">
+      <ion-button fill="clear" color="dark" (click)="volver()">
+        <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+        {{ 'INFO_NEGOCIO.BACK' | translate }}
+      </ion-button>
+      <div class="location-badge">
+        <ion-icon name="location-outline"></ion-icon>
+        {{ negocio.ubicacion.municipio || 'Calvillo, AGS' }}
+      </div>
     </div>
-  } 
-  
-  @else if (negocio) {
-    <div class="wf-container">
-      
-      <div class="header-actions">
-        <ion-button fill="clear" color="dark" (click)="volver()">
-          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-          {{ 'INFO_NEGOCIO.BACK' | translate }}
-        </ion-button>
-        <div class="location-badge">
-          <ion-icon name="location-outline"></ion-icon>
-          {{ negocio.ubicacion?.municipio || 'Calvillo, AGS' }}
+
+    <div class="main-grid">
+      <div class="gallery-column">
+        <div class="main-image-container">
+          <img
+            [src]="negocio.imagen"
+            alt="Experiencia principal"
+            class="main-image"
+          />
+          @if (negocio.calificacionMedia) {
+          <div class="rating-badge">
+            <ion-icon name="star"></ion-icon> {{ negocio.calificacionMedia }}
+          </div>
+          }
         </div>
       </div>
 
-      <div class="main-grid">
-        <div class="gallery-column">
-          <div class="main-image-container">
-            <ion-img
-              [src]="negocio.imagen?.[0] || 'assets/images/placeholder.jpg'"
-              alt="{{ negocio.nombre }}"
-              class="main-image">
-            </ion-img>
-            
-            @if (negocio.calificacionMedia) {
-              <div class="rating-badge">
-                <ion-icon name="star"></ion-icon> {{ negocio.calificacionMedia }}
-              </div>
+      <div class="info-column">
+        <div class="title-section">
+          <p class="subtitle">{{ 'INFO_NEGOCIO.LOCAL_EXPERIENCE' | translate }}</p>
+          <div class="title-row">
+            <h1 class="business-name">{{ negocio.nombre }}</h1>
+
+            @if (negocio.verificado) {
+            <ion-icon
+              name="checkmark-circle"
+              color="primary"
+              class="verified-icon"
+            ></ion-icon>
             }
           </div>
         </div>
 
-        <div class="info-column ion-padding">
-          <div class="title-section">
-            <p class="subtitle">{{ 'INFO_NEGOCIO.LOCAL_EXPERIENCE' | translate }}</p>
-            <div class="title-row">
-              <h1 class="business-name">{{ negocio.nombre }}</h1>
+        <div class="business-description">
+          <p>{{ negocio.descripcion }}</p>
+        </div>
 
-              @if (negocio.verificado) {
-                <ion-icon name="checkmark-circle" color="primary" class="verified-icon"></ion-icon>
-              }
+        <div class="info-accordions">
+          <div class="accordion">
+            <div class="accordion-header" (click)="toggleSeccion(0)">
+              <div class="header-title">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ 'INFO_NEGOCIO.HOURS_CONTACT' | translate }}</span>
+              </div>
+              <ion-icon
+                [name]="seccionesAbiertas[0] ? 'remove-outline' : 'add-outline'"
+              ></ion-icon>
+            </div>
+            <div class="accordion-content" [class.open]="seccionesAbiertas[0]">
+              <p><strong>{{ 'INFO_NEGOCIO.OPENING' | translate }}:</strong> {{ negocio.horario }}</p>
+              <p><strong>{{ 'INFO_NEGOCIO.PHONE' | translate }}:</strong> {{ negocio.telefono }}</p>
             </div>
           </div>
 
-          <div class="business-description ion-margin-bottom">
-            <p>{{ negocio.descripcion }}</p>
-          </div>
-
-          <div class="info-accordions">
-            
-            <div class="accordion">
-              <div class="accordion-header" (click)="toggleSeccion(0)">
-                <div class="header-title">
-                  <ion-icon name="time-outline"></ion-icon>
-                  <span>{{ 'INFO_NEGOCIO.HOURS_CONTACT' | translate }}</span>
-                </div>
-                <ion-icon [name]="seccionesAbiertas[0] ? 'remove-outline' : 'add-outline'"></ion-icon>
+          <div class="accordion">
+            <div class="accordion-header" (click)="toggleSeccion(1)">
+              <div class="header-title">
+                <ion-icon name="map-outline"></ion-icon>
+                <span>{{ 'INFO_NEGOCIO.LOCATION_MAP' | translate }}</span>
               </div>
-              
-              <div class="accordion-content" [class.open]="seccionesAbiertas[0]">
-                <p><strong>{{ 'INFO_NEGOCIO.OPENING' | translate }}:</strong> {{ negocio.horario }}</p>
-                <p><strong>{{ 'INFO_NEGOCIO.PHONE' | translate }}:</strong> {{ negocio.telefono }}</p>
-              </div>
+              <ion-icon
+                [name]="seccionesAbiertas[1] ? 'remove-outline' : 'add-outline'"
+              ></ion-icon>
             </div>
 
-            <div class="accordion">
-              <div class="accordion-header" (click)="toggleSeccion(1)">
-                <div class="header-title">
-                  <ion-icon name="map-outline"></ion-icon>
-                  <span>{{ 'INFO_NEGOCIO.LOCATION_MAP' | translate }}</span>
-                </div>
-                <ion-icon [name]="seccionesAbiertas[1] ? 'remove-outline' : 'add-outline'"></ion-icon>
+            <div class="accordion-content" [class.open]="seccionesAbiertas[1]">
+              <p class="address-text">
+                {{ negocio?.ubicacion?.direccionCompleta }}
+              </p>
+
+              <div style="width: 100%; margin-bottom: 15px; display: block">
+                <div
+                  #mapaElement
+                  style="
+                    width: 100%;
+                    height: 200px;
+                    background-color: #e0e0e0;
+                    border-radius: 12px;
+                    display: block;
+                  "
+                ></div>
               </div>
 
-              <div class="accordion-content" [class.open]="seccionesAbiertas[1]">
-                <p class="address-text">
-                  {{ negocio.ubicacion?.direccionCompleta }}
-                </p>
-
-                <div class="map-container ion-margin-bottom">
-                  <div #mapaElement class="map-frame"></div>
-                </div>
-
-                <ion-button expand="block" fill="outline" class="btn-direcciones" (click)="irAMapa()">
-                  <ion-icon name="map-outline" slot="start"></ion-icon>
-                  {{ 'INFO_NEGOCIO.GET_DIRECTIONS' | translate }}
-                </ion-button>
-              </div>
-            </div>
-          </div>
-
-          <div class="action-section ion-margin-top">
-            @if (negocio.tieneInventario) {
-              <ion-button expand="block" color="primary" class="reserve-btn" (click)="iniciarReserva()">
-                {{ 'INFO_NEGOCIO.BOOK_NOW' | translate }}
+              <ion-button
+                expand="block"
+                fill="outline"
+                class="btn-direcciones"
+                (click)="irAMapa()"
+              >
+                <ion-icon name="map-outline" slot="start"></ion-icon>
+                {{ 'INFO_NEGOCIO.GET_DIRECTIONS' | translate }}
               </ion-button>
-            } @else {
-              <div class="no-reservation-msg">
-                <ion-icon name="walk-outline"></ion-icon>
-                <p>{{ 'INFO_NEGOCIO.NO_RESERVATION_MSG' | translate }}</p>
-              </div>
-            }
+            </div>
           </div>
-          
+        </div>
+
+        <div class="action-section">
+          @if (negocio.tieneInventario) {
+          <ion-button
+            expand="block"
+            class="reserve-btn"
+            (click)="iniciarReserva()"
+          >
+            {{ 'INFO_NEGOCIO.BOOK_NOW' | translate }}
+          </ion-button>
+          } @if (!negocio.tieneInventario) {
+          <div class="no-reservation-msg">
+            <ion-icon name="walk-outline"></ion-icon>
+            <p>{{ 'INFO_NEGOCIO.NO_RESERVATION_MSG' | translate }}</p>
+          </div>
+          }
         </div>
       </div>
     </div>
+  </div>
   }
 </ion-content>

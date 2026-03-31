@@ -1,35 +1,42 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/env/env';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MuroSocialService {
-  // Inyección moderna
-  private http = inject(HttpClient);
-  
-  // URL dinámica
-  private API = `${environment.apiUrl}/publicaciones`;
+
+  private API = 'http://localhost:3000/api/publicaciones';
+
+  constructor() {}
 
   // Obtener publicaciones
-  getPublicaciones(): Observable<any[]> {
-    return this.http.get<any[]>(this.API);
+  async getPublicaciones() {
+    const res = await fetch(this.API);
+    return await res.json();
   }
 
   // Dar like
-  darLike(id: number, idUsuario: number): Observable<any> {
-    return this.http.post(`${this.API}/${id}/like`, { idUsuario });
+  async darLike(id: number, idUsuario: number) {
+    return await fetch(`${this.API}/${id}/like`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idUsuario })
+    });
   }
 
   // Eliminar publicación
-  eliminarPublicacion(id: number): Observable<any> {
-    return this.http.delete(`${this.API}/${id}`);
+  async eliminarPublicacion(id: number) {
+    return await fetch(`${this.API}/${id}`, {
+      method: 'DELETE'
+    });
   }
 
   // Crear publicación
-  crearPublicacion(data: any): Observable<any> {
-    return this.http.post(this.API, data);
+  async crearPublicacion(data: any) {
+    return await fetch(this.API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
   }
 }

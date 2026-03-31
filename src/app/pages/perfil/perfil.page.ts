@@ -1,23 +1,24 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonItem, 
   IonLabel, IonInput, IonButton, IonIcon, IonSelect, 
-  IonSelectOption, IonButtons, IonBackButton, IonSpinner, ToastController
+  IonSelectOption, IonButtons, IonBackButton, IonSpinner, IonToast
 } from "@ionic/angular/standalone";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { 
   personOutline, mailOutline, calendarOutline, 
   maleFemaleOutline, languageOutline, saveOutline, arrowBackOutline 
 } from 'ionicons/icons';
 
-// Servicios Core
 import { UsuarioService } from 'src/app/core/services/usuario.service';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from 'src/app/core/services/auth';
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
+import { Router } from '@angular/router';
+
+// IMPORTANTE: Importamos los módulos de traducción
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-perfil',
@@ -28,22 +29,23 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
     CommonModule, ReactiveFormsModule, IonHeader, IonToolbar, 
     IonTitle, IonContent, IonItem, IonLabel, IonInput, 
     IonButton, IonIcon, IonSelect, IonSelectOption, 
-    IonButtons, IonBackButton, IonSpinner, TranslateModule 
+    IonButtons, IonBackButton, IonSpinner, IonToast,
+    TranslateModule // <-- Agregamos TranslateModule para usar el pipe en el HTML
   ]
 })
 export class PerfilPage {
-  
-  // Inyección moderna
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private translate = inject(TranslateService); 
-  private toastCtrl = inject(ToastController);
+  private translate = inject(TranslateService); // <-- Inyectamos el servicio de traducción
 
   perfilForm: FormGroup;
   idUsuarioActual: number = 0;
   guardando: boolean = false;
+  
+  mostrarToast: boolean = false;
+  mensajeToast: string = '';
 
   constructor() {
     addIcons({ 
@@ -59,11 +61,11 @@ export class PerfilPage {
       idIdioma: ['', Validators.required]
     });
 
+    // Cambiar el idioma en tiempo real cuando el usuario seleccione otra opción en el select
     this.perfilForm.get('idIdioma')?.valueChanges.subscribe(valor => {
-      if (valor) {
-        const idioma = valor === '2' ? 'en' : 'es';
-        this.translate.use(idioma);
-      }
+      // 1 = Español, 2 = Inglés
+      const idioma = valor === '2' ? 'en' : 'es';
+      this.translate.use(idioma);
     });
   }
 
@@ -75,7 +77,8 @@ export class PerfilPage {
     const usuarioLogueadoStr = localStorage.getItem('user');
     
     if (!usuarioLogueadoStr) {
-      this.mostrarToast(this.translate.instant('PROFILE.MSG_NO_SESSION'), 'warning');
+      // Usamos translate.instant() para traducir textos en el código TypeScript
+      this.mostrarMensaje(this.translate.instant('PROFILE.MSG_NO_SESSION'));
       this.router.navigate(['/login'], { replaceUrl: true });
       return;
     }
@@ -83,12 +86,12 @@ export class PerfilPage {
     const usuarioLogueado: DatosUsuario = JSON.parse(usuarioLogueadoStr);
     this.idUsuarioActual = usuarioLogueado.idUsuario;
 
+    // Establecemos el idioma inicial según la base de datos
     const idiomaActual = usuarioLogueado.idIdioma === 2 ? 'en' : 'es';
     this.translate.use(idiomaActual);
 
     this.llenarFormulario(usuarioLogueado);
 
-    // Refrescamos con datos de Express por si hubo cambios en otro dispositivo
     this.usuarioService.obtenerUsuario(this.idUsuarioActual).subscribe({
       next: (datosFrescos) => {
         this.llenarFormulario(datosFrescos);
@@ -101,19 +104,13 @@ export class PerfilPage {
         const usuarioSincronizado = { ...usuarioLogueado, ...datosFrescos };
         localStorage.setItem('user', JSON.stringify(usuarioSincronizado));
       },
-      error: (err) => console.warn('Usando datos locales por error de red', err)
+      error: (err) => console.warn('Usando datos locales', err)
     });
   }
 
   private llenarFormulario(datos: Partial<DatosUsuario>) {
-    let fechaFormateada = '';
-    if (datos.fechaNacimiento) {
-      try {
-        fechaFormateada = new Date(datos.fechaNacimiento).toISOString().split('T')[0];
-      } catch (e) {
-        fechaFormateada = '';
-      }
-    }
+    const fechaFormateada = datos.fechaNacimiento ? 
+      new Date(datos.fechaNacimiento).toISOString().split('T')[0] : '';
 
     this.perfilForm.patchValue({
       nombre: datos.nombre,
@@ -141,7 +138,8 @@ export class PerfilPage {
 
     this.usuarioService.actualizarPerfil(this.idUsuarioActual, datosActualizados).subscribe({
       next: (res) => {
-        this.mostrarToast(this.translate.instant('PROFILE.MSG_SUCCESS'), 'success');
+        // Obtenemos el mensaje de éxito traducido
+        this.mostrarMensaje(this.translate.instant('PROFILE.MSG_SUCCESS'));
         
         const usuarioActualStr = localStorage.getItem('user');
         if (usuarioActualStr) {
@@ -153,20 +151,16 @@ export class PerfilPage {
         this.guardando = false;
       },
       error: (err) => {
-        this.mostrarToast(this.translate.instant('PROFILE.MSG_ERROR'), 'danger');
+        // Obtenemos el mensaje de error traducido
+        this.mostrarMensaje(this.translate.instant('PROFILE.MSG_ERROR'));
         this.guardando = false;
       }
     });
   }
 
-  async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastCtrl.create({
-      message: mensaje,
-      duration: 2500,
-      color: color,
-      position: 'top'
-    });
-    toast.present();
+  mostrarMensaje(mensaje: string) {
+    this.mensajeToast = mensaje;
+    this.mostrarToast = true;
   }
 
   volver() {
@@ -187,7 +181,7 @@ export class PerfilPage {
         this.router.navigate(['turista-inicio'], {replaceUrl: true});
         break;
       case 3:
-        this.router.navigate(['negocio-inicio'], {replaceUrl: true});
+        this.router.navigate(['negocio-presentacion'], {replaceUrl: true});
         break;
       default:
         this.router.navigate(['login'], {replaceUrl: true});

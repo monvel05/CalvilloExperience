@@ -1,117 +1,122 @@
-import { Component, OnInit, inject } from '@angular/core';
+// negocio-inicio.page.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { 
-  IonicModule, NavController, ToastController, AlertController 
-} from '@ionic/angular';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IonicModule, NavController, ToastController } from '@ionic/angular';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { 
-  personCircleOutline, imageOutline, pencilOutline, trashOutline, 
-  add, storefrontOutline, barChartOutline, starOutline, logOutOutline
+import {
+  personCircleOutline,
+  imageOutline,
+  storefrontOutline,
+  timeOutline,
+  callOutline,
+  pricetagOutline,
+  calendarClearOutline,
+  locationOutline,
+  saveOutline
 } from 'ionicons/icons';
-
-// Servicios
-import { NegocioService } from '../../core/services/negocio.service';
-import { AuthService } from '../../core/services/auth.service';
-import { DatosNegocio } from '../../shared/interfaces/datos-negocio';
-import { DatosUsuario } from '../../shared/interfaces/datos-usuario';
 
 @Component({
   selector: 'app-negocio-inicio',
   templateUrl: './negocio-inicio.page.html',
   styleUrls: ['./negocio-inicio.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, TranslateModule] 
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule
+  ]
 })
 export class NegocioInicioPage implements OnInit {
 
-  misNegocios: DatosNegocio[] = [];
-  usuario: DatosUsuario | null = null;
-  cargando = true;
+  negocioForm: FormGroup;
+  categorias: string[] = ['Atractivo Turístico', 'Restaurante', 'Cafetería', 'Artesanías'];
 
-  private navCtrl = inject(NavController);
-  private toastCtrl = inject(ToastController);
-  private alertCtrl = inject(AlertController);
-  private negocioService = inject(NegocioService);
-  private authService = inject(AuthService);
-  private translate = inject(TranslateService);
+  constructor(
+    private fb: FormBuilder,
+    private navCtrl: NavController,
+    private toastCtrl: ToastController,
+    private translate: TranslateService
+  ) {
+    addIcons({
+      personCircleOutline,
+      imageOutline,
+      storefrontOutline,
+      timeOutline,
+      callOutline,
+      pricetagOutline,
+      calendarClearOutline,
+      locationOutline,
+      saveOutline
+    });
 
-  constructor() {
-    addIcons({ 
-      personCircleOutline, imageOutline, pencilOutline, trashOutline, 
-      add, storefrontOutline, barChartOutline, starOutline, logOutOutline
+    this.negocioForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      descripcion: ['', Validators.required],
+      categoria: ['', Validators.required],
+      diasTrabajo: [[]],
+      diasDescanso: [[]],
+      horaInicio: [''],
+      horaFin: [''],
+      horario: [''],
+      telefono: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+      permitirReservas: [false],
+      imagen: [''],
+      ubicacion: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    const usuarioStr = localStorage.getItem('user');
-    if (usuarioStr) {
-      this.usuario = JSON.parse(usuarioStr) as DatosUsuario;
-      this.translate.use(this.usuario.idIdioma === 2 ? 'en' : 'es');
+  ngOnInit() { }
+
+  cambiarImagen() {
+    this.presentToast('Simulando apertura de archivos...', 'primary');
+    const imagenSimulada = 'assets/img-simulated.jpg';
+    this.negocioForm.patchValue({ imagen: imagenSimulada });
+  }
+
+  async guardarCambios() {
+    if (this.negocioForm.invalid) {
+      this.negocioForm.markAllAsTouched();
+      return;
     }
-  }
-
-  ionViewWillEnter() {
-    this.cargarMisNegocios();
-  }
-
-  cargarMisNegocios() {
-    this.cargando = true;
-    this.negocioService.obtenerTodos().subscribe({
-      next: (data) => {
-        this.misNegocios = data; 
-        this.cargando = false;
-      },
-      error: (err) => {
-        this.presentToast('Error al cargar tus negocios', 'danger');
-        this.cargando = false;
-      }
-    });
-  }
-
-  irACrearNegocio() {
-    this.navCtrl.navigateForward('/negocio-presentacion');
-  }
-
-  editarNegocio(negocio: DatosNegocio) {
-    this.navCtrl.navigateForward('/negocio-presentacion', { state: { negocioEditable: negocio } });
+    const datosNegocio = this.negocioForm.value;
+    console.log('Datos del negocio a guardar:', datosNegocio);
+    const msgExito = this.translate.instant('NEGOCIO_INICIO.GUARDAR_EXITO');
+    await this.presentToast(msgExito, 'success');
+    this.navCtrl.navigateBack('/negocio-presentacion');
   }
 
   irAPerfil() {
     this.navCtrl.navigateForward('/perfil');
   }
 
-  logout() {
-    this.authService.logout();
-  }
-
-  async borrarNegocio(negocio: DatosNegocio) {
-    const alert = await this.alertCtrl.create({
-      header: '¿Eliminar negocio?',
-      message: `¿Estás seguro de borrar definitivamente "${negocio.nombre}"? Esta acción no se puede deshacer.`,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          role: 'destructive',
-          handler: () => {
-            this.negocioService.eliminarNegocio(negocio.idNegocio).subscribe({
-              next: () => {
-                this.cargarMisNegocios();
-                this.presentToast('Negocio eliminado correctamente', 'success');
-              },
-              error: () => this.presentToast('Error al eliminar. Verifica que no tenga reservas.', 'danger')
-            });
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
   async presentToast(msg: string, color: string) {
-    const toast = await this.toastCtrl.create({ message: msg, duration: 2500, color: color, position: 'top' });
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 2000,
+      color: color,
+      position: 'bottom'
+    });
     toast.present();
+  }
+
+  // ✅ Métodos para manejar la portada
+  abrirSelectorImagen(fileInput: HTMLInputElement) {
+    fileInput.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input?.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.negocioForm.patchValue({ imagen: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
