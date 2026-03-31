@@ -1,22 +1,37 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/env/env';
+import { Observable } from 'rxjs';
+import { DatosNegocio } from '../../shared/interfaces/datos-negocio';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NegocioService {
-  // Ajusta la URL base según tu entorno (ej. environment.apiUrl)
-  private apiUrl = 'http://localhost:3000'; 
+  // Inyectamos HttpClient de forma moderna
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/api/negocios`;
 
   constructor() { }
 
-  async obtenerNegocioPorId(id: number | string) {
-    try {
-      const response = await fetch(`${this.apiUrl}/negocios/${id}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      return await response.json();
-    } catch (error) {
-      console.error(`Error al obtener el negocio ${id}:`, error);
-      throw error;
-    }
+  /**
+   * Obtiene la lista completa de negocios desde Express
+   */
+  obtenerTodos(): Observable<DatosNegocio[]> {
+    return this.http.get<DatosNegocio[]>(this.apiUrl);
+  }
+
+  /**
+   * Obtiene un solo negocio por su ID
+   */
+  obtenerPorId(id: number | string): Observable<DatosNegocio> {
+    return this.http.get<DatosNegocio>(`${this.apiUrl}/${id}`);
+  }
+
+  /**
+   *  Obtener negocios por categoría
+   */
+  obtenerPorCategoria(categoria: string): Observable<DatosNegocio[]> {
+    return this.http.get<DatosNegocio[]>(`${this.apiUrl}/categoria/${categoria}`);
   }
 }

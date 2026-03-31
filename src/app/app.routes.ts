@@ -44,11 +44,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/muro-social/muro-social.page').then(m => m.MuroSocial)
   },
   {
-    path: 'info-negocio',
+    path: 'info-negocio/:id',
     loadComponent: () => import('./pages/info-negocio/info-negocio.page').then(m => m.InfoNegocioPage)
   },
   {
-    path: 'reservar',
+    path: 'reservar/:id',
     loadComponent: () => import('./pages/reservar/reservar.page').then(m => m.ReservarPage)
   },
   {

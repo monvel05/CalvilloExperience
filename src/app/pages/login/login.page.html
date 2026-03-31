@@ -23,10 +23,10 @@
             type="email" 
             formControlName="correo" 
             [placeholder]="'LOGIN_PAGE.EMAIL_PLACEHOLDER' | translate"
-            [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched"
           >
           </ion-input>
         </ion-item>
+        
         <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error-message">
           <ion-icon name="alert-circle-outline"></ion-icon>
           <span>{{ 'LOGIN_PAGE.EMAIL_REQUIRED' | translate }}</span>
@@ -38,10 +38,10 @@
             type="password" 
             formControlName="contraseña" 
             [placeholder]="'LOGIN_PAGE.PASSWORD_PLACEHOLDER' | translate"
-            [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched"
           >
           </ion-input>
         </ion-item>
+        
         <div *ngIf="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched" class="error-message">
           <ion-icon name="alert-circle-outline"></ion-icon>
           <span>{{ 'LOGIN_PAGE.PASSWORD_MIN_LENGTH' | translate }}</span>
@@ -51,7 +51,6 @@
           expand="block" 
           type="submit" 
           class="login-button"
-          [disabled]="loginForm.invalid"
         >
           {{ 'LOGIN_PAGE.SUBMIT_BUTTON' | translate }}
         </ion-button>

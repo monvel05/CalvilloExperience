@@ -1,6 +1,6 @@
 <ion-content class="fondo-claro">
   @if (cargando) {
-  <div class="loader-container">
+  <div class="loader-container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     <ion-spinner color="success"></ion-spinner>
   </div>
   } @if (!cargando && negocio) {
@@ -20,7 +20,7 @@
       <div class="gallery-column">
         <div class="main-image-container">
           <img
-            [src]="negocio.imagen"
+            [src]="negocio.imagen?.[0] || 'assets/images/placeholder.jpg'"
             alt="Experiencia principal"
             class="main-image"
           />

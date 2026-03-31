@@ -4,21 +4,25 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { connDB } = require("../database");
 
-// Nota: Quitamos 'validateRegister' de aquí porque esta es la ruta de login
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     console.log("¡Recibiendo petición de login!");
     const { correo, contraseña } = req.body;
     console.log("Intento de login para:", correo);
 
-    const query = "SELECT * FROM Usuarios WHERE correo = ?";
-    
-    connDB.query(query, [correo], async (err, results) => {
-        if (err) return res.status(500).json({ message: "Error en la consulta" });
-        if (results.length === 0) return res.status(401).json({ message: "Usuario no encontrado" });
+    try {
+        const query = "SELECT * FROM Usuarios WHERE correo = ?";
+        
+        // Con el Pool de promesas, usamos await. 
+        // mysql2 devuelve un array donde el primer elemento [0] son los resultados.
+        const [results] = await connDB.query(query, [correo]);
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: "Usuario no encontrado" });
+        }
 
         const user = results[0];
         
-        // Comparamos el hash de la DB con la contraseña recibida
+        // Comparación de contraseña con bcrypt
         const isMatch = await bcrypt.compare(contraseña, user.contraseña);
 
         if (!isMatch) {
@@ -28,12 +32,11 @@ router.post("/login", (req, res) => {
         // Generar Token JWT
         const token = jwt.sign(
             { id: user.idUsuario, rol: user.idTipoUsuario },
-            "secreto",
+            "secreto", // Nota: En el futuro esto debería ir en una variable de entorno
             { expiresIn: "1h" }
         );
 
-        // ¡CORRECCIÓN AQUÍ! 
-        // Devolvemos las variables con los mismos nombres que la interfaz DatosUsuario
+        // Devolvemos la respuesta formateada para tu interfaz DatosUsuario de Angular
         res.json({
             token,
             user: {
@@ -46,7 +49,11 @@ router.post("/login", (req, res) => {
                 idIdioma: user.idIdioma
             }
         });
-    });
+
+    } catch (err) {
+        console.error("Error en la consulta de login:", err);
+        return res.status(500).json({ message: "Error interno del servidor" });
+    }
 });
 
 module.exports = router;

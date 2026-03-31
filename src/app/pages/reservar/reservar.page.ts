@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReservasService } from '../../core/services/reservas.service';
+import { ActivatedRoute } from '@angular/router'; // Para leer el ID de la URL
 import { 
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
-  IonSelect, IonSelectOption, IonDatetime, 
+  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
+  IonSelect, IonSelectOption, IonDatetime, IonSpinner,
   IonDatetimeButton, IonModal, IonIcon, IonLabel, IonButton,
-  NavController 
+  NavController, ToastController 
 } from '@ionic/angular/standalone';
 import { 
   arrowBackOutline, locationOutline, calendarOutline, timeOutline, 
@@ -19,6 +18,9 @@ import { addIcons } from 'ionicons';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
+import { ReservasService } from '../../core/services/reservas.service';
+import { NegocioService } from '../../core/services/negocio.service';
+import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 
 @Component({
   selector: 'app-reservar',
@@ -27,39 +29,45 @@ import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
   standalone: true,
   imports: [
     CommonModule, 
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
-    IonSelect, IonSelectOption, IonDatetime,IonicModule, 
-    CommonModule,
-    IonDatetimeButton, IonModal, IonIcon, IonLabel, IonButton, 
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
+    IonSelect, IonSelectOption, IonDatetime, IonSpinner,
+    IonDatetimeButton, IonModal, IonIcon, IonLabel, IonButton
   ]
 })
 export class ReservarPage implements OnInit {
   @ViewChild('exitTimeModal') exitTimeModal!: IonModal;
   
-  // Variables para fechas y horas (Strings formateados para la DB)
+  private reservasService = inject(ReservasService);
+  private negocioService = inject(NegocioService);
+  private translate = inject(TranslateService);
+  private navCtrl = inject(NavController);
+  private route = inject(ActivatedRoute);
+  private toastCtrl = inject(ToastController);
+
+  // Variables de Negocio y Usuario
+  negocio: DatosNegocio | null = null;
+  idUsuarioLogueado: number = 0;
+  cargando: boolean = true;
+
+  // Variables para fechas y horas
   selectedDate: string = '';
   selectedTime: string = '';
   exitTime: string = '';
   exitTimeValue: string = '';
   numeroPersonas: string = '';
   
-  // Lógica del calendario optimizada con índices (0-11)
+  // Lógica del calendario
   currentMonthIndex: number;
   currentYear: number;
   selectedDay: any = null;
   calendarDays: any[] = [];
   
-  // Fechas en formato ISO para los componentes de Ionic
   currentDate: string = new Date().toISOString();
   currentTime: string = new Date().toISOString();
 
-  constructor(
-    private reservasService: ReservasService,
-    private translate: TranslateService,
-    private navCtrl: NavController 
-  ) {
+  constructor() {
     addIcons({
       locationOutline, calendarOutline, timeOutline, calendarClearOutline, 
       chevronDownOutline, chevronBackOutline, chevronForwardOutline, 
@@ -67,17 +75,35 @@ export class ReservarPage implements OnInit {
     }); 
 
     const today = new Date();
-    this.currentMonthIndex = today.getMonth(); // 0 al 11
+    this.currentMonthIndex = today.getMonth(); 
     this.currentYear = today.getFullYear();
     this.generarCalendario();
   }
 
   ngOnInit() {
+    // 1. Obtener datos del usuario logueado
     const usuarioStr = localStorage.getItem('user');
     if (usuarioStr) {
       const usuario = JSON.parse(usuarioStr) as DatosUsuario;
-      const idioma = usuario.idIdioma === 2 ? 'en' : 'es';
-      this.translate.use(idioma);
+      this.idUsuarioLogueado = usuario.idUsuario;
+      this.translate.use(usuario.idIdioma === 2 ? 'en' : 'es');
+    }
+
+    // 2. Obtener el ID del negocio desde la URL y cargar sus datos
+    const idNegocio = this.route.snapshot.paramMap.get('id');
+    if (idNegocio) {
+      this.negocioService.obtenerPorId(idNegocio).subscribe({
+        next: (data) => {
+          this.negocio = data;
+          this.cargando = false;
+        },
+        error: (err) => {
+          console.error("Error al cargar negocio para reservar", err);
+          this.cargando = false;
+        }
+      });
+    } else {
+      this.cargando = false;
     }
   }
 
@@ -85,12 +111,14 @@ export class ReservarPage implements OnInit {
     this.navCtrl.back();
   }
 
+  // --- LÓGICA DEL CALENDARIO (Se mantiene igual, solo optimizamos) ---
   generarCalendario() {
     const firstDayOfMonth = new Date(this.currentYear, this.currentMonthIndex, 1);
     const daysInMonth = new Date(this.currentYear, this.currentMonthIndex + 1, 0).getDate();
     const startingDayOfWeek = firstDayOfMonth.getDay();
     
-    const unavailableDays: number[] = [1, 15, 20, 25];
+    // Aquí en el futuro podrías conectar los días ocupados reales del backend
+    const unavailableDays: number[] = [1, 15, 20, 25]; 
     this.calendarDays = [];
     
     for (let i = 0; i < startingDayOfWeek; i++) {
@@ -100,10 +128,7 @@ export class ReservarPage implements OnInit {
     for (let i = 1; i <= daysInMonth; i++) {
       const isAvailable = !unavailableDays.includes(i);
       this.calendarDays.push({
-        date: i,
-        available: isAvailable,
-        isSelected: false,
-        empty: false,
+        date: i, available: isAvailable, isSelected: false, empty: false,
         fullDate: new Date(this.currentYear, this.currentMonthIndex, i)
       });
     }
@@ -120,27 +145,23 @@ export class ReservarPage implements OnInit {
     if (this.selectedDay) {
       const day = this.selectedDay.date.toString().padStart(2, '0');
       const monthForDB = (this.currentMonthIndex + 1).toString().padStart(2, '0');
-      const year = this.currentYear;
       
-      this.selectedDate = `${year}-${monthForDB}-${day}`;
-      this.currentDate = new Date(year, this.currentMonthIndex, parseInt(day)).toISOString();
+      this.selectedDate = `${this.currentYear}-${monthForDB}-${day}`;
+      this.currentDate = new Date(this.currentYear, this.currentMonthIndex, parseInt(day)).toISOString();
       
       this.selectedDay.isSelected = false;
       this.selectedDay = null;
     }
   }
   
-  abrirModalHoraSalida() {
-    this.exitTimeModal.present();
-  }
+  // --- MANEJO DE HORAS ---
+  abrirModalHoraSalida() { this.exitTimeModal.present(); }
   
   alCambiarHoraSalida(event: any) {
     const selectedTime = event.detail.value;
     if (selectedTime) {
       const date = new Date(selectedTime);
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      this.exitTime = `${hours}:${minutes}:00`; 
+      this.exitTime = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`; 
       this.exitTimeValue = selectedTime;
     }
     this.exitTimeModal.dismiss();
@@ -149,8 +170,7 @@ export class ReservarPage implements OnInit {
   alCambiarFecha(event: any) {
     const selectedDate = event.detail.value;
     if (selectedDate) {
-      const date = new Date(selectedDate);
-      this.selectedDate = date.toISOString().split('T')[0]; 
+      this.selectedDate = new Date(selectedDate).toISOString().split('T')[0]; 
       this.currentDate = selectedDate;
     }
   }
@@ -159,53 +179,62 @@ export class ReservarPage implements OnInit {
     const selectedTime = event.detail.value;
     if (selectedTime) {
       const date = new Date(selectedTime);
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      this.selectedTime = `${hours}:${minutes}:00`; 
+      this.selectedTime = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`; 
       this.currentTime = selectedTime;
     }
   }
 
   mesAnterior() {
-    this.currentMonthIndex--;
-    if (this.currentMonthIndex < 0) {
-      this.currentMonthIndex = 11;
-      this.currentYear--;
-    }
+    if (this.currentMonthIndex === 0) { this.currentMonthIndex = 11; this.currentYear--; }
+    else { this.currentMonthIndex--; }
     this.generarCalendario();
   }
   
   mesSiguiente() {
-    this.currentMonthIndex++;
-    if (this.currentMonthIndex > 11) {
-      this.currentMonthIndex = 0;
-      this.currentYear++;
-    }
+    if (this.currentMonthIndex === 11) { this.currentMonthIndex = 0; this.currentYear++; }
+    else { this.currentMonthIndex++; }
     this.generarCalendario();
   }
   
+  async mostrarMensaje(mensaje: string, color: string = 'danger') {
+    const toast = await this.toastCtrl.create({
+      message: mensaje, duration: 3000, position: 'top', color: color
+    });
+    await toast.present();
+  }
+
+  // --- ENVÍO DE RESERVA AL BACKEND ---
   confirmarReserva() {
     if (!this.selectedDate || !this.selectedTime || !this.numeroPersonas) {
-      alert(this.translate.instant('RESERVE_PAGE.ALERT_MISSING_FIELDS'));
+      this.mostrarMensaje(this.translate.instant('RESERVE_PAGE.ALERT_MISSING_FIELDS'));
       return;
     }
 
+    if (!this.negocio || this.idUsuarioLogueado === 0) {
+      this.mostrarMensaje('Error de sesión o de negocio no válido');
+      return;
+    }
+
+    // Armamos el objeto con los datos REALES
     const datosReserva = {
       fechaEntrada: this.selectedDate,
-      fechaSalida: this.selectedDate,
+      fechaSalida: this.selectedDate, // Por ahora el mismo día
       horaEntrada: this.selectedTime,
       horaSalida: this.exitTime || this.selectedTime, 
-      idUsuario: 1,  
-      idNegocio: 1,  
-      idEstatus: 1  
+      idUsuario: this.idUsuarioLogueado,  
+      idNegocio: this.negocio.idNegocio,  
+      idEstatus: 1 // 1 = Pendiente
     };
 
     this.reservasService.enviarReserva(datosReserva).subscribe({
       next: (res) => {
-        alert(this.translate.instant('RESERVE_PAGE.ALERT_SUCCESS'));
+        this.mostrarMensaje(this.translate.instant('RESERVE_PAGE.ALERT_SUCCESS'), 'success');
+        // Esperamos un segundo y lo devolvemos a la información del negocio
+        setTimeout(() => this.volver(), 1500);
       },
       error: (err) => {
-        alert(this.translate.instant('RESERVE_PAGE.ALERT_ERROR'));
+        console.error("Error al guardar:", err);
+        this.mostrarMensaje(this.translate.instant('RESERVE_PAGE.ALERT_ERROR'));
       }
     });
   }

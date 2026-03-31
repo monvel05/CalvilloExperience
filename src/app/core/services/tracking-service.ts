@@ -8,7 +8,7 @@ import { environment } from 'src/env/env';
 export class TrackingService {
   private http = inject(HttpClient);
   // Asegúrate de cambiar esto por la URL base de tu API en Express
-  private apiUrl = environment.apiUrl + '/logs'; 
+  private apiUrl = environment.apiUrl + 'api/logs'; 
 
   /**
    * Envía un evento al backend de forma silenciosa

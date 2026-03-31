@@ -1,19 +1,19 @@
 import { Component, OnInit, inject, ViewChild, ElementRef, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
-  IonContent, IonButton, IonIcon, IonBadge, IonSpinner 
+  IonContent, IonButton, IonIcon, IonBadge, IonSpinner, NavController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { 
   arrowBackOutline, locationOutline, star, checkmarkCircle, 
-  timeOutline, mapOutline, addOutline, removeOutline, walkOutline 
+  timeOutline, mapOutline, addOutline, removeOutline, walkOutline, callOutline
 } from 'ionicons/icons';
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
 import { TrackingService } from 'src/app/core/services/tracking-service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
-import { environment } from '../../../env/env'; 
+import { environment } from 'src/env/env'; // Ajusta la ruta a tu env si es necesario
 import { NegocioService } from 'src/app/core/services/negocio.service';
 
 declare var google: any;
@@ -29,209 +29,138 @@ export class InfoNegocioPage implements OnInit {
   negocio: DatosNegocio | null = null;
   usuario: DatosUsuario | null = null;
   cargando: boolean = true;
-  seccionesAbiertas: boolean[] = [false, false];
+  seccionesAbiertas: boolean[] = [true, false]; // El horario (0) viene abierto por defecto
   
   @ViewChild('mapaElement', { static: false }) mapaElement!: ElementRef;
-
   mapaInicializado = false;
 
   private trackingService = inject(TrackingService);
-  private router = inject(Router);
   private route = inject(ActivatedRoute); 
   private negocioService = inject(NegocioService);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
-  private translate = inject(TranslateService); // Inyectamos el servicio de traducción
+  private translate = inject(TranslateService);
+  private navCtrl = inject(NavController);
 
   constructor() {
     addIcons({
       arrowBackOutline, locationOutline, star, checkmarkCircle,
-      timeOutline, mapOutline, addOutline, removeOutline, walkOutline
+      timeOutline, mapOutline, addOutline, removeOutline, walkOutline, callOutline
     });
   }
 
   ngOnInit() {
-    // 1. Inicializamos el usuario para el idioma y el botón "Volver"
-    const usuarioLogueadoStr = localStorage.getItem('user');
-    if (usuarioLogueadoStr) {
-      this.usuario = JSON.parse(usuarioLogueadoStr) as DatosUsuario;
-      const idiomaActual = this.usuario.idIdioma === 2 ? 'en' : 'es';
-      this.translate.use(idiomaActual);
-    } else {
-      this.translate.use('es'); // Idioma por defecto
-    }
+    this.inicializarUsuario();
+    this.cargarDatos();
+  }
 
-    // Leemos el estado de la navegación por si mandamos el objeto completo o el ID
-    const state = history.state;
+  private inicializarUsuario() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      this.usuario = JSON.parse(userStr);
+      // Aplicamos el idioma que prefiera el usuario
+      this.translate.use(this.usuario?.idIdioma === 2 ? 'en' : 'es');
+    }
+  }
+
+  private cargarDatos() {
+    // Obtenemos el ID de la URL (ej. /info-negocio/5)
+    const id = this.route.snapshot.paramMap.get('id');
     
-    // CASO 1: La interfaz ya trae todos los datos completos
-    if (state && state.negocioCompleto) {
-      this.negocio = state.negocioCompleto;
-      this.cargando = false;
-    } else {
-      // Buscamos un ID (puede venir en el state o en la URL, ej: /info-negocio/5)
-      const id = state.idNegocio || this.route.snapshot.paramMap.get('id');
-      
-      if (id) {
-        // CASO 2: Solo tenemos el ID, hay que llamar a Express
-        this.cargarDesdeAPI(id);
-      } else {
-        // CASO 3: Interfaz completamente vacía
-        this.cargarDatosSimulados();
-      }
-    }
-  }
-
-  async cargarDesdeAPI(id: number | string) {
-    try {
-      const data = await this.negocioService.obtenerNegocioPorId(id);
-      
-      if (data) {
-        // Usamos translate.instant() para textos de respaldo si la API no devuelve data
-        this.negocio = {
-          idNegocio: data.idNegocio,
-          nombre: data.nombre,
-          descripcion: data.descripcion || this.translate.instant('INFO_NEGOCIO.PENDING_DESC'), 
-          verificado: data.verificado === 1,
-          horario: data.horario || this.translate.instant('INFO_NEGOCIO.NO_HOURS'),
-          telefono: data.telefono || this.translate.instant('INFO_NEGOCIO.NO_PHONE'),
-          calificacionMedia: 5.0, 
-          imagen: 'https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&q=80&w=800',
-          ubicacion: {
-            direccionCompleta: `${data.calle || ''} ${data.numero || ''}, ${data.colonia || ''}`.trim(),
-            municipio: data.municipio || 'Calvillo',
-            latitud: data.latitud?.toString() || '0',
-            longitud: data.longitud?.toString() || '0'
-          },
-          tieneInventario: false 
-        } as unknown as DatosNegocio;
-      } else {
-        this.cargarDatosSimulados();
-      }
-    } catch (error) {
-      console.error("Error al conectar con la API, cargando simulados", error);
-      this.cargarDatosSimulados();
-    } finally {
-      this.cargando = false;
-      this.cdr.detectChanges();
-    }
-  }
-
-  cargarDatosSimulados() {
-    setTimeout(() => {
-      this.negocio = {
-        idNegocio: 1,
-        nombre: 'Artesanos de Calvillo',
-        descripcion: 'Descubre la magia de la guayaba en nuestro taller histórico...',
-        verificado: true,
-        horario: 'Lunes a Domingo - 9:00 AM a 6:00 PM',
-        telefono: '+52 495 123 4567',
-        calificacionMedia: 4.8,
-        imagen: 'https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&q=80&w=800',
-        ubicacion: {
-          direccionCompleta: 'Benito Juárez #12, Centro Histórico, Calvillo, AGS',
-          municipio: 'Calvillo',
-          latitud: '21.8469',
-          longitud: '-102.7188'
+    if (id) {
+      this.negocioService.obtenerPorId(id).subscribe({
+        next: (data) => {
+          this.negocio = data;
+          this.cargando = false;
+          this.cdr.detectChanges(); // Forzamos actualización de la vista
         },
-        tieneInventario: true 
-      } as unknown as DatosNegocio;
-      
-      this.cargando = false;
-      this.cdr.detectChanges();
-    }, 800);
+        error: (err) => {
+          console.error("Error al cargar el negocio", err);
+          this.cargando = false;
+        }
+      });
+    }
   }
 
   toggleSeccion(index: number) {
     this.seccionesAbiertas[index] = !this.seccionesAbiertas[index];
+    
+    // Si abre la pestaña del mapa (índice 1) y no se ha inicializado, lo cargamos
     if (index === 1 && this.seccionesAbiertas[1] && !this.mapaInicializado) {
       this.cargarAPIYRenderizar(0);
     }
   }
 
-  cargarAPIYRenderizar(intentosDOM: number) {
+  cargarAPIYRenderizar(intentos: number) {
+    // Si la API de Google ya existe en memoria, pintamos el mapa directo
     if (typeof google !== 'undefined') {
-      this.intentarRenderizarMapa(intentosDOM);
+      this.intentarRenderizarMapa(intentos);
       return;
     }
-
-    const scriptExistente = document.getElementById('google-maps-script-info');
+    
+    // Evitamos duplicar el script si el usuario da clics muy rápido
+    const scriptExistente = document.getElementById('google-maps-script');
     if (scriptExistente) {
-      setTimeout(() => this.cargarAPIYRenderizar(intentosDOM), 500);
-      return;
+        setTimeout(() => this.cargarAPIYRenderizar(intentos), 500);
+        return;
     }
 
     const script = document.createElement('script');
-    script.id = 'google-maps-script-info';
+    script.id = 'google-maps-script';
     script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apis.mapsApiKey}`;
-    script.async = true;
+    script.async = true; 
     script.defer = true;
-    
-    script.onload = () => {
-      this.intentarRenderizarMapa(intentosDOM);
-    };
-    
+    script.onload = () => this.intentarRenderizarMapa(0);
     document.head.appendChild(script);
   }
 
   intentarRenderizarMapa(intentos: number) {
-    if (!this.mapaElement || !this.negocio) return;
-
-    if (intentos > 8) return;
-
+    if (!this.mapaElement || !this.negocio || intentos > 5) return;
+    
     const el = this.mapaElement.nativeElement;
     
-    if (el.offsetWidth === 0 || el.offsetHeight === 0) {
-      const tiempoEspera = 300 + (intentos * 100);
-      setTimeout(() => this.intentarRenderizarMapa(intentos + 1), tiempoEspera);
+    // Si el div del mapa aún no tiene alto/ancho en el DOM, esperamos
+    if (el.offsetWidth === 0) {
+      setTimeout(() => this.intentarRenderizarMapa(intentos + 1), 500);
       return;
     }
-
-    const lat = parseFloat(this.negocio.ubicacion.latitud);
-    const lng = parseFloat(this.negocio.ubicacion.longitud);
-    const posicion = { lat, lng };
-
-    const mapOptions = {
-      center: posicion,
-      zoom: 16,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      disableDefaultUI: true, 
-      zoomControl: true,
-      scrollwheel: false,
-    };
-
+    
     this.ngZone.run(() => {
-      const map = new google.maps.Map(el, mapOptions);
-      new google.maps.Marker({
-        position: posicion,
-        map: map,
-        title: this.negocio?.nombre
+      const pos = { 
+        lat: parseFloat(this.negocio!.ubicacion.latitud), 
+        lng: parseFloat(this.negocio!.ubicacion.longitud) 
+      };
+      
+      const map = new google.maps.Map(el, { center: pos, zoom: 16, disableDefaultUI: true });
+      
+      new google.maps.Marker({ 
+        position: pos, 
+        map: map, 
+        title: this.negocio!.nombre 
       });
+      
       this.mapaInicializado = true;
-      this.cdr.detectChanges();
     });
   }
 
-  iniciarReserva() {
-    this.trackingService.registrarEvento('INICIAR_RESERVA', this.negocio?.idNegocio || 0);
-    this.router.navigate(['/reserva']);
+  volver() {
+    // Navegación nativa de Ionic hacia atrás, mantiene el estado previo de los filtros
+    this.navCtrl.back(); 
   }
 
   irAMapa() {
     if (!this.negocio) return;
     const lat = this.negocio.ubicacion.latitud;
     const lng = this.negocio.ubicacion.longitud;
-    
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+    // URL universal que abre la app de Google Maps en móviles
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     window.open(url, '_system');
   }
 
-  volver() {
-    switch (this.usuario?.idTipoUsuario) {
-      case 1: this.router.navigate(['/administrador-inicio']); break;
-      case 2: this.router.navigate(['/turista-inicio']); break;
-      case 3: this.router.navigate(['/negocio-inicio']); break;
-      default: this.router.navigate(['/home']);
+  iniciarReserva() {
+    if (this.negocio) {
+      this.trackingService.registrarEvento('INICIAR_RESERVA', this.negocio.idNegocio);
+      this.navCtrl.navigateForward(`/reservar/${this.negocio.idNegocio}`);
     }
   }
 }

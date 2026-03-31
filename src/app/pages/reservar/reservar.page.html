@@ -1,200 +1,178 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button (click)="volver()"></ion-back-button>
+      <ion-back-button defaultHref="/turista-inicio"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'RESERVE_PAGE.TITLE' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="citrus-main-bg">
-  <div class="dashboard-container">
-
-    <div class="hero-section">
-      <div class="hero-content">
-        <h1 class="hero-title">Cenaduría <span>Doña Lupe</span></h1>
-        <p class="hero-subtitle">Calvillo Experience</p>
-        <div class="hero-location">
-          <ion-icon name="location-outline"></ion-icon>
-          <span>{{ 'RESERVE_PAGE.LOCATION' | translate }}</span>
-        </div>
-      </div>
+  @if (cargando) {
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+      <ion-spinner color="success"></ion-spinner>
     </div>
-
-    <div class="booking-grid">
-
-      <div class="booking-info">
-        <div class="info-card">
-
-          <div class="dates-row">
-            <div class="date-field">
-              <div class="field-label">{{ 'RESERVE_PAGE.ARRIVAL_DATE' | translate }}</div>
-              <div class="field-value">
-                <ion-icon name="calendar-outline"></ion-icon>
-                <ion-datetime-button datetime="date"></ion-datetime-button>
-              </div>
-            </div>
-            <div class="date-field">
-              <div class="field-label">{{ 'RESERVE_PAGE.ARRIVAL_TIME' | translate }}</div>
-              <div class="field-value">
-                <ion-icon name="time-outline"></ion-icon>
-                <ion-datetime-button datetime="time"></ion-datetime-button>
-              </div>
-            </div>
+  } @else if (negocio) {
+    <div class="dashboard-container">
+      <div class="hero-section">
+        <div class="hero-content">
+          <h1 class="hero-title">{{ negocio.nombre }}</h1>
+          <p class="hero-subtitle">{{ negocio.categoria }} • Calvillo Experience</p>
+          <div class="hero-location">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ negocio.ubicacion.municipio || 'Calvillo, AGS' }}</span>
           </div>
-
-          @if (selectedDate || selectedTime) {
-            <div class="selected-info">
-              @if (selectedDate) {
-                <div class="info-chip">
-                  <ion-icon name="calendar-clear-outline"></ion-icon>
-                  <span>{{ selectedDate }}</span>
-                </div>
-              }
-              @if (selectedTime) {
-                <div class="info-chip">
-                  <ion-icon name="time-outline"></ion-icon>
-                  <span>{{ selectedTime }}</span>
-                </div>
-              }
-            </div>
-          }
-
-          <div class="people-field">
-            <div class="field-label">{{ 'RESERVE_PAGE.NUM_PEOPLE' | translate }}</div>
-            <div class="field-value-select">
-              <ion-select [(ngModel)]="numeroPersonas" [placeholder]="'RESERVE_PAGE.SELECT_PLACEHOLDER' | translate" interface="popover" class="custom-select">
-                <ion-select-option value="1">{{ 'RESERVE_PAGE.PERSON_1' | translate }}</ion-select-option>
-                <ion-select-option value="2">2 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
-                <ion-select-option value="3">3 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
-                <ion-select-option value="4">4 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
-                <ion-select-option value="5">5 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
-                <ion-select-option value="6">6 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
-                <ion-select-option value="7">7 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
-                <ion-select-option value="8">{{ 'RESERVE_PAGE.PERSON_8_PLUS' | translate }}</ion-select-option>
-              </ion-select>
-              <ion-icon name="chevron-down-outline" class="select-icon"></ion-icon>
-            </div>
-          </div>
-
-          <div class="exit-time-field">
-            <div class="field-label">{{ 'RESERVE_PAGE.DEPARTURE_TIME' | translate }}</div>
-            <div class="field-value" (click)="abrirModalHoraSalida()">
-              <ion-icon name="time-outline"></ion-icon>
-              <span>{{ exitTime || ('RESERVE_PAGE.SELECT_DEPARTURE_TIME' | translate) }}</span>
-            </div>
-          </div>
-
-          <button class="btn-reservar" expand="block" (click)="confirmarReserva()">
-            {{ 'RESERVE_PAGE.BOOK_NOW' | translate }}
-          </button>
         </div>
       </div>
 
-      <div class="calendar-section">
-        <div class="calendar-card">
-          <h3 class="section-title">{{ 'RESERVE_PAGE.AVAILABILITY' | translate }}</h3>
+      <div class="booking-grid">
+        <div class="booking-info">
+          <div class="info-card">
 
-          <div class="calendar-container">
-            <div class="calendar-header">
-              <button class="calendar-nav" (click)="mesAnterior()">
-                <ion-icon name="chevron-back-outline"></ion-icon>
-              </button>
-              <span class="calendar-month">{{ 'RESERVE_PAGE.MONTH_' + currentMonthIndex | translate }} {{ currentYear }}</span>
-              <button class="calendar-nav" (click)="mesSiguiente()">
-                <ion-icon name="chevron-forward-outline"></ion-icon>
-              </button>
-            </div>
-
-            <div class="calendar-weekdays">
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.SUN' | translate }}</span>
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.MON' | translate }}</span>
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.TUE' | translate }}</span>
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.WED' | translate }}</span>
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.THU' | translate }}</span>
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.FRI' | translate }}</span>
-              <span>{{ 'RESERVE_PAGE.WEEKDAYS.SAT' | translate }}</span>
-            </div>
-
-            <div class="calendar-days">
-              @for (day of calendarDays; track $index) {
-                <div class="day" 
-                  [class.available]="day.available && !day.empty"
-                  [class.selected]="day.isSelected" 
-                  [class.disabled]="!day.available && !day.empty"
-                  [class.empty]="day.empty" 
-                  (click)="seleccionarDia(day)">
-                  {{ day.date }}
+            <div class="dates-row">
+              <div class="date-field">
+                <div class="field-label">{{ 'RESERVE_PAGE.ARRIVAL_DATE' | translate }}</div>
+                <div class="field-value">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <ion-datetime-button datetime="date"></ion-datetime-button>
                 </div>
-              }
+              </div>
+              <div class="date-field">
+                <div class="field-label">{{ 'RESERVE_PAGE.ARRIVAL_TIME' | translate }}</div>
+                <div class="field-value">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <ion-datetime-button datetime="time"></ion-datetime-button>
+                </div>
+              </div>
             </div>
 
-            @if (selectedDay) {
-              <div class="accept-button-container">
-                <button class="btn-accept" (click)="aceptarFecha()">
-                  <ion-icon name="checkmark-circle-outline"></ion-icon>
-                  {{ 'RESERVE_PAGE.ACCEPT' | translate }}
-                </button>
+            @if (selectedDate || selectedTime) {
+              <div class="selected-info">
+                @if (selectedDate) {
+                  <div class="info-chip">
+                    <ion-icon name="calendar-clear-outline"></ion-icon>
+                    <span>{{ selectedDate }}</span>
+                  </div>
+                }
+                @if (selectedTime) {
+                  <div class="info-chip">
+                    <ion-icon name="time-outline"></ion-icon>
+                    <span>{{ selectedTime }}</span>
+                  </div>
+                }
               </div>
             }
 
-            <div class="calendar-legend">
-              <div class="legend-item">
-                <span class="legend-dot available-dot"></span>
-                <span>{{ 'RESERVE_PAGE.LEGEND_AVAILABLE' | translate }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot selected-dot"></span>
-                <span>{{ 'RESERVE_PAGE.LEGEND_SELECTED' | translate }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot unavailable-dot"></span>
-                <span>{{ 'RESERVE_PAGE.LEGEND_UNAVAILABLE' | translate }}</span>
+            <div class="people-field">
+              <div class="field-label">{{ 'RESERVE_PAGE.NUM_PEOPLE' | translate }}</div>
+              <div class="field-value-select">
+                <ion-select [(ngModel)]="numeroPersonas" [placeholder]="'RESERVE_PAGE.SELECT_PLACEHOLDER' | translate" interface="popover" class="custom-select">
+                  <ion-select-option value="1">{{ 'RESERVE_PAGE.PERSON_1' | translate }}</ion-select-option>
+                  <ion-select-option value="2">2 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                  <ion-select-option value="3">3 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                  <ion-select-option value="4">4 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                  <ion-select-option value="5">5 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                  <ion-select-option value="6">6 {{ 'RESERVE_PAGE.PERSON_PLURAL' | translate }}</ion-select-option>
+                </ion-select>
+                <ion-icon name="chevron-down-outline" class="select-icon"></ion-icon>
               </div>
             </div>
-          </div>
 
-          <div class="hours-section">
-            <h4 class="hours-title">{{ 'RESERVE_PAGE.BUSINESS_HOURS_TITLE' | translate }}</h4>
-            <div class="hours-grid">
-              <div class="hour-item">
-                <span class="hour-day">{{ 'RESERVE_PAGE.HOURS_MON_THU' | translate }}</span>
-                <span class="hour-time">6:00 PM - 11:00 PM</span>
-              </div>
-              <div class="hour-item">
-                <span class="hour-day">{{ 'RESERVE_PAGE.HOURS_FRI_SUN' | translate }}</span>
-                <span class="hour-time">5:00 PM - 12:00 AM</span>
+            <div class="exit-time-field">
+              <div class="field-label">{{ 'RESERVE_PAGE.DEPARTURE_TIME' | translate }} (Opcional)</div>
+              <div class="field-value" (click)="abrirModalHoraSalida()">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ exitTime || ('RESERVE_PAGE.SELECT_DEPARTURE_TIME' | translate) }}</span>
               </div>
             </div>
+
+            <button class="btn-reservar" expand="block" (click)="confirmarReserva()">
+              {{ 'RESERVE_PAGE.BOOK_NOW' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="calendar-section">
+          <div class="calendar-card">
+            <h3 class="section-title">{{ 'RESERVE_PAGE.AVAILABILITY' | translate }}</h3>
+
+            <div class="calendar-container">
+              <div class="calendar-header">
+                <button class="calendar-nav" (click)="mesAnterior()">
+                  <ion-icon name="chevron-back-outline"></ion-icon>
+                </button>
+                <span class="calendar-month">{{ 'RESERVE_PAGE.MONTH_' + currentMonthIndex | translate }} {{ currentYear }}</span>
+                <button class="calendar-nav" (click)="mesSiguiente()">
+                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                </button>
+              </div>
+
+              <div class="calendar-weekdays">
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.SUN' | translate }}</span>
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.MON' | translate }}</span>
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.TUE' | translate }}</span>
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.WED' | translate }}</span>
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.THU' | translate }}</span>
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.FRI' | translate }}</span>
+                <span>{{ 'RESERVE_PAGE.WEEKDAYS.SAT' | translate }}</span>
+              </div>
+
+              <div class="calendar-days">
+                @for (day of calendarDays; track $index) {
+                  <div class="day" 
+                    [class.available]="day.available && !day.empty"
+                    [class.selected]="day.isSelected" 
+                    [class.disabled]="!day.available && !day.empty"
+                    [class.empty]="day.empty" 
+                    (click)="seleccionarDia(day)">
+                    {{ day.date }}
+                  </div>
+                }
+              </div>
+
+              @if (selectedDay) {
+                <div class="accept-button-container">
+                  <button class="btn-accept" (click)="aceptarFecha()">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    {{ 'RESERVE_PAGE.ACCEPT' | translate }}
+                  </button>
+                </div>
+              }
+            </div>
+
+            <div class="hours-section">
+              <h4 class="hours-title">Horario de Operación</h4>
+              <div class="hours-grid">
+                <div class="hour-item" style="width: 100%;">
+                  <span class="hour-time" style="font-size: 14px;">{{ negocio.horario || 'Horario no especificado' }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-info">
+        <div class="payment-methods">
+          <span class="payment-label">{{ 'RESERVE_PAGE.PAYMENT_METHODS' | translate }}</span>
+          <div class="payment-icons">
+            <ion-icon name="card-outline"></ion-icon>
+            <span>Visa</span>
+            <span>Mastercard</span>
+            <span>{{ 'RESERVE_PAGE.CASH' | translate }}</span>
+          </div>
+        </div>
+
+        <div class="contact-info">
+          <div class="contact-item">
+            <ion-icon name="call-outline"></ion-icon>
+            <span>{{ negocio.telefono || 'Sin teléfono' }}</span>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="footer-info">
-      <div class="payment-methods">
-        <span class="payment-label">{{ 'RESERVE_PAGE.PAYMENT_METHODS' | translate }}</span>
-        <div class="payment-icons">
-          <ion-icon name="card-outline"></ion-icon>
-          <span>Visa</span>
-          <span>Mastercard</span>
-          <span>Amex</span>
-          <span>{{ 'RESERVE_PAGE.CASH' | translate }}</span>
-        </div>
-      </div>
-
-      <div class="contact-info">
-        <div class="contact-item">
-          <ion-icon name="call-outline"></ion-icon>
-          <span>+52 (449) 123 4567</span>
-        </div>
-        <div class="contact-item">
-          <ion-icon name="mail-outline"></ion-icon>
-          <span>reservas@cenaduradonalupe.com</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  }
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core'; // Usamos inject para consistencia con Angular 20
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/env/env';
 import { tap } from 'rxjs/operators';
@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 
-// Interfaz exclusiva para el registro, añade la contraseña que no está en DatosUsuario
 export interface RegistroUsuario extends Omit<DatosUsuario, 'idUsuario'> {
   contraseña: string; 
 }
@@ -15,26 +14,25 @@ export interface RegistroUsuario extends Omit<DatosUsuario, 'idUsuario'> {
   providedIn: 'root'
 })
 export class AuthService {
-
-  constructor(private router: Router, private http: HttpClient) { }
+  // Inyección moderna de dependencias
+  private http = inject(HttpClient);
+  private router = inject(Router);
 
   login(correo: string, contraseña: string): Observable<any> {
+    // Apuntamos a /api/login
     return this.http.post(`${environment.apiUrl}/api/login`, { correo, contraseña }).pipe(
       tap((res: any) => {
-        // Guardar el token y datos en el navegador
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('user', JSON.stringify(res.user));
+        if (res.token) {
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user));
+        }
       })
     );
   }
 
   registrarUsuario(datos: RegistroUsuario): Observable<any> {
-    // Aseguramos que el backend reciba la propiedad 'contraseña' con 'ñ'
-    const bodyEnvio = {
-      ...datos,
-      contraseña: datos.contraseña 
-    };
-    return this.http.post(`${environment.apiUrl}/usuarios`, bodyEnvio);
+    // CORRECCIÓN: Añadimos /api/ para que coincida con el servidor de Express
+    return this.http.post(`${environment.apiUrl}/api/usuarios`, datos);
   }
 
   isLoggedIn(): boolean {
@@ -53,6 +51,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    this.router.navigate(['/login']); // Redirige al inicio de sesión
+    this.router.navigate(['/login']);
   }
 }
