@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button (click)="volver()"></ion-back-button>
+      <ion-back-button (click)="volver()" defaultHref="/turista-inicio"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'RESERVE_PAGE.TITLE' | translate }}</ion-title>
   </ion-toolbar>
@@ -10,19 +10,18 @@
 <ion-content class="citrus-main-bg">
   <div class="dashboard-container">
 
-    <div class="hero-section">
+    <div class="hero-section" [ngStyle]="{'background-image': 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(' + (negocio?.imagen?.[0] || 'assets/images/placeholder.jpg') + ')'}">
       <div class="hero-content">
-        <h1 class="hero-title">Cenaduría <span>Doña Lupe</span></h1>
+        <h1 class="hero-title">{{ negocio?.nombre || 'Cargando...' }}</h1>
         <p class="hero-subtitle">Calvillo Experience</p>
         <div class="hero-location">
           <ion-icon name="location-outline"></ion-icon>
-          <span>{{ 'RESERVE_PAGE.LOCATION' | translate }}</span>
+          <span>{{ negocio?.ubicacion?.municipio || ('RESERVE_PAGE.LOCATION' | translate) }}</span>
         </div>
       </div>
     </div>
 
     <div class="booking-grid">
-
       <div class="booking-info">
         <div class="info-card">
 
@@ -85,9 +84,9 @@
             </div>
           </div>
 
-          <button class="btn-reservar" expand="block" (click)="confirmarReserva()">
+          <ion-button expand="block" class="btn-reservar" color="primary" (click)="confirmarReserva()">
             {{ 'RESERVE_PAGE.BOOK_NOW' | translate }}
-          </button>
+          </ion-button>
         </div>
       </div>
 
@@ -186,31 +185,21 @@
       <div class="contact-info">
         <div class="contact-item">
           <ion-icon name="call-outline"></ion-icon>
-          <span>+52 (449) 123 4567</span>
-        </div>
-        <div class="contact-item">
-          <ion-icon name="mail-outline"></ion-icon>
-          <span>reservas@cenaduradonalupe.com</span>
+          <span>{{ negocio?.telefono || '+52 (449) 123 4567' }}</span>
         </div>
       </div>
     </div>
   </div>
 
   <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime id="date" presentation="date" [(ngModel)]="currentDate" (ionChange)="alCambiarFecha($event)"></ion-datetime>
-    </ng-template>
+    <ion-datetime id="date" presentation="date" [(ngModel)]="currentDate" (ionChange)="alCambiarFecha($event)"></ion-datetime>
   </ion-modal>
 
   <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime id="time" presentation="time" [(ngModel)]="currentTime" (ionChange)="alCambiarHora($event)"></ion-datetime>
-    </ng-template>
+    <ion-datetime id="time" presentation="time" [(ngModel)]="currentTime" (ionChange)="alCambiarHora($event)"></ion-datetime>
   </ion-modal>
 
   <ion-modal #exitTimeModal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime presentation="time" [(ngModel)]="exitTimeValue" (ionChange)="alCambiarHoraSalida($event)"></ion-datetime>
-    </ng-template>
+    <ion-datetime presentation="time" [(ngModel)]="exitTimeValue" (ionChange)="alCambiarHoraSalida($event)"></ion-datetime>
   </ion-modal>
 </ion-content>

@@ -1,88 +1,148 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule, NavController, ToastController, AlertController } from '@ionic/angular';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IonicModule, NavController, ToastController, LoadingController } from '@ionic/angular';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { 
-  personCircleOutline, 
-  imageOutline, 
-  pencilOutline, 
-  trashOutline, 
-  add, 
-  storefrontOutline 
+import {
+  imageOutline, storefrontOutline, timeOutline, callOutline,
+  pricetagOutline, calendarClearOutline, locationOutline, saveOutline, calendarOutline
 } from 'ionicons/icons';
 
-interface Negocio {
-  id: number;
-  nombre: string;
-  categoria: string;
-  descripcion: string;
-  imagen?: string;
-}
+// Servicios
+import { CloudinaryService } from '../../core/services/cloudinary.service';
+import { NegocioService } from '../../core/services/negocio.service';
+import { DatosNegocio } from '../../shared/interfaces/datos-negocio';
 
 @Component({
   selector: 'app-negocio-presentacion',
   templateUrl: './negocio-presentacion.page.html',
   styleUrls: ['./negocio-presentacion.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule] 
+  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, TranslateModule]
 })
 export class NegocioPresentacionPage implements OnInit {
 
-  misNegocios: Negocio[] = [
-    { id: 1, nombre: 'Café Guayaba Real', categoria: 'Cafetería', descripcion: 'El aroma tradicional de Calvillo en tu mesa.' },
-    { id: 2, nombre: 'Deshilados "La Original"', categoria: 'Artesanías', descripcion: 'Prendas únicas con técnica artesanal de la región.' }
-  ];
+  negocioForm: FormGroup;
+  categorias: string[] = ['Atractivo Turístico', 'Restaurante', 'Cafetería', 'Artesanías', 'Hospedaje'];
+  archivoImagen: File | null = null;
+  negocioAEditar: DatosNegocio | null = null;
+  esEdicion = false;
 
-  constructor(
-    private navCtrl: NavController,
-    private toastCtrl: ToastController,
-    private alertCtrl: AlertController
-  ) {
-    addIcons({ 
-      personCircleOutline, 
-      imageOutline, 
-      pencilOutline, 
-      trashOutline, 
-      add, 
-      storefrontOutline 
+  private fb = inject(FormBuilder);
+  private navCtrl = inject(NavController);
+  private toastCtrl = inject(ToastController);
+  private loadingCtrl = inject(LoadingController);
+  private cloudinary = inject(CloudinaryService);
+  private negocioService = inject(NegocioService);
+  private translate = inject(TranslateService);
+
+  constructor() {
+    addIcons({ imageOutline, storefrontOutline, timeOutline, callOutline, pricetagOutline, calendarClearOutline, locationOutline, saveOutline, calendarOutline });
+
+    this.negocioForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      descripcion: ['', Validators.required],
+      categoria: ['', Validators.required],
+      diasTrabajo: [[]],
+      diasDescanso: [[]],
+      horaInicio: [''],
+      horaFin: [''],
+      horario: [''], 
+      telefono: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+      permitirReservas: [false],
+      imagen: [''], 
+      ubicacion: ['', Validators.required]
     });
   }
 
-  ngOnInit() { }
-
-  irANegocioInicio() {
-    this.navCtrl.navigateForward('/negocio-inicio');
+  ngOnInit() {
+    const state = history.state;
+    if (state && state.negocioEditable) {
+      this.esEdicion = true;
+      this.negocioAEditar = state.negocioEditable;
+      
+      this.negocioForm.patchValue({
+        nombre: this.negocioAEditar?.nombre,
+        descripcion: this.negocioAEditar?.descripcion,
+        categoria: this.negocioAEditar?.categoria, 
+        telefono: this.negocioAEditar?.telefono,
+        horario: this.negocioAEditar?.horario,
+        permitirReservas: this.negocioAEditar?.permitirReservas,
+        imagen: this.negocioAEditar?.imagen?.[0] || '',
+        ubicacion: this.negocioAEditar?.ubicacion?.direccionCompleta
+      });
+    }
   }
 
-  irAPerfil() {
-    this.navCtrl.navigateForward('/perfil');
+  volver() {
+    // AHORA DIRIGE AL DASHBOARD
+    this.navCtrl.navigateBack('/negocio-inicio');
   }
 
-  editarNegocio(negocio: Negocio) {
-    this.presentToast(`Editando: ${negocio.nombre}`, 'primary');
+  abrirSelectorImagen(fileInput: HTMLInputElement) {
+    fileInput.click();
   }
 
-  async borrarNegocio(negocio: Negocio) {
-    const alert = await this.alertCtrl.create({
-      header: '¿Eliminar negocio?',
-      message: `¿Estás seguro de borrar "${negocio.nombre}"?`,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Borrar',
-          handler: () => {
-            this.misNegocios = this.misNegocios.filter(n => n.id !== negocio.id);
-            this.presentToast('Negocio eliminado', 'danger');
-          }
-        }
-      ]
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input?.files && input.files[0]) {
+      this.archivoImagen = input.files[0];
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.negocioForm.patchValue({ imagen: reader.result });
+      };
+      reader.readAsDataURL(this.archivoImagen);
+    }
+  }
+
+  async guardarCambios() {
+    if (this.negocioForm.invalid) {
+      this.negocioForm.markAllAsTouched();
+      return;
+    }
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Guardando datos en el servidor...',
+      spinner: 'crescent'
     });
-    await alert.present();
+    await loading.present();
+
+    try {
+      let urlImagen = this.negocioForm.get('imagen')?.value;
+
+      if (this.archivoImagen) {
+        const resCloudinary = await this.cloudinary.uploadImage(this.archivoImagen);
+        urlImagen = resCloudinary.secure_url;
+      }
+
+      const formData = this.negocioForm.value;
+      const datosFinales = {
+        ...formData,
+        horario: `${formData.horaInicio || ''} a ${formData.horaFin || ''}`, 
+        imagen: [urlImagen] 
+      };
+
+      if (this.esEdicion && this.negocioAEditar) {
+        await this.negocioService.actualizarNegocio(this.negocioAEditar.idNegocio, datosFinales).toPromise();
+      } else {
+        await this.negocioService.crearNegocio(datosFinales).toPromise();
+      }
+
+      await loading.dismiss();
+      this.presentToast('Negocio guardado exitosamente', 'success');
+      this.navCtrl.navigateBack('/negocio-inicio');
+
+    } catch (error) {
+      console.error(error);
+      await loading.dismiss();
+      this.presentToast('Hubo un error al guardar. Intenta nuevamente.', 'danger');
+    }
   }
 
   async presentToast(msg: string, color: string) {
-    const toast = await this.toastCtrl.create({ message: msg, duration: 2000, color: color });
+    const toast = await this.toastCtrl.create({ message: msg, duration: 3000, color: color, position: 'top' });
     toast.present();
   }
 }

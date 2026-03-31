@@ -28,6 +28,9 @@
         <li [class.active]="vistaActual === 'configuracion'" (click)="cambiarVista('configuracion')">
           <ion-icon name="settings-outline"></ion-icon> Configuración
         </li>
+        <li class="logout-item" (click)="logout()" style="margin-top: auto; color: #ef4444;">
+          <ion-icon name="log-out-outline"></ion-icon> Cerrar Sesión
+        </li>
       </ul>
     </div>
 
@@ -129,7 +132,7 @@
                 <ion-icon [name]="getIconoCategoria(negocio.categoria)" class="icon-negocios"></ion-icon>
                 <div>
                   <h4>{{ negocio.nombre }}</h4>
-                  <p style="text-transform: capitalize;">{{ negocio.categoria }}</p>
+                  <p style="text-transform: capitalize;">{{ negocio.categoria || 'General' }}</p>
                 </div>
               </div>
               <span class="badge {{ getClaseMembresia(negocio.membresia) }}">
@@ -142,7 +145,8 @@
               <p>No hay negocios registrados aún.</p>
             </div>
           }
-          </div>
+          
+        </div>
       </div>
 
       <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'reportes'" style="flex: 1;">
@@ -159,6 +163,7 @@
       </div>
 
       <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'configuracion'" style="flex: 1; overflow-y: auto;">
+        <p style="color: #64748b; padding: 20px;">Opciones de configuración del sistema (Próximamente)...</p>
       </div>
 
     </div>

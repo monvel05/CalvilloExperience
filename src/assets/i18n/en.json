@@ -119,5 +119,32 @@
     "ALERT_MISSING_FIELDS": "Please complete the date, check-in time, and number of people.",
     "ALERT_SUCCESS": "Reservation successfully created in Calvillo Experience",
     "ALERT_ERROR": "There was a problem connecting to the server."
+  },
+  "SOCIAL_WALL": {
+    "TITLE": "Social Wall",
+    "SUBTITLE": "Discover and share the best of Calvillo Experience",
+    "SHARE_PROMPT": "Share your experience",
+    "INPUT_PLACEHOLDER": "What did you discover today in Calvillo?",
+    "UPLOAD_PHOTO": "Upload photo",
+    "PUBLISH_BTN": "Publish",
+    "EMPTY_STATE": "No posts yet. Be the first to share something!",
+    "EXPLORER": "Explorer",
+    "RECENT": "Recent",
+    "DELETE_CONFIRM_TITLE": "Delete post",
+    "DELETE_CONFIRM_MSG": "Are you sure you want to delete this post?",
+    "CANCEL": "Cancel",
+    "DELETE": "Delete",
+    "ALERT_EMPTY_POST": "Please write something before publishing.",
+    "ERROR_PUBLISH": "There was an error publishing your post."
+  },"MAP_PAGE": {
+    "ATTRACTIONS": "Attractions",
+    "RESTAURANTS": "Restaurants",
+    "LODGING": "Lodging",
+    "TRANSPORT": "Transport",
+    "VIEW_DETAILS": "View details",
+    "DIRECTIONS": "Directions",
+    "MAP": "Map",
+    "RESERVES": "Reserves",
+    "RESERVE_WARNING": "To book, please select a business from the catalog."
   }
 }

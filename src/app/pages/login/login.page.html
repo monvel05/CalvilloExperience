@@ -22,37 +22,34 @@
           <ion-input 
             type="email" 
             formControlName="correo" 
-            [placeholder]="'LOGIN_PAGE.EMAIL_PLACEHOLDER' | translate"
-            [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched"
-          >
+            [placeholder]="'LOGIN_PAGE.EMAIL_PLACEHOLDER' | translate">
           </ion-input>
         </ion-item>
-        <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error-message">
-          <ion-icon name="alert-circle-outline"></ion-icon>
-          <span>{{ 'LOGIN_PAGE.EMAIL_REQUIRED' | translate }}</span>
-        </div>
+        
+        @if (loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>{{ 'LOGIN_PAGE.EMAIL_REQUIRED' | translate }}</span>
+          </div>
+        }
 
         <ion-item lines="none" class="custom-input" [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched">
           <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
           <ion-input 
             type="password" 
             formControlName="contraseña" 
-            [placeholder]="'LOGIN_PAGE.PASSWORD_PLACEHOLDER' | translate"
-            [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched"
-          >
+            [placeholder]="'LOGIN_PAGE.PASSWORD_PLACEHOLDER' | translate">
           </ion-input>
         </ion-item>
-        <div *ngIf="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched" class="error-message">
-          <ion-icon name="alert-circle-outline"></ion-icon>
-          <span>{{ 'LOGIN_PAGE.PASSWORD_MIN_LENGTH' | translate }}</span>
-        </div>
 
-        <ion-button 
-          expand="block" 
-          type="submit" 
-          class="login-button"
-          [disabled]="loginForm.invalid"
-        >
+        @if (loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched) {
+          <div class="error-message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>{{ 'LOGIN_PAGE.PASSWORD_MIN_LENGTH' | translate }}</span>
+          </div>
+        }
+
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="loginForm.invalid">
           {{ 'LOGIN_PAGE.SUBMIT_BUTTON' | translate }}
         </ion-button>
       </form>
@@ -60,9 +57,7 @@
       <div class="login-footer">
         <p>{{ 'LOGIN_PAGE.NO_ACCOUNT' | translate }}
           <span class="register-link">
-            <a routerLink="/registrarse">
-              {{ 'LOGIN_PAGE.REGISTER_LINK' | translate }}
-            </a>
+            <a routerLink="/registrarse">{{ 'LOGIN_PAGE.REGISTER_LINK' | translate }}</a>
           </span>
         </p>
       </div>

@@ -1,31 +1,32 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-segment
       [value]="categoriaSeleccionada()"
       (ionChange)="cambiarCategoria($event)"
       scrollable="true"
+      mode="md"
     >
-      <ion-segment-button value="1">
-        <ion-label>Atractivos</ion-label>
+      <ion-segment-button value="Atractivo turistico">
+        <ion-label>{{ 'MAP_PAGE.ATTRACTIONS' | translate }}</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="2">
-        <ion-label>Restaurantes</ion-label>
+      <ion-segment-button value="Restaurante">
+        <ion-label>{{ 'MAP_PAGE.RESTAURANTS' | translate }}</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="3">
-        <ion-label>Hospedaje</ion-label>
+      <ion-segment-button value="Hospedaje">
+        <ion-label>{{ 'MAP_PAGE.LODGING' | translate }}</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="4">
-        <ion-label>Transporte</ion-label>
+      <ion-segment-button value="Transporte">
+        <ion-label>{{ 'MAP_PAGE.TRANSPORT' | translate }}</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [scrollY]="false">
-  <google-map height="100%" width="100%" [center]="center" [zoom]="zoom">
+  <google-map height="100%" width="100%" [center]="center" [zoom]="zoom" [options]="{disableDefaultUI: true, zoomControl: true}">
 
     @for (lugar of lugaresFiltrados(); track lugar.id) {
       <map-marker
@@ -45,75 +46,79 @@
   [initialBreakpoint]="0.35"
   (didDismiss)="cerrarModal()"
 >
-  <ion-content class="modal-content">
+  <ng-template>
+    <ion-content class="modal-content ion-padding">
 
-    @if (lugarSeleccionado()) {
-      <div class="contenido">
+      @if (lugarSeleccionado()) {
+        <div class="contenido">
 
-        <h2 class="titulo">
-          {{ lugarSeleccionado()?.nombre }}
-        </h2>
+          <h2 class="titulo" style="font-weight: bold; margin-bottom: 15px; color: var(--ion-color-dark);">
+            {{ lugarSeleccionado()?.nombre }}
+          </h2>
 
-        <div class="info">
-          <ion-icon name="location"></ion-icon>
-          <span>{{ lugarSeleccionado()?.direccion }}</span>
+          <div class="info" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--ion-color-medium);">
+            <ion-icon name="location" color="primary"></ion-icon>
+            <span>{{ lugarSeleccionado()?.direccion }}</span>
+          </div>
+
+          <div class="info" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; color: var(--ion-color-medium);">
+            <ion-icon name="call" color="primary"></ion-icon>
+            <span>
+              {{ lugarSeleccionado()?.telefono !== 'Sin teléfono'
+                ? lugarSeleccionado()?.telefono
+                : ('INFO_NEGOCIO.NO_PHONE' | translate) }}
+            </span>
+          </div>
+
+          <div class="acciones" style="display: flex; gap: 10px; flex-direction: column;">
+            <ion-button expand="block" color="primary" (click)="verDetalles(lugarSeleccionado().id)">
+              {{ 'MAP_PAGE.VIEW_DETAILS' | translate }}
+            </ion-button>
+
+            <ion-button
+              expand="block"
+              fill="outline"
+              color="dark"
+              (click)="irComoLlegar(lugarSeleccionado())"
+            >
+              <ion-icon name="location-outline" slot="start"></ion-icon>
+              {{ 'MAP_PAGE.DIRECTIONS' | translate }}
+            </ion-button>
+          </div>
+
         </div>
+      }
 
-        <div class="info">
-          <ion-icon name="call"></ion-icon>
-          <span>
-            {{ lugarSeleccionado()?.telefono !== 'Sin teléfono'
-              ? lugarSeleccionado()?.telefono
-              : 'No disponible' }}
-          </span>
-        </div>
-
-        <div class="acciones">
-          <ion-button expand="block" fill="solid">
-            Ver detalles
-          </ion-button>
-
-          <ion-button
-            expand="block"
-            fill="outline"
-            (click)="irComoLlegar(lugarSeleccionado())"
-          >
-            Cómo llegar
-          </ion-button>
-        </div>
-
-      </div>
-    }
-
-  </ion-content>
+    </ion-content>
+  </ng-template>
 </ion-modal>
 
 <ion-footer>
-  <ion-tab-bar>
+  <ion-tab-bar slot="bottom">
 
-    <ion-tab-button (click)="navegar('inicio')">
+    <ion-tab-button (click)="navegar('turista-inicio')">
       <ion-icon name="home-outline"></ion-icon>
-      <ion-label>Inicio</ion-label>
+      <ion-label>{{ 'NAVBAR.HOME' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button (click)="navegar('mapa')" class="tab-selected">
       <ion-icon name="location"></ion-icon>
-      <ion-label>Mapa</ion-label>
+      <ion-label>{{ 'MAP_PAGE.MAP' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button (click)="irAReservas()">
       <ion-icon name="calendar-outline"></ion-icon>
-      <ion-label>Reservas</ion-label>
+      <ion-label>{{ 'MAP_PAGE.RESERVES' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button (click)="navegar('muro-social')">
       <ion-icon name="images-outline"></ion-icon>
-      <ion-label>Muro Social</ion-label>
+      <ion-label>{{ 'SOCIAL_WALL.TITLE' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button (click)="navegar('perfil')">
       <ion-icon name="person-outline"></ion-icon>
-      <ion-label>Perfil</ion-label>
+      <ion-label>{{ 'PROFILE.TITLE' | translate }}</ion-label>
     </ion-tab-button>
 
   </ion-tab-bar>
