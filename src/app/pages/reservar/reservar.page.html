@@ -9,11 +9,12 @@
 
 <ion-content class="citrus-main-bg">
   @if (cargando) {
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div class="loader-container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
       <ion-spinner color="success"></ion-spinner>
     </div>
   } @else if (negocio) {
     <div class="dashboard-container">
+      
       <div class="hero-section">
         <div class="hero-content">
           <h1 class="hero-title">{{ negocio.nombre }}</h1>
@@ -86,7 +87,7 @@
               </div>
             </div>
 
-            <button class="btn-reservar" expand="block" (click)="confirmarReserva()">
+            <button class="btn-reservar" (click)="confirmarReserva()">
               {{ 'RESERVE_PAGE.BOOK_NOW' | translate }}
             </button>
           </div>
@@ -143,8 +144,8 @@
             <div class="hours-section">
               <h4 class="hours-title">Horario de Operación</h4>
               <div class="hours-grid">
-                <div class="hour-item" style="width: 100%;">
-                  <span class="hour-time" style="font-size: 14px;">{{ negocio.horario || 'Horario no especificado' }}</span>
+                <div class="hour-item">
+                  <span class="hour-time">{{ negocio.horario || 'Horario no especificado' }}</span>
                 </div>
               </div>
             </div>

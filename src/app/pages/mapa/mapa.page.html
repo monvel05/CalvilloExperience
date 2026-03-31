@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-segment
       [value]="categoriaSeleccionada()"
@@ -8,15 +8,12 @@
       <ion-segment-button value="1">
         <ion-label>Atractivos</ion-label>
       </ion-segment-button>
-
       <ion-segment-button value="2">
         <ion-label>Restaurantes</ion-label>
       </ion-segment-button>
-
       <ion-segment-button value="3">
         <ion-label>Hospedaje</ion-label>
       </ion-segment-button>
-
       <ion-segment-button value="4">
         <ion-label>Transporte</ion-label>
       </ion-segment-button>
@@ -26,7 +23,6 @@
 
 <ion-content [scrollY]="false">
   <google-map height="100%" width="100%" [center]="center" [zoom]="zoom">
-
     @for (lugar of lugaresFiltrados(); track lugar.id) {
       <map-marker
         [position]="lugar.coordenadas"
@@ -35,7 +31,6 @@
       >
       </map-marker>
     }
-
   </google-map>
 </ion-content>
 
@@ -46,13 +41,9 @@
   (didDismiss)="cerrarModal()"
 >
   <ion-content class="modal-content">
-
     @if (lugarSeleccionado()) {
       <div class="contenido">
-
-        <h2 class="titulo">
-          {{ lugarSeleccionado()?.nombre }}
-        </h2>
+        <h2 class="titulo">{{ lugarSeleccionado()?.nombre }}</h2>
 
         <div class="info">
           <ion-icon name="location"></ion-icon>
@@ -69,52 +60,39 @@
         </div>
 
         <div class="acciones">
-          <ion-button expand="block" fill="solid">
+          <ion-button fill="solid">
             Ver detalles
           </ion-button>
-
-          <ion-button
-            expand="block"
-            fill="outline"
-            (click)="irComoLlegar(lugarSeleccionado())"
-          >
+          <ion-button fill="outline" (click)="irComoLlegar(lugarSeleccionado())">
             Cómo llegar
           </ion-button>
         </div>
-
       </div>
     }
-
   </ion-content>
 </ion-modal>
 
 <ion-footer>
   <ion-tab-bar>
-
     <ion-tab-button (click)="navegar('inicio')">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Inicio</ion-label>
     </ion-tab-button>
-
     <ion-tab-button (click)="navegar('mapa')" class="tab-selected">
       <ion-icon name="location"></ion-icon>
       <ion-label>Mapa</ion-label>
     </ion-tab-button>
-
     <ion-tab-button (click)="irAReservas()">
       <ion-icon name="calendar-outline"></ion-icon>
       <ion-label>Reservas</ion-label>
     </ion-tab-button>
-
     <ion-tab-button (click)="navegar('muro-social')">
       <ion-icon name="images-outline"></ion-icon>
       <ion-label>Muro Social</ion-label>
     </ion-tab-button>
-
     <ion-tab-button (click)="navegar('perfil')">
       <ion-icon name="person-outline"></ion-icon>
       <ion-label>Perfil</ion-label>
     </ion-tab-button>
-
   </ion-tab-bar>
 </ion-footer>

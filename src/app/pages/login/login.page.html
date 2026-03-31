@@ -2,29 +2,24 @@
   <div class="login-wrapper">
     
     <div class="language-switcher" style="position: absolute; top: 20px; right: 20px; z-index: 10;">
-      <ion-chip color="primary" (click)="toggleLanguage()" mode="ios">
+      <ion-chip (click)="toggleLanguage()" mode="ios">
         <ion-icon name="globe-outline"></ion-icon>
         <ion-label>{{ currentLang === 'es' ? 'Español' : 'English' }}</ion-label>
       </ion-chip>
     </div>
 
     <div class="login-card">
-
       <div class="login-header">
-        <img src="assets/icon/favicon.png" alt="Logo" class="login-logo">
+        <img src="assets/icon/logo.png" alt="Logo" class="login-logo">
         <h1>Calvillo</h1>
         <p>Experience</p>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
-        <ion-item lines="none" class="custom-input" [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched">
+        <ion-item lines="none" class="custom-input" 
+          [class.ion-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched">
           <ion-icon name="mail-outline" slot="start"></ion-icon>
-          <ion-input 
-            type="email" 
-            formControlName="correo" 
-            [placeholder]="'LOGIN_PAGE.EMAIL_PLACEHOLDER' | translate"
-          >
-          </ion-input>
+          <ion-input type="email" formControlName="correo" [placeholder]="'LOGIN_PAGE.EMAIL_PLACEHOLDER' | translate"></ion-input>
         </ion-item>
         
         <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error-message">
@@ -32,14 +27,10 @@
           <span>{{ 'LOGIN_PAGE.EMAIL_REQUIRED' | translate }}</span>
         </div>
 
-        <ion-item lines="none" class="custom-input" [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched">
+        <ion-item lines="none" class="custom-input" 
+          [class.ion-invalid]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched">
           <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-          <ion-input 
-            type="password" 
-            formControlName="contraseña" 
-            [placeholder]="'LOGIN_PAGE.PASSWORD_PLACEHOLDER' | translate"
-          >
-          </ion-input>
+          <ion-input type="password" formControlName="contraseña" [placeholder]="'LOGIN_PAGE.PASSWORD_PLACEHOLDER' | translate"></ion-input>
         </ion-item>
         
         <div *ngIf="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched" class="error-message">
@@ -47,11 +38,7 @@
           <span>{{ 'LOGIN_PAGE.PASSWORD_MIN_LENGTH' | translate }}</span>
         </div>
 
-        <ion-button 
-          expand="block" 
-          type="submit" 
-          class="login-button"
-        >
+        <ion-button expand="block" type="submit" class="login-button">
           {{ 'LOGIN_PAGE.SUBMIT_BUTTON' | translate }}
         </ion-button>
       </form>
@@ -59,9 +46,7 @@
       <div class="login-footer">
         <p>{{ 'LOGIN_PAGE.NO_ACCOUNT' | translate }}
           <span class="register-link">
-            <a routerLink="/registrarse">
-              {{ 'LOGIN_PAGE.REGISTER_LINK' | translate }}
-            </a>
+            <a routerLink="/registrarse">{{ 'LOGIN_PAGE.REGISTER_LINK' | translate }}</a>
           </span>
         </p>
       </div>

@@ -1,206 +1,300 @@
-/* negocio-inicio.page.scss */
+//Negocio inicio: // Paleta de colores base de Calvillo Experience
+$pink-primary: #BF2A52;
+$pink-secondary: #D96C80;
+$mustard: #F2AE2E;
+$olive: #BFB74B;
+$cream: #F2E9CE;
+$white: #FFFFFF;
+$dark-text: #2C3E50;
+$gray-text: #6C7A89;
+$border-color: #E8EDF2;
+$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-$dark-charcoal: #121212;   /* Fondo de la página */
-$dark-slate: #1c1c1e;      /* Fondo de la card */
-$electric-blue: #3880ff;   /* Color de acento para subtítulos */
-$pure-white: #ffffff;      /* Títulos principales */
-$soft-white: #b0b0b2;      /* Texto de descripción */
-$border-subtle: #2c2c2e;   /* Borde sutil */
-$accent-gray: #f5f5f7;     /* Color de acento claro de las imágenes */
-
-/* Colores cálidos */
-$warm-beige: #fdf6e3;       /* Fondo general */
-$warm-card: #fce5cd;        /* Fondo de las cards */
-$accent-orange: #ff8c42;    /* Color de acento */
-$dark-header: #000000;      /* Header negro */
-$soft-brown: #6b4f3f;       /* Texto secundario cálido */
-
-ion-content {
-  --padding-bottom: 120px;
-  --offset-bottom: 0px !important;
+/* ==========================================
+   HEADER
+   ========================================== */
+.custom-header {
+  ion-toolbar {
+    --background: #{$cream};
+    --border-width: 0;
+    
+    ion-title {
+      font-weight: 800;
+      color: $pink-primary;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+    }
+    
+    ion-back-button {
+      --color: $pink-primary;
+    }
+  }
 }
 
+/* ==========================================
+   CONTENIDO PRINCIPAL
+   ========================================== */
 .main-content-dark {
-  display: flex;
-  flex-direction: column;
-  --background: #{$warm-beige}; 
-}
-
-/* Encabezado */
-.custom-header ion-toolbar {
-  --background: #{$dark-header}; 
-  --color: #fff;
-  ion-icon { font-size: 28px; color: white; }
+  --background: #{$cream};
 }
 
 /* COLUMNA DE IMAGEN */
 .image-column {
-  position: relative;
-  overflow: hidden;
-}
-
-.cover-image-container {
-  width: 100%;
-  height: 200px; 
-  position: relative;
-  background-color: #f7e1b5;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 12px;
-
-  img {
+  .cover-image-container {
+    position: relative;
     width: 100%;
-    height: 100%;
-    object-fit: cover; 
+    height: 350px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: $shadow;
+    background: $white;
+    margin-bottom: 24px;
+    
+    // Si la pantalla es grande, se queda fija (sticky) mientras el formulario hace scroll
+    @media (min-width: 768px) {
+      position: sticky;
+      top: 20px;
+      height: 600px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s;
+    }
+
+    .change-image-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      --background: rgba(255, 255, 255, 0.9);
+      --color: #{$pink-primary};
+      --border-radius: 16px;
+      --padding-start: 20px;
+      --padding-end: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(4px);
+      width: max-content;
+
+      &::part(native):active {
+        transform: scale(0.96);
+      }
+    }
   }
 }
 
-/* Botón flotante para cambiar imagen */
-.change-image-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: #2c2c2e;
-  border-radius: 12px;
-  font-size: 0.9em;
-  color: white;
-  font-weight: 500;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-  
-  ion-icon {
-    font-size: 1.2em;
-    margin-right: 5px;
-  }
-}
-
-/* Cards y formularios */
+/* ==========================================
+   TÍTULOS DEL FORMULARIO
+   ========================================== */
 .form-main-title {
-  color: #000000;
-  font-weight: 700;
-  font-size: 1.8em;
+  font-size: 2rem;
+  font-weight: 800;
+  color: $dark-text;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
 .form-main-subtitle {
-  color: #000000;
-  margin-bottom: 30px;
+  color: $gray-text;
+  font-size: 1rem;
+  margin: 0 0 28px 0;
+  font-weight: 500;
 }
 
+/* ==========================================
+   TARJETAS DE SECCIÓN (Cards)
+   ========================================== */
 .compact-card {
-  --background: #{$warm-card};
-  background: #{$warm-card};
-  border-radius: 12px;
-  margin-bottom: 24px;
-  border: 1px solid #{$border-subtle};
+  background: $white;
+  border-radius: 24px;
+  box-shadow: $shadow;
+  margin: 0 0 24px 0;
+  border: none;
+
+  ion-card-header {
+    padding: 24px 24px 12px;
+    
+    .electric-subtitle {
+      color: $olive;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+  }
+
+  ion-card-content {
+    padding: 0 24px 24px;
+  }
 }
 
-.electric-subtitle {
-  color: #{$accent-orange}; 
-  font-weight: 600;
-  font-size: 1em;
-}
-
+/* ==========================================
+   INPUTS Y CONTROLES DEL FORMULARIO
+   ========================================== */
 .input-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  color: #000000;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  // Ícono lateral
   .input-icon {
-    font-size: 24px;
-    color: #000000
+    margin-top: 34px; // Lo alinea visualmente con la caja del input
+    font-size: 1.4rem;
+    color: $gray-text;
   }
 
   .input-labels-container {
-    flex-grow: 1;
+    flex: 1;
     display: flex;
     flex-direction: column;
+    width: 100%;
+
+    // Etiquetas superiores ("Nombre del Negocio", etc.)
+    .input-top-label, .textarea-top-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: $dark-text;
+      margin-bottom: 8px;
+    }
+
+    // Estilo universal para inputs, selects y textareas
+    ion-input, ion-select, ion-textarea {
+      --background: #F8FAFE;
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --padding-top: 14px;
+      --padding-bottom: 14px;
+      border: 1.5px solid $border-color;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: $dark-text;
+      width: 100%;
+      transition: all 0.3s ease;
+
+      &::part(placeholder) {
+        color: #94a3b8;
+      }
+
+      &.ion-focused {
+        border-color: $pink-secondary;
+        --background: $white;
+        box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
+      }
+    }
+
+    // Ajuste especial para TextArea (Descripción)
+    ion-textarea {
+      --padding-top: 16px;
+      min-height: 120px;
+    }
+
+    // Ajuste especial para Select (Días)
+    ion-select {
+      &::part(icon) {
+        color: $olive;
+      }
+    }
+
+    // Estilizar el componente de hora para que no rompa el diseño
+    ion-datetime {
+      background: #F8FAFE;
+      border: 1.5px solid $border-color;
+      border-radius: 14px;
+      padding: 4px;
+      width: 100%;
+    }
   }
 }
 
-.input-top-label {
-  font-size: 0.85em;
-  color: #000000;
-  margin-bottom: 4px;
-}
-
-ion-input, ion-textarea, ion-select {
-  --background: transparent;
-  --color: #000000
-  --padding-start: 0;
-  --padding-end: 0;
-  font-size: 1.1em;
-}
-
-ion-select {
-  width: 100%;
-  justify-content: space-between;
-}
-
-.textarea-item {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-
-  .textarea-top-label {
-    font-size: 0.85em;
-    color: #000000;
-  }
-
-  ion-textarea {
-    min-height: 100px;
-    border: 1px solid #{$border-subtle};
-    border-radius: 8px;
-    padding: 12px;
-  }
-}
-
-.highlight-card {
-  border-style: dotted;
-}
-
+/* ==========================================
+   CONFIGURACIÓN DE RESERVAS (Toggle)
+   ========================================== */
 .reservation-config {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 10px;
+  gap: 16px;
+  padding: 8px 0;
 
   .main-icon {
-    font-size: 32px;
-    color: #000000;
+    font-size: 1.8rem;
+    color: $mustard;
+    background: rgba(242, 174, 46, 0.15);
+    padding: 12px;
+    border-radius: 16px;
   }
 
   .text-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    flex: 1;
+    
+    .bright-title {
+      margin: 0 0 4px 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: $dark-text;
+    }
+    
+    .description-text {
+      margin: 0;
+      font-size: 0.85rem;
+      color: $gray-text;
+      font-weight: 500;
+    }
   }
 
-  .bright-title {
-    color: #000000;
-    margin: 0;
-    font-weight: 600;
-  }
-
-  .description-text {
-    margin: 0;
-    font-size: 0.9em;
+  ion-toggle {
+    --background-checked: #{$pink-primary};
+    --handle-background-checked: #{$white};
   }
 }
 
-ion-toggle {
-  --background: transparent;
-}
+/* ==========================================
+   FOOTER Y BOTÓN DE GUARDAR
+   ========================================== */
+ion-footer {
+  background: transparent;
 
-.text-dimmed {
-  color: #000000;
-}
+  .save-button-container {
+    background: linear-gradient(to top, #{$cream} 80%, rgba(242, 233, 206, 0) 100%);
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    padding-top: 30px;
+    
+    ion-button {
+      --background: #{$pink-primary};
+      --color: #{$white};
+      --border-radius: 16px;
+      --padding-top: 20px;
+      --padding-bottom: 20px;
+      --box-shadow: 0 8px 24px rgba(191, 42, 82, 0.35);
+      margin: 0;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      max-width: 600px;
+      margin: 0 auto;
+      
+      &::part(native):active {
+        transform: scale(0.98);
+      }
 
-.save-button-container {
-  padding: 20px 10px;
-  background: #ae9be1; /* ✅ Fondo cálido */
+      // Estilo cuando el formulario es inválido
+      &.button-disabled {
+        --background: #cbd5e1;
+        --box-shadow: none;
+        opacity: 0.7;
+      }
+    }
+  }
 }

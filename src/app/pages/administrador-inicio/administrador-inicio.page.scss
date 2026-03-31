@@ -1,314 +1,381 @@
+// Paleta de colores base
+$pink-primary: #BF2A52;
+$pink-secondary: #D96C80;
+$mustard: #F2AE2E;
+$olive: #BFB74B;
+$cream: #F2E9CE;
+$white: #FFFFFF;
+$dark-text: #2C3E50;
+$gray-text: #6C7A89;
+$border-color: #E8EDF2;
+$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+// Fondo principal
+ion-content {
+  --background: #{$cream};
+}
+
 .dashboard-container {
   display: flex;
   height: 100vh;
-  width: 100vw;
-  overflow: hidden; 
-  font-family: 'Segoe UI', sans-serif;
-  background: #fdfbfb; 
+  padding: 20px;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* SIDEBAR */
+/* ==========================================
+   SIDEBAR (Menú lateral flotante)
+   ========================================== */
 .sidebar {
-  width: 250px;
-  background: #ffffff;
-  color: #334155;
-  padding: 20px;
-  border-right: 1px solid #fce7f3;
+  width: 260px;
+  background: $white;
+  border-radius: 24px;
+  box-shadow: $shadow;
   display: flex;
   flex-direction: column;
+  padding: 32px 20px;
+  flex-shrink: 0; // Para evitar que se reduzca en pantallas medianas
+  
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $pink-primary;
+    text-align: center;
+    margin-bottom: 32px;
+    letter-spacing: -0.5px;
+  }
+  
+  .perfil {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1.5px solid $border-color;
+    
+    h3 {
+      margin: 0 0 4px 0;
+      color: $dark-text;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    span {
+      color: $gray-text;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      border-radius: 14px;
+      color: $gray-text;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      ion-icon {
+        font-size: 1.2rem;
+      }
+      
+      &:hover {
+        background: rgba(191, 42, 82, 0.05);
+        color: $pink-secondary;
+      }
+      
+      &.active {
+        background: $pink-primary;
+        color: $white;
+        box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+      }
+    }
+  }
 }
 
-.logo {
-  font-size: 20px;
-  font-weight: 800;
-  color: #f472b6; 
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.perfil {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.perfil img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid #a7f3d0; 
-  object-fit: cover;
-}
-
-.perfil h3 {
-  margin: 10px 0 5px;
-  color: #475569;
-}
-
-.perfil span {
-  font-size: 12px;
-  color: #64748b;
-  background: #fdf2f8; 
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 600;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-  flex: 1;
-}
-
-.sidebar li {
-  padding: 12px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 500;
-  color: #64748b;
-  transition: all 0.3s ease;
-  margin-bottom: 5px;
-}
-
-.sidebar li ion-icon {
-  font-size: 20px;
-}
-
-.sidebar li.active,
-.sidebar li:hover {
-  background: #fdf2f8; 
-  color: #f472b6;
-}
-
-/* MAIN CONTENT */
+/* ==========================================
+   ÁREA PRINCIPAL
+   ========================================== */
 .main {
   flex: 1;
-  padding: 20px 30px;
   display: flex;
   flex-direction: column;
-  height: 100vh; 
-  overflow: hidden; 
+  overflow: hidden; // Oculta el overflow general, le delegamos el scroll a cada sección
+  
+  .header {
+    margin-bottom: 24px;
+    padding-top: 10px;
+    flex-shrink: 0; // Vital: Evita que el header se aplaste cuando el contenido scrollea
+    
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: $dark-text;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.5px;
+    }
+    
+    p {
+      color: $gray-text;
+      margin: 0;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+  }
 }
 
-/* HEADER */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  flex-shrink: 0;
+/* ==========================================
+   CONTENEDOR DE SCROLL PARA LAS VISTAS
+   ========================================== */
+.vista-seccion {
+  flex: 1;
+  overflow-y: auto; // Activa el scroll vertical
+  min-height: 0; // Obligatorio para que Flexbox no se desborde
+  padding-right: 12px; // Separación para que el scrollbar no tape contenido
+  padding-bottom: 24px; // Espacio libre al final
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 24px;
-  color: #334155;
-}
+/* ==========================================
+   COMPONENTES INTERNOS
+   ========================================== */
 
-.header p {
-  margin: 5px 0 0;
-  color: #94a3b8;
-  font-size: 14px;
-}
-
-/* FILTRO */
+// Segmentos (Filtros de tiempo)
 .custom-segment {
-  background: #ffffff;
-  border-radius: 10px;
-  margin-bottom: 15px;
+  background: $white;
+  border-radius: 16px;
+  padding: 6px;
+  margin-bottom: 28px;
+  box-shadow: $shadow;
+  max-width: 500px;
   flex-shrink: 0;
-  --background: #ffffff;
-  border: 1px solid #fce7f3;
+  
+  ion-segment-button {
+    --color: $gray-text;
+    --color-checked: $white;
+    --indicator-color: transparent;
+    font-weight: 600;
+    font-size: 0.85rem;
+    min-height: 40px;
+    
+    &::part(indicator-background) {
+      background: $pink-primary;
+      border-radius: 12px;
+    }
+  }
 }
 
-/* CARDS DASHBOARD */
+// Tarjetas de Estadísticas (Cards)
 .cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 15px;
-  flex-shrink: 0;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+  
+  .card {
+    background: $white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: $shadow;
+    transition: transform 0.2s;
+    
+    &:hover {
+      transform: translateY(-4px);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      
+      p {
+        margin: 0;
+        color: $gray-text;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      ion-icon {
+        font-size: 1.4rem;
+        padding: 12px;
+        border-radius: 14px;
+        
+        &.icon-usuarios { color: $pink-primary; background: rgba(191, 42, 82, 0.1); }
+        &.icon-turistas { color: $mustard; background: rgba(242, 174, 46, 0.1); }
+        &.icon-negocios { color: $olive; background: rgba(191, 183, 75, 0.1); }
+        &.icon-ganancias { color: #2ecc71; background: rgba(46, 204, 113, 0.1); }
+      }
+    }
+    
+    h2 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: $dark-text;
+      letter-spacing: -1px;
+    }
+  }
 }
 
-.card {
-  background: white;
-  padding: 15px 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2); 
-  border: 1px solid #fdf2f8;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card p {
-  color: #64748b;
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.card ion-icon {
-  font-size: 22px;
-  padding: 8px;
-  border-radius: 10px;
-}
-
-.icon-usuarios { color: #f472b6; background: #fdf2f8; }
-.icon-turistas { color: #34d399; background: #d1fae5; }
-.icon-negocios { color: #fbbf24; background: #fef3c7; }
-.icon-ganancias { color: #a78bfa; background: #f3e8ff; }
-
-.card h2 {
-  margin: 10px 0 5px;
-  font-size: 24px;
-  color: #334155;
-}
-
-.positive {
-  color: #34d399;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* CHARTS */
+// Gráficas
 .charts-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 15px;
-  flex: 1; 
-  min-height: 0; 
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+  
+  .chart-card {
+    background: $white;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: $shadow;
+    
+    &.large {
+      grid-column: 1 / -1;
+    }
+    
+    h3 {
+      margin: 0 0 24px 0;
+      color: $pink-primary;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding-bottom: 12px;
+      border-bottom: 2px solid $mustard;
+      display: inline-block;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+  }
 }
 
-.chart-card {
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2);
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #fdf2f8;
+// Directorio de Negocios
+.negocios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  padding-bottom: 20px;
+  
+  .negocio-card {
+    background: $white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: $shadow;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    
+    &:hover {
+      transform: translateY(-4px);
+      border-color: $pink-secondary;
+    }
+    
+    .negocio-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      
+      ion-icon {
+        font-size: 1.5rem;
+        color: $olive;
+        background: rgba(191, 183, 75, 0.1);
+        padding: 12px;
+        border-radius: 14px;
+      }
+      
+      h4 {
+        margin: 0 0 4px 0;
+        color: $dark-text;
+        font-weight: 700;
+        font-size: 1.05rem;
+      }
+      
+      p {
+        margin: 0;
+        color: $gray-text;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+    
+    .badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      
+      &.basica { background: rgba(191, 183, 75, 0.1); color: $olive; }
+      &.premium { background: rgba(242, 174, 46, 0.1); color: $mustard; }
+      &.sin-membresia { background: rgba(108, 122, 137, 0.1); color: $gray-text; }
+    }
+  }
 }
 
-.chart-card h3 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-  color: #475569;
-  flex-shrink: 0;
-}
-
-.chart-card.large {
-  grid-column: span 1; 
-}
-
-.chart-container {
-  position: relative;
-  width: 100%;
-  flex: 1; 
-  min-height: 0;
-}
-
-/* EXPORT */
+// Botones de Exportación
 .export-buttons {
   display: flex;
-  gap: 10px;
-  flex-shrink: 0;
+  gap: 16px;
+  
+  .btn-export {
+    --border-radius: 14px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    --padding-start: 24px;
+    --padding-end: 24px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    
+    &.pdf {
+      --background: #{$pink-primary};
+      --color: #{$white};
+      --box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+    }
+    
+    &.excel {
+      --background: #{$mustard};
+      --color: #{$dark-text};
+      --box-shadow: 0 4px 12px rgba(242, 174, 46, 0.3);
+    }
+  }
 }
 
-.btn-export {
-  --border-radius: 8px;
-  --box-shadow: none;
-  font-weight: 600;
-  height: 40px;
-}
-
-.btn-export.pdf {
-  --background: #fdf2f8;
-  --color: #f472b6;
-}
-
-.btn-export.excel {
-  --background: #d1fae5;
-  --color: #10b981;
-}
-
-/* LA CLASE MAGICA QUE REEMPLAZA AL *ngIf */
+// Utilidades
 .vista-oculta {
   display: none !important;
 }
 
-/* ==========================================
-   ESTILOS PARA NEGOCIOS
-   ========================================== */
-.negocios-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding-bottom: 20px;
+// Scrollbar personalizado para las vistas con overflow
+::-webkit-scrollbar {
+  width: 8px;
 }
-
-.negocio-card {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2);
-  border: 1px solid #fdf2f8;
-  gap: 15px;
-  transition: transform 0.2s ease;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-.negocio-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 15px -3px rgba(251, 207, 232, 0.4);
+::-webkit-scrollbar-thumb {
+  background: rgba(108, 122, 137, 0.3);
+  border-radius: 10px;
 }
-
-.negocio-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 122, 137, 0.5);
 }
-
-.negocio-info ion-icon {
-  font-size: 24px;
-  color: #f472b6;
-  background: #fdf2f8;
-  padding: 12px;
-  border-radius: 12px;
-}
-
-.negocio-info h4 {
-  margin: 0 0 5px 0;
-  color: #334155;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.negocio-info p {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 13px;
-}
-
-/* ETIQUETAS (BADGES) */
-.badge {
-  text-align: center;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  width: 100%;
-}
-
-.badge-vip { background: #fef3c7; color: #d97706; }
-.badge-premium { background: #d1fae5; color: #059669; }
-.badge-basica { background: #e0e7ff; color: #4f46e5; }
-.badge-ninguna { background: #f1f5f9; color: #64748b; }

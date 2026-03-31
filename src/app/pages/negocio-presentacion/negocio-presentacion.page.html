@@ -1,63 +1,109 @@
-<ion-header class="custom-header">
+<ion-header class="custom-header ion-no-border">
   <ion-toolbar>
-    <ion-title>Calvillo Experience.</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="irAPerfil()">
-        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/negocio-inicio"></ion-back-button>
     </ion-buttons>
+    <ion-title>{{ modoEdicion ? 'Editar Negocio' : 'Nuevo Negocio' }}</ion-title>
   </ion-toolbar>
 </ion-header>
-<h2><ion-title class="ion-text-center">Mis Negocios...</ion-title></h2>
+
 <ion-content class="main-content-dark ion-padding">
-
-  <div class="cards-grid">
-    @for (negocio of misNegocios; track negocio.id) {
-      <ion-card class="compact-card">
-        <div class="card-image-box">
-          @if (negocio.imagen) {
-            <img [src]="negocio.imagen" [alt]="negocio.nombre" class="business-img">
-          } @else {
-            <ion-icon name="image-outline" class="placeholder-icon"></ion-icon>
-          }
-        </div>
-
-        <ion-card-header>
-          <ion-card-title class="bright-title">{{ negocio.nombre }}</ion-card-title>
-          <ion-card-subtitle class="electric-subtitle">{{ negocio.categoria | uppercase }}</ion-card-subtitle>
-        </ion-card-header>
-
-        <ion-card-content class="description-text">
-          {{ negocio.descripcion }}
-        </ion-card-content>
-
-        <div class="card-action-footer">
-          <ion-button fill="clear" color="primary" (click)="editarNegocio(negocio)" class="btn-subtle">
-            <ion-icon slot="start" name="pencil-outline"></ion-icon>
-            Editar
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="5">
+        <div class="cover-image-container">
+          <img [src]="negocioForm.get('imagen')?.value || 'assets/images/placeholder.jpg'" alt="Portada del Negocio" class="cover-img">
+          <ion-button class="change-image-btn" color="light" (click)="abrirSelectorImagen(fileInput)">
+            <ion-icon slot="start" name="image-outline"></ion-icon>
+            {{ negocioForm.get('imagen')?.value ? 'CAMBIAR PORTADA' : 'SUBIR PORTADA' }}
           </ion-button>
-          <ion-button fill="clear" color="danger" (click)="borrarNegocio(negocio)" class="btn-subtle">
-            <ion-icon slot="start" name="trash-outline"></ion-icon>
-            Borrar
-          </ion-button>
+          <input type="file" accept="image/*" hidden #fileInput (change)="onFileSelected($event)">
         </div>
-      </ion-card>
-    }
+      </ion-col>
 
-    <ion-card class="compact-card create-card" (click)="irANegocioInicio()" title="Crear un nuevo negocio">
-      <div class="create-content">
-        <div class="icon-circle">
-          <ion-icon name="add"></ion-icon>
+      <ion-col size="12" size-md="7">
+        <div class="header-bienvenida">
+          <h2>{{ modoEdicion ? 'Actualiza tu información' : 'Detalles de tu experiencia' }}</h2>
+          <p>La información que coloques aquí será visible para todos los turistas.</p>
         </div>
-        <p class="create-text">Crear un nuevo negocio</p>
-      </div>
-    </ion-card>
-  </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="success" (click)="irANegocioInicio()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+        <form [formGroup]="negocioForm">
+          
+          <div class="compact-card">
+            <ion-card-header>
+              <p class="electric-subtitle">INFORMACIÓN GENERAL</p>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-input label="Nombre del Negocio" labelPlacement="stacked" fill="solid" formControlName="nombre" placeholder="Ej. Artesanos de Calvillo" class="custom-input"></ion-input>
+              <ion-textarea label="Descripción" labelPlacement="stacked" fill="solid" formControlName="descripcion" placeholder="Describe brevemente lo que ofreces..." [autoGrow]="true" class="custom-input"></ion-textarea>
+              <ion-select label="Categoría" labelPlacement="stacked" fill="solid" formControlName="categoria" class="custom-input">
+                @for (cat of categorias; track cat) {
+                  <ion-select-option [value]="cat">{{ cat }}</ion-select-option>
+                }
+              </ion-select>
+            </ion-card-content>
+          </div>
 
+          <div class="compact-card">
+            <ion-card-header>
+              <p class="electric-subtitle">CONTACTO Y HORARIOS</p>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-input type="tel" label="Teléfono (10 dígitos)" labelPlacement="stacked" fill="solid" formControlName="telefono" placeholder="495 123 4567" class="custom-input"></ion-input>
+              <ion-text color="danger" class="error-msg" *ngIf="negocioForm.get('telefono')?.invalid && negocioForm.get('telefono')?.touched">
+                <small>El número debe tener exactamente 10 dígitos.</small>
+              </ion-text>
+              
+              <div class="horarios-grid">
+                <ion-select label="Días de Trabajo" labelPlacement="stacked" fill="solid" formControlName="diasTrabajo" multiple="true" class="custom-input">
+                  <ion-select-option value="Lunes">Lunes</ion-select-option>
+                  <ion-select-option value="Martes">Martes</ion-select-option>
+                  <ion-select-option value="Miércoles">Miércoles</ion-select-option>
+                  <ion-select-option value="Jueves">Jueves</ion-select-option>
+                  <ion-select-option value="Viernes">Viernes</ion-select-option>
+                  <ion-select-option value="Sábado">Sábado</ion-select-option>
+                  <ion-select-option value="Domingo">Domingo</ion-select-option>
+                </ion-select>
+              </div>
+            </ion-card-content>
+          </div>
+
+          <div class="compact-card">
+            <ion-card-content>
+              <div class="reservation-config">
+                <div class="text-content">
+                  <h3 class="bright-title">Permitir Reservaciones</h3>
+                  <p class="description-text">
+                    {{ negocioForm.get('permitirReservas')?.value ? 'Tus usuarios pueden agendar' : 'Reservas desactivadas' }}
+                  </p>
+                </div>
+                <ion-toggle formControlName="permitirReservas"></ion-toggle>
+              </div>
+            </ion-card-content>
+          </div>
+
+          <div class="compact-card">
+            <ion-card-header>
+              <p class="electric-subtitle">UBICACIÓN</p>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-input label="Dirección Completa" labelPlacement="stacked" fill="solid" formControlName="ubicacion" placeholder="Ej. Calle Hidalgo #123, Calvillo" class="custom-input"></ion-input>
+            </ion-card-content>
+          </div>
+
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="transparent-toolbar">
+    <div class="save-button-container">
+      <ion-button expand="block" (click)="guardarCambios()" [disabled]="negocioForm.invalid" [class.button-disabled]="negocioForm.invalid">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        {{ modoEdicion ? 'ACTUALIZAR NEGOCIO' : 'GUARDAR NEGOCIO' }}
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

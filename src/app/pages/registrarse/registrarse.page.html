@@ -1,8 +1,8 @@
-<ion-content class="ion-padding">
+<ion-content class="login-background ion-padding">
   <div class="login-wrapper">
 
-    <div class="language-switcher" style="position: absolute; top: 20px; right: 20px; z-index: 10;">
-      <ion-chip color="primary" (click)="toggleLanguage()" mode="ios">
+    <div class="language-switcher">
+      <ion-chip (click)="toggleLanguage()" mode="ios">
         <ion-icon name="globe-outline"></ion-icon>
         <ion-label>{{ currentLang === 'es' ? 'Español' : 'English' }}</ion-label>
       </ion-chip>
@@ -16,12 +16,10 @@
 
       <form [formGroup]="registroForm" (ngSubmit)="registrar()">
         
-        <ion-item lines="none" class="custom-input" 
-          [class.ion-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
           <ion-icon name="person-outline" slot="start"></ion-icon>
           <ion-input formControlName="nombre" [placeholder]="'REGISTER_PAGE.FULL_NAME' | translate"></ion-input>
         </ion-item>
-
         @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
           <div class="error-message">
             <ion-icon name="alert-circle-outline"></ion-icon>
@@ -29,12 +27,10 @@
           </div>
         }
 
-        <ion-item lines="none" class="custom-input"
-          [class.ion-invalid]="registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched">
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched">
           <ion-icon name="calendar-outline" slot="start"></ion-icon>
           <ion-input formControlName="fechaNacimiento" type="date" [placeholder]="'REGISTER_PAGE.BIRTH_DATE' | translate"></ion-input>
         </ion-item>
-
         @if (registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched) {
           <div class="error-message">
             <ion-icon name="alert-circle-outline"></ion-icon>
@@ -42,12 +38,10 @@
           </div>
         }
 
-        <ion-item lines="none" class="custom-input"
-          [class.ion-invalid]="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched">
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched">
           <ion-icon name="mail-outline" slot="start"></ion-icon>
           <ion-input formControlName="correo" type="email" [placeholder]="'REGISTER_PAGE.EMAIL' | translate"></ion-input>
         </ion-item>
-
         @if (registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched) {
           <div class="error-message">
             <ion-icon name="alert-circle-outline"></ion-icon>
@@ -55,12 +49,10 @@
           </div>
         }
 
-        <ion-item lines="none" class="custom-input"
-          [class.ion-invalid]="registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched">
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched">
           <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
           <ion-input formControlName="contraseña" type="password" [placeholder]="'REGISTER_PAGE.PASSWORD' | translate"></ion-input>
         </ion-item>
-
         @if (registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched) {
           <div class="error-message">
             <ion-icon name="alert-circle-outline"></ion-icon>
@@ -68,12 +60,10 @@
           </div>
         }
 
-        <ion-item lines="none" class="custom-input"
-          [class.ion-invalid]="registroForm.get('confirmarContraseña')?.invalid && registroForm.get('confirmarContraseña')?.touched">
+        <ion-item lines="none" class="custom-input" [class.ion-invalid]="registroForm.get('confirmarContraseña')?.invalid && registroForm.get('confirmarContraseña')?.touched">
           <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
           <ion-input formControlName="confirmarContraseña" type="password" [placeholder]="'REGISTER_PAGE.CONFIRM_PASSWORD' | translate"></ion-input>
         </ion-item>
-
         @if (registroForm.get('confirmarContraseña')?.invalid && registroForm.get('confirmarContraseña')?.touched) {
           <div class="error-message">
             <ion-icon name="alert-circle-outline"></ion-icon>
@@ -83,7 +73,6 @@
 
         <ion-item lines="none" class="custom-input">
           <ion-icon name="people-outline" slot="start"></ion-icon>
-          <ion-label>{{ 'REGISTER_PAGE.USER_TYPE' | translate }}</ion-label>
           <ion-select formControlName="idTipoUsuario" [placeholder]="'REGISTER_PAGE.SELECT_ROLE' | translate" interface="popover">
             <ion-select-option value="1">{{ 'REGISTER_PAGE.ADMIN' | translate }}</ion-select-option>
             <ion-select-option value="2">{{ 'REGISTER_PAGE.TOURIST' | translate }}</ion-select-option>
@@ -93,7 +82,6 @@
 
         <ion-item lines="none" class="custom-input">
           <ion-icon name="male-female-outline" slot="start"></ion-icon>
-          <ion-label>{{ 'REGISTER_PAGE.GENDER' | translate }}</ion-label>
           <ion-select formControlName="idGenero" [placeholder]="'REGISTER_PAGE.SELECT_GENDER' | translate" interface="popover">
             <ion-select-option value="1">{{ 'REGISTER_PAGE.MALE' | translate }}</ion-select-option>
             <ion-select-option value="2">{{ 'REGISTER_PAGE.FEMALE' | translate }}</ion-select-option>
@@ -103,18 +91,13 @@
 
         <ion-item lines="none" class="custom-input">
           <ion-icon name="language-outline" slot="start"></ion-icon>
-          <ion-label>{{ 'REGISTER_PAGE.LANGUAGE' | translate }}</ion-label>
           <ion-select formControlName="idIdioma" [placeholder]="'REGISTER_PAGE.SELECT_LANGUAGE' | translate" interface="popover">
             <ion-select-option value="1">{{ 'REGISTER_PAGE.SPANISH' | translate }}</ion-select-option>
             <ion-select-option value="2">{{ 'REGISTER_PAGE.ENGLISH' | translate }}</ion-select-option>
           </ion-select>
         </ion-item>
 
-        <ion-button 
-          expand="block" 
-          type="submit" 
-          class="login-button"
-          [disabled]="registroForm.invalid">
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="registroForm.invalid">
           {{ 'REGISTER_PAGE.SUBMIT_BUTTON' | translate }}
         </ion-button>
       </form>

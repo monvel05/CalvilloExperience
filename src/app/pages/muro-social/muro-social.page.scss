@@ -1,152 +1,272 @@
+//Muro social: // Paleta de colores base
+$pink-primary: #BF2A52;
+$pink-secondary: #D96C80;
+$mustard: #F2AE2E;
+$olive: #BFB74B;
+$cream: #F2E9CE;
+$white: #FFFFFF;
+$dark-text: #2C3E50;
+$gray-text: #6C7A89;
+$border-color: #E8EDF2;
+$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+/* ==========================================
+   HEADER Y FONDO
+   ========================================== */
+ion-header {
+  ion-toolbar {
+    --background: #{$cream};
+    --border-width: 0;
+    
+    ion-title {
+      font-weight: 800;
+      color: $pink-primary;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+    }
+    
+    ion-back-button {
+      --color: $pink-primary;
+    }
+  }
+}
+
+ion-content {
+  --background: #{$cream};
+}
+
 .dashboard-container {
-  min-height: 100vh;
-  width: 100vw;
-  font-family: 'Segoe UI', sans-serif;
-  background: #fdfbfb; 
-  display: flex;
-  justify-content: center; /* Centramos el feed */
+  padding: 16px 16px 40px;
+  max-width: 680px; // Un poco más angosto para que el feed parezca una red social real
+  margin: 0 auto;
 }
 
-.main-feed {
-  width: 100%;
-  max-width: 650px; /* Ancho ideal para un muro tipo red social */
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ENCABEZADO */
 .header-muro {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 24px !important;
+  
+  p {
+    color: $gray-text !important;
+    font-size: 0.9rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+}
 
-  .btn-back {
-    --color: #64748b;
-    margin: 0;
+/* ==========================================
+   TARJETAS BASE (Cards)
+   ========================================== */
+.card {
+  background: $white !important;
+  border-radius: 24px !important;
+  box-shadow: $shadow !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+  border: none !important;
+}
+
+/* ==========================================
+   ZONA DE PUBLICAR
+   ========================================== */
+.card-publicar {
+  .perfil-publicar {
+    h3 {
+      margin: 0 0 16px 0;
+      color: $pink-primary;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.5px;
+    }
   }
 
-  h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #334155;
-    font-weight: 700;
+  // Caja de texto
+  .input-text {
+    width: 100%;
+    background: #F8FAFE;
+    border: 1.5px solid $border-color;
+    border-radius: 16px;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: $dark-text;
+    resize: none;
+    min-height: 100px;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $pink-secondary;
+      background: $white;
+      box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
+    }
+
+    &::placeholder {
+      color: $gray-text;
+      font-weight: 500;
+    }
+  }
+
+  // Fila de botones inferiores
+  .input-row {
+    border-top: 1.5px solid $border-color !important;
+    padding-top: 16px !important;
+    margin-top: 16px !important;
+
+    .btn-upload {
+      color: $olive !important;
+      background: rgba(191, 183, 75, 0.1) !important;
+      padding: 10px 16px;
+      border-radius: 14px;
+      transition: all 0.2s ease;
+      
+      ion-icon {
+        font-size: 1.2rem;
+      }
+
+      &:active {
+        transform: scale(0.95);
+        background: rgba(191, 183, 75, 0.2) !important;
+      }
+    }
+
+    .file-name-badge {
+      background: rgba(191, 42, 82, 0.1) !important;
+      color: $pink-primary !important;
+      border: none !important;
+      font-size: 0.8rem !important;
+      padding: 8px 12px !important;
+    }
+
+    .btn-publicar {
+      --background: #{$pink-primary} !important;
+      --color: #{$white};
+      --border-radius: 14px;
+      --padding-start: 24px;
+      --padding-end: 24px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      --box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+
+      &::part(native):active {
+        transform: scale(0.98);
+      }
+    }
+  }
+}
+
+/* ==========================================
+   PUBLICACIONES DEL FEED
+   ========================================== */
+.publicacion {
+  padding: 20px !important;
+  
+  .header-muro {
+    margin-bottom: 16px !important;
+    text-align: left;
+    
+    // Avatar cuadrado con bordes curvos (Squircle)
+    .avatar-sm {
+      background: linear-gradient(135deg, $mustard, $olive) !important;
+      border-radius: 14px !important; 
+    }
+
+    .info {
+      span:first-child {
+        color: $dark-text !important;
+        font-size: 1.05rem;
+        letter-spacing: -0.3px;
+      }
+      span:last-child {
+        color: $gray-text !important;
+        font-weight: 600;
+        font-size: 0.8rem !important;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  // Contenedor de la imagen de la publicación
+  .contenedor-foto {
+    margin: 16px 0 !important;
+    
+    img {
+      border-radius: 16px !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+    }
+  }
+
+  // Texto de la publicación
+  .contenido-texto {
+    color: $dark-text !important;
+    
+    strong {
+      color: $pink-primary;
+      font-weight: 800;
+      margin-right: 6px;
+    }
+  }
+
+  // Botones de Me Gusta y Eliminar
+  .acciones {
+    border-top: 1.5px solid $border-color !important;
+    margin-top: 20px !important;
+    padding-top: 12px !important;
+
+    ion-button {
+      font-weight: 700;
+      font-size: 0.95rem;
+      --border-radius: 12px;
+
+      // Botón Like
+      &:first-child {
+        --color: #{$pink-primary} !important;
+        
+        ion-icon {
+          font-size: 1.2rem;
+        }
+
+        &::part(native):active {
+          background: rgba(191, 42, 82, 0.1);
+        }
+      }
+
+      // Botón Eliminar
+      &:last-child {
+        --color: #{$gray-text} !important;
+
+        ion-icon {
+          font-size: 1.2rem;
+        }
+
+        &::part(native):active {
+          --color: #e74c3c !important;
+          background: rgba(231, 76, 60, 0.1);
+        }
+      }
+    }
+  }
+}
+
+/* ==========================================
+   ESTADO VACÍO (Sin publicaciones)
+   ========================================== */
+.loading-state {
+  background: $white;
+  border-radius: 24px;
+  box-shadow: $shadow;
+  padding: 48px 24px !important;
+
+  ion-icon {
+    color: $pink-secondary !important;
+    opacity: 0.3 !important;
   }
 
   p {
-    margin: 5px 0 0;
-    color: #94a3b8;
-    font-size: 14px;
-  }
-}
-
-/* TARJETAS (Heredado del dashboard) */
-.card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px -1px rgba(251, 207, 232, 0.2);
-  border: 1px solid #fdf2f8;
-  padding: 20px;
-}
-
-/* ZONA DE PUBLICACIÓN */
-.card-publicar {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  .perfil-publicar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .avatar-sm {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid #fce7f3;
-      object-fit: cover;
-    }
-
-    h3 {
-      margin: 0;
-      color: #475569;
-      font-size: 16px;
-      font-weight: 600;
-    }
-  }
-
-  .input-text {
-    width: 100%;
-    min-height: 80px;
-    border: none;
-    resize: none;
-    font-family: inherit;
-    font-size: 15px;
-    color: #334155;
-    background: transparent;
-    outline: none;
-
-    &::placeholder {
-      color: #cbd5e1;
-    }
-  }
-
-  .input-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 15px;
-  }
-}
-
-/* BOTONES DE LA PUBLICACIÓN */
-.hidden-input {
-  display: none;
-}
-
-.btn-upload {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #f472b6;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: #fdf2f8;
-  }
-
-  ion-icon {
-    font-size: 20px;
-  }
-}
-
-.btn-publicar {
-  --background: #f472b6;
-  --color: white;
-  --border-radius: 8px;
-  --box-shadow: none;
-  font-weight: 600;
-  margin: 0;
-  height: 40px;
-}
-
-/* ESTADO DE CARGA */
-.loading-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #94a3b8;
-
-  ion-spinner {
-    margin-bottom: 10px;
-    transform: scale(1.5);
+    color: $gray-text !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 }

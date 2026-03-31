@@ -33,17 +33,15 @@
 
     <div class="main">
       <div class="header">
-        <div>
-          <h1 [class.vista-oculta]="vistaActual !== 'dashboard'">Dashboard</h1>
-          <h1 [class.vista-oculta]="vistaActual !== 'usuarios'">Detalle de Usuarios</h1>
-          <h1 [class.vista-oculta]="vistaActual !== 'negocios'">Directorio de Negocios</h1>
-          <h1 [class.vista-oculta]="vistaActual !== 'reportes'">Generación de Reportes</h1>
-          <h1 [class.vista-oculta]="vistaActual !== 'configuracion'">Configuración</h1>
-          <p>Resumen general del sistema</p>
-        </div>
+        <h1 [class.vista-oculta]="vistaActual !== 'dashboard'">Dashboard</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'usuarios'">Detalle de Usuarios</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'negocios'">Directorio de Negocios</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'reportes'">Generación de Reportes</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'configuracion'">Configuración</h1>
+        <p>Resumen general del sistema</p>
       </div>
 
-      <div id="contenido-reporte" [class.vista-oculta]="vistaActual !== 'dashboard'" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'dashboard'">
         <ion-segment [(ngModel)]="filtro" (ionChange)="cambiarFiltro()" class="custom-segment">
           <ion-segment-button value="hoy">Hoy</ion-segment-button>
           <ion-segment-button value="7dias">7 días</ion-segment-button>
@@ -92,14 +90,12 @@
               <canvas id="graficaLinea"></canvas>
             </div>
           </div>
-
           <div class="chart-card">
             <h3>Membresías</h3>
             <div class="chart-container">
               <canvas id="graficaDona"></canvas>
             </div>
           </div>
-
           <div class="chart-card">
             <h3>Top lugares</h3>
             <div class="chart-container">
@@ -109,44 +105,38 @@
         </div>
       </div>
 
-      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'usuarios'" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'usuarios'">
         <div class="charts-grid" style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;">
           <div class="chart-card">
             <h3 style="text-align: center; margin-bottom: 20px;">Distribución por Género</h3>
-            <div class="chart-container" style="height: 300px;">
+            <div class="chart-container">
               <canvas id="graficaGeneros"></canvas>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'negocios'" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'negocios'">
         <div class="negocios-grid">
-          
           @for (negocio of listaNegocios; track negocio.idNegocio) {
             <div class="negocio-card">
               <div class="negocio-info">
-                <ion-icon [name]="getIconoCategoria(negocio.categoria)" class="icon-negocios"></ion-icon>
+                <ion-icon [name]="getIconoCategoria(negocio.categoria)"></ion-icon>
                 <div>
                   <h4>{{ negocio.nombre }}</h4>
-                  <p style="text-transform: capitalize;">{{ negocio.categoria }}</p>
+                  <p>{{ negocio.categoria }}</p>
                 </div>
               </div>
-              <span class="badge {{ getClaseMembresia(negocio.membresia) }}">
+              <span class="badge" [ngClass]="getClaseMembresia(negocio.membresia)">
                 {{ negocio.membresia === 'Sin Membresia' ? 'Sin Membresía' : 'Membresía ' + negocio.membresia }}
               </span>
             </div>
-          } @empty {
-            <div style="text-align: center; color: #94a3b8; padding: 20px; width: 100%; grid-column: 1 / -1;">
-              <ion-icon name="storefront-outline" style="font-size: 48px; opacity: 0.5;"></ion-icon>
-              <p>No hay negocios registrados aún.</p>
-            </div>
           }
-          </div>
+        </div>
       </div>
 
-      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'reportes'" style="flex: 1;">
-        <div class="export-buttons" style="justify-content: flex-start; margin-top: 10px;">
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'reportes'">
+        <div class="export-buttons">
           <ion-button class="btn-export pdf" (click)="exportarPDF()">
             <ion-icon name="document-text-outline" slot="start"></ion-icon>
             Exportar PDF
@@ -158,8 +148,8 @@
         </div>
       </div>
 
-      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'configuracion'" style="flex: 1; overflow-y: auto;">
-      </div>
+      <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'configuracion'">
+        </div>
 
     </div>
   </div>

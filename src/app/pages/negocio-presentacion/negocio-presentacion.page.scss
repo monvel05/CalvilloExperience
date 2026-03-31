@@ -1,111 +1,239 @@
-/* Variables de color elegantes */
-$dark-charcoal: #121212;
-$dark-slate: #1c1c1e;
-$electric-blue: #3880ff;
-$pure-white: #ffffff;
-$soft-white: #b0b0b2;
-$border-subtle: #2c2c2e;
-$accent-purple: #7c4dff; /* Color para el botón crear */
+// Paleta de colores base
+$pink-primary: #BF2A52;
+$pink-secondary: #D96C80;
+$mustard: #F2AE2E;
+$olive: #BFB74B;
+$cream: #F2E9CE;
+$white: #FFFFFF;
+$dark-text: #2C3E50;
+$gray-text: #6C7A89;
+$border-color: #E8EDF2;
+$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-.main-content-dark {
-  --background: #{$dark-charcoal};
-}
-
+/* ==========================================
+   HEADER
+   ========================================== */
 .custom-header {
   ion-toolbar {
-    --background: #000;
-    --color: #fff;
-  }
-  ion-icon { font-size: 28px; color: white; }
-}
-
-/* Contenedor Grid Estilo Turista */
-.cards-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-}
-
-/* Estilo Base de las Cards */
-.compact-card {
-  --background: #{$dark-slate};
-  background: #{$dark-slate};
-  border-radius: 12px;
-  margin: 0;
-  width: calc(50% - 10px); /* 2 por fila */
-  min-width: 280px;
-  max-width: 340px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #{$border-subtle};
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  }
-}
-
-/* Imagen Superior */
-.card-image-box {
-  height: 160px;
-  background: #2c2c2e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #{$border-subtle};
-
-  .business-img { width: 100%; height: 100%; object-fit: cover; }
-  .placeholder-icon { font-size: 50px; color: rgba(255, 255, 255, 0.05); }
-}
-
-/* Textos */
-.bright-title { color: #{$pure-white}; font-weight: 600; font-size: 1.1rem; }
-.electric-subtitle { color: #{$electric-blue}; font-size: 0.8rem; letter-spacing: 1px; }
-.description-text { color: #{$soft-white}; font-size: 0.9rem; flex-grow: 1; line-height: 1.4; }
-
-/* Footer de botones */
-.card-action-footer {
-  padding: 8px 12px;
-  border-top: 1px solid #{$border-subtle};
-  display: flex;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.01);
-}
-
-.btn-subtle { font-size: 0.8rem; --padding-start: 8px; --padding-end: 8px; }
-
-/* Tarjeta Especial de Creación */
-.create-card {
-  cursor: pointer;
-  border: 2px dashed #{$border-subtle};
-  background: rgba(255, 255, 255, 0.02);
-  justify-content: center;
-  align-items: center;
-  min-height: 380px;
-
-  .create-content {
-    text-align: center;
-    .icon-circle {
-      background: #{$accent-purple};
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 15px;
-      box-shadow: 0 4px 15px rgba(124, 77, 255, 0.4);
-      
-      ion-icon { font-size: 35px; color: white; }
+    --background: #{$cream};
+    --border-width: 0;
+    
+    ion-title {
+      font-weight: 800;
+      color: $pink-primary;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
     }
-    .create-text { color: #{$accent-purple}; font-weight: 600; font-size: 1rem; }
+    ion-back-button {
+      --color: $pink-primary;
+    }
+  }
+}
+
+/* ==========================================
+   CONTENIDO GENERAL
+   ========================================== */
+.main-content-dark {
+  --background: #{$cream};
+}
+
+.header-bienvenida {
+  margin-bottom: 24px;
+  
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: $dark-text;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+  }
+  
+  p {
+    color: $gray-text;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* ==========================================
+   CONTENEDOR DE IMAGEN (PORTADA)
+   ========================================== */
+.cover-image-container {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  height: 350px;
+  box-shadow: $shadow;
+  background: $white;
+  margin-bottom: 24px;
+
+  @media (min-width: 768px) {
+    position: sticky;
+    top: 20px;
   }
 
-  &:hover {
-    background: rgba(124, 77, 255, 0.05);
-    border-color: #{$accent-purple};
+  .cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .change-image-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    --background: rgba(255, 255, 255, 0.9);
+    --color: #{$pink-primary};
+    --border-radius: 16px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+    width: max-content;
+  }
+}
+
+/* ==========================================
+   TARJETAS DEL FORMULARIO
+   ========================================== */
+.compact-card {
+  background: $white;
+  border-radius: 24px;
+  box-shadow: $shadow;
+  margin-bottom: 24px;
+  border: none;
+
+  ion-card-header {
+    padding: 24px 24px 12px;
+    
+    .electric-subtitle {
+      color: $olive;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+  }
+
+  ion-card-content {
+    padding: 0 24px 24px;
+  }
+}
+
+/* ==========================================
+   INPUTS Y SELECTS
+   ========================================== */
+.custom-input {
+  --background: #F8FAFE;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  border: 1.5px solid $border-color;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: $dark-text;
+  width: 100%;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+
+  &::part(placeholder) {
+    color: #94a3b8;
+  }
+
+  &.ion-focused {
+    border-color: $pink-secondary;
+    --background: #{$white};
+    box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
+  }
+}
+
+ion-textarea.custom-input {
+  --padding-top: 16px;
+  min-height: 120px;
+}
+
+.error-msg {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 16px;
+  padding-left: 8px;
+  font-weight: 600;
+}
+
+/* ==========================================
+   CONFIGURACIÓN DE RESERVAS
+   ========================================== */
+.reservation-config {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+
+  .text-content {
+    .bright-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: $dark-text;
+      margin: 0 0 4px 0;
+    }
+    .description-text {
+      font-size: 0.85rem;
+      color: $gray-text;
+      margin: 0;
+    }
+  }
+
+  ion-toggle {
+    --background-checked: #{$pink-primary};
+  }
+}
+
+/* ==========================================
+   FOOTER Y BOTÓN DE GUARDAR
+   ========================================== */
+ion-footer {
+  background: transparent;
+
+  &::before {
+    display: none; // Quita la sombra por defecto de Ionic
+  }
+
+  .transparent-toolbar {
+    --background: transparent;
+    --border-width: 0;
+  }
+
+  .save-button-container {
+    background: linear-gradient(to top, #{$cream} 80%, rgba(242, 233, 206, 0) 100%);
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+    
+    ion-button {
+      --background: #{$pink-primary};
+      --color: #{$white};
+      --border-radius: 16px;
+      --padding-top: 20px;
+      --padding-bottom: 20px;
+      --box-shadow: 0 8px 24px rgba(191, 42, 82, 0.35);
+      margin: 0 auto;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      max-width: 600px;
+      
+      &::part(native):active {
+        transform: scale(0.98);
+      }
+
+      &.button-disabled {
+        --background: #cbd5e1;
+        --box-shadow: none;
+        opacity: 0.7;
+      }
+    }
   }
 }
