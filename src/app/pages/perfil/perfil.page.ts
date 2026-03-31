@@ -13,7 +13,7 @@ import {
 } from 'ionicons/icons';
 
 import { UsuarioService } from 'src/app/core/services/usuario.service';
-import { AuthService } from 'src/app/core/services/auth';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 import { Router } from '@angular/router';
 

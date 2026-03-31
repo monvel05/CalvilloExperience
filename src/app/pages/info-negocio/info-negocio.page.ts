@@ -10,7 +10,7 @@ import {
   timeOutline, mapOutline, addOutline, removeOutline, walkOutline 
 } from 'ionicons/icons';
 import { DatosNegocio } from 'src/app/shared/interfaces/datos-negocio';
-import { TrackingService } from 'src/app/core/services/tracking-service';
+import { TrackingService } from 'src/app/core/services/tracking.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario';
 import { environment } from '../../../env/env'; 

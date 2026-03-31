@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // <-- 2. Importamos tu archivo de environments (verifica que la ruta sea correcta para tu proyecto)
 import { environment } from 'src/env/env';
-import { TrackingService } from './core/services/tracking-service';
+import { TrackingService } from './core/services/tracking.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 

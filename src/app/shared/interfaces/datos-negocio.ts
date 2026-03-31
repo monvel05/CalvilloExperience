@@ -1,17 +1,33 @@
 export interface DatosNegocio {
   idNegocio: number;
   nombre: string;
-  descripcion: string; // Viene de la tabla negocios_traduccion (según el idioma)
-  verificado: boolean; // Viene de negocios.verificado (TINYINT convertido a boolean)
-  horario: string;
-  telefono: string;
-  calificacionMedia: number; // Promedio calculado de la tabla resenas
-  imagen: string[]; // Array extraído de la tabla fotos_nego
-  ubicacion: {
-    direccionCompleta: string; // Concatenación de calle, numero, colonia, etc.
-    municipio: string;
-    latitud: string;
-    longitud: string;
+  verificado: boolean;
+  horario?: string;
+  telefono?: string;
+  
+  // Datos que vienen de los JOINs en Express
+  descripcion?: string; 
+  categoria?: string;
+  subcategoria?: string; 
+  
+  // Métricas y multimedia
+  calificacionMedia?: number; 
+  imagen?: string[]; 
+  
+  // Estructura de Ubicación
+  idUbicacion?: number;
+  ubicacion?: {
+    direccionCompleta?: string;
+    municipio?: string;
+    // OJO: Es mejor manejarlas como number para las APIs de mapas
+    latitud: number; 
+    longitud: number; 
+    calle?: string;
+    numero?: string;
+    colonia?: string;
   };
-  tieneInventario: boolean; // Si hay registros en 'inventario' para habilitar reservas
+  
+  // Banderas de operación
+  tieneInventario?: boolean; 
+  permitirReservas?: boolean;
 }

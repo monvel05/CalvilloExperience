@@ -10,8 +10,8 @@ import { CanActivateFn, Router } from '@angular/router';
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   
-  // 1. Obtener credenciales con las LLAVES CORRECTAS que usamos en el login
-  const token = localStorage.getItem('token'); 
+  // 1. CORRECCIÓN CRÍTICA: Usamos 'jwt_token' para coincidir con AuthService e Interceptor
+  const token = localStorage.getItem('jwt_token'); 
   const userString = localStorage.getItem('user'); 
   
   // Variable para almacenar el rol (idTipoUsuario)
@@ -29,7 +29,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   // 2. Validación de Autenticación (¿Inició sesión?)
   if (!token) {
     console.warn('❌ Guard: Bloqueado. No hay sesión activa. Redirigiendo al login...');
-    router.navigate(['/login']); // Mandamos al login (que no debe tener guard)
+    router.navigate(['/login']); 
     return false;
   }
 
@@ -37,14 +37,23 @@ export const authGuard: CanActivateFn = (route, state) => {
   const requiredRoles = route.data?.['roles'];
 
   if (requiredRoles && requiredRoles.length > 0) {
-    // Usamos 'some' y convertimos a Number para que '3' (texto) y 3 (número) sean lo mismo
     const tienePermiso = requiredRoles.some((rolPermitido: any) => Number(rolPermitido) === Number(userRole));
 
     if (!tienePermiso) {
       console.error(`🚫 Guard: Acceso denegado. Rol actual: '${userRole}'. Requerido: '${requiredRoles.join(', ')}'`);
       
-      // ¡ROMPE EL BUCLE! Redirigimos a una ruta libre de guards.
-      router.navigate(['/login']); 
+      // MEJORA UX: Redirección inteligente basada en el rol
+      if (userRole === 1) {
+        router.navigate(['/administrador-inicio']);
+      } else if (userRole === 2) {
+        router.navigate(['/turista-inicio']);
+      } else if (userRole === 3) {
+        router.navigate(['/negocio-inicio']);
+      } else {
+        // Por si acaso los datos se corrompieron
+        localStorage.clear(); 
+        router.navigate(['/login']); 
+      }
       return false; 
     }
   }

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CloudinaryService } from './cloudinary-service';
+import { CloudinaryService } from './cloudinary.service';
 
 describe('CloudinaryService', () => {
   let service: CloudinaryService;

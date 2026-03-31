@@ -13,7 +13,7 @@ import {
   NavController // Solo usaremos este para salir del menú de turistas
 } from '@ionic/angular/standalone';
 
-import { CloudinaryService } from '../../core/services/cloudinary-service';
+import { CloudinaryService } from '../../core/services/cloudinary.service';
 import { MuroSocialService } from '../../core/services/muro-social.service';
 
 import { addIcons } from 'ionicons';

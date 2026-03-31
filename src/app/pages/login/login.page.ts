@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { CommonModule } from '@angular/common'; 
 import { addIcons } from 'ionicons';
 import { 
