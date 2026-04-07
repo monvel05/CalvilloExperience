@@ -7,6 +7,14 @@ import { Router } from '@angular/router'; // Para redirigir al login si falla
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
 
+  // ==========================================
+  // 🛑 EXCEPCIÓN PARA CLOUDINARY
+  // ==========================================
+  // Si la URL es de Cloudinary, dejamos que pase directo sin token
+  if (req.url.includes('api.cloudinary.com')) {
+    return next(req); 
+  }
+
   // 1. Obtener el token. 
   // (Asumimos que tu compañero lo guardará en el localStorage cuando termine el Login)
   const token = localStorage.getItem('jwt_token');
