@@ -1,32 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'; 
+import { AuthService } from 'src/app/core/services/auth.service';
+
+// IMPORTANTE: Importamos el módulo y servicio bilingüe
+import { TranslateModule, TranslateService } from '@ngx-translate/core'; 
+import { catchError, forkJoin, of } from 'rxjs';
 
 import { addIcons } from 'ionicons'; 
 import { 
-  gridOutline, 
-  peopleOutline, 
-  storefrontOutline, 
-  mapOutline, 
-  barChartOutline, 
-  settingsOutline,
-  people,
-  airplane,
-  storefront,
-  cash,
-  documentTextOutline,
-  imagesOutline,
-  restaurantOutline,
-  bedOutline,
-  busOutline,
-  cameraOutline
+  gridOutline, peopleOutline, storefrontOutline, mapOutline, 
+  barChartOutline, settingsOutline, people, airplane, 
+  storefront, cash, documentTextOutline, imagesOutline, 
+  restaurantOutline, bedOutline, busOutline, cameraOutline, logOutOutline
 } from 'ionicons/icons';
 
 import { DashboardService } from '../../core/services/dashboard.service';
 import { Chart, registerables } from 'chart.js';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -37,22 +29,18 @@ Chart.register(...registerables);
   templateUrl: './administrador-inicio.page.html',
   styleUrls: ['./administrador-inicio.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  // Agregamos TranslateModule a los imports
+  imports: [IonicModule, CommonModule, FormsModule, TranslateModule] 
 })
 export class AdministradorInicioPage implements OnInit {
+  private authService = inject(AuthService);
+  private translate = inject(TranslateService); // Inyectamos el servicio bilingüe
 
   vistaActual: string = 'dashboard';
 
   stats: any = {
-    usuarios: 0,
-    turistas: 0,
-    negocios: 0,
-    ganancias: 0,
-    membresias: {
-      basica: 0,
-      premium: 0,
-      vip: 0,
-      }, 
+    usuarios: 0, turistas: 0, negocios: 0, ganancias: 0,
+    membresias: { basica: 0, premium: 0, vip: 0 }, 
     generos: { mujeres: 0, hombres: 0, prefieroNoDecirlo: 0 } 
   };
 
@@ -65,22 +53,12 @@ export class AdministradorInicioPage implements OnInit {
     private router: Router
   ) {
     addIcons({
-      'grid-outline': gridOutline,
-      'people-outline': peopleOutline,
-      'storefront-outline': storefrontOutline,
-      'map-outline': mapOutline,
-      'bar-chart-outline': barChartOutline,
-      'settings-outline': settingsOutline,
-      'people': people,
-      'airplane': airplane,
-      'storefront': storefront,
-      'cash': cash,
-      'document-text-outline': documentTextOutline,
-      'images-outline': imagesOutline,
-      'restaurant-outline': restaurantOutline,
-      'bed-outline': bedOutline,
-      'bus-outline': busOutline,
-      'camera-outline': cameraOutline
+      'grid-outline': gridOutline, 'people-outline': peopleOutline, 'storefront-outline': storefrontOutline,
+      'map-outline': mapOutline, 'bar-chart-outline': barChartOutline, 'settings-outline': settingsOutline,
+      'people': people, 'airplane': airplane, 'storefront': storefront, 'cash': cash,
+      'document-text-outline': documentTextOutline, 'images-outline': imagesOutline,
+      'restaurant-outline': restaurantOutline, 'bed-outline': bedOutline, 'bus-outline': busOutline,
+      'camera-outline': cameraOutline, 'log-out-outline': logOutOutline
     });
   }
 
@@ -91,6 +69,8 @@ export class AdministradorInicioPage implements OnInit {
   cambiarVista(vista: string) {
     if (vista === 'muro-social') {
       this.router.navigate(['/muro-social']);
+    } else if (vista === 'configuracion') {
+      this.router.navigate(['/perfil']);
     } else {
       this.vistaActual = vista;
       if (vista === 'dashboard' || vista === 'usuarios') {
@@ -101,77 +81,75 @@ export class AdministradorInicioPage implements OnInit {
 
   getIconoCategoria(categoria: string): string {
     const cat = categoria.toLowerCase();
-    if (cat.includes('cenaduria')) return 'restaurant-outline';
-    if (cat.includes('hospedaje')) return 'bed-outline';
-    if (cat.includes('transporte')) return 'bus-outline';
-    if (cat.includes('atractivo')) return 'camera-outline';
-    return 'storefront-outline'; // Ícono por defecto
+    if (cat.includes('cenaduria') || cat.includes('restaurant')) return 'restaurant-outline';
+    if (cat.includes('hospedaje') || cat.includes('hotel')) return 'bed-outline';
+    if (cat.includes('transporte') || cat.includes('transport')) return 'bus-outline';
+    if (cat.includes('atractivo') || cat.includes('attraction')) return 'camera-outline';
+    return 'storefront-outline'; 
   }
 
   getClaseMembresia(membresia: string): string {
     const mem = membresia.toLowerCase();
     if (mem.includes('vip')) return 'badge-vip';
     if (mem.includes('premium')) return 'badge-premium';
-    if (mem.includes('basica') || mem.includes('básica')) return 'badge-basica';
+    if (mem.includes('basica') || mem.includes('básica') || mem.includes('basic')) return 'badge-basica';
     return 'badge-ninguna';
   }
 
-  // Ahora cargarDatos y cambiarFiltro usan 'this.filtro'
   cambiarFiltro() {
     this.cargarDatos();
   }
 
   cargarDatos() {
-    // Nota: Tu DashboardService ahora debería recibir 'this.filtro' para hacer la consulta correcta a la BD
-    
-    this.dashboardService.getUsuarios().subscribe(res => {
-      this.stats.usuarios = res?.total || 0;
-    });
+    const peticionSegura = (peticion: any) => peticion.pipe(
+      catchError(err => {
+        console.error('Fallo una petición:', err);
+        return of(null); 
+      })
+    );
 
-    this.dashboardService.getTuristas().subscribe(res => {
-      this.stats.turistas = res?.total || 0;
-    });
+    forkJoin({
+      usuarios: peticionSegura(this.dashboardService.getUsuarios(this.filtro)),
+      turistas: peticionSegura(this.dashboardService.getTuristas(this.filtro)),
+      negocios: peticionSegura(this.dashboardService.getNegocios(this.filtro)),
+      ganancias: peticionSegura(this.dashboardService.getGanancias(this.filtro)),
+      membresias: peticionSegura(this.dashboardService.getMembresias(this.filtro)),
+      generos: peticionSegura(this.dashboardService.getGeneros(this.filtro)),
+      lista: peticionSegura(this.dashboardService.getListaNegocios(this.filtro))
+    }).subscribe({
+      next: (res: any) => {
+        this.stats.usuarios = res.usuarios?.total || 0;
+        this.stats.turistas = res.turistas?.total || 0;
+        this.stats.negocios = res.negocios?.total || 0;
+        this.stats.ganancias = res.ganancias?.total || 0;
 
-    this.dashboardService.getNegocios().subscribe(res => {
-      this.stats.negocios = res?.total || 0;
-    });
-
-    this.dashboardService.getGanancias().subscribe(res => {
-      this.stats.ganancias = res?.total || 0;
-    });
-
-    this.dashboardService.getMembresias().subscribe(res => {
-      const data = { basica: 0, premium: 0, vip: 0 };
-      if (res && Array.isArray(res)) {
-        res.forEach((m: any) => {
-          if (m.tipo_membresia === 'Basica') data.basica = m.total;
-          if (m.tipo_membresia === 'Premium') data.premium = m.total;
-          if (m.tipo_membresia === 'VIP') data.vip = m.total;
-        });
-      }
-      this.stats.membresias = data;
-
-      setTimeout(() => {
-        if (this.vistaActual === 'dashboard') {
-          this.crearGraficas();
+        const dataMembresias = { basica: 0, premium: 0, vip: 0 };
+        if (res.membresias && Array.isArray(res.membresias)) {
+          res.membresias.forEach((m: any) => {
+            if (m.tipo_membresia === 'Basica') dataMembresias.basica = m.total;
+            if (m.tipo_membresia === 'Premium') dataMembresias.premium = m.total;
+            if (m.tipo_membresia === 'VIP') dataMembresias.vip = m.total;
+          });
         }
-      }, 100);
-    });
+        this.stats.membresias = dataMembresias;
 
-    this.dashboardService.getGeneros().subscribe(res => {
-      const data = { hombres: 0, mujeres: 0, prefieroNoDecirlo: 0 };
-      if (res && Array.isArray(res)) {
-        res.forEach((g: any) => {
-          if (g.genero === 'Hombre') data.hombres = g.total;
-          if (g.genero === 'Mujer') data.mujeres = g.total;
-          if (g.genero === 'Prefiero no decirlo') data.prefieroNoDecirlo = g.total;
-        });
+        const dataGeneros = { hombres: 0, mujeres: 0, prefieroNoDecirlo: 0 };
+        if (res.generos && Array.isArray(res.generos)) {
+          res.generos.forEach((g: any) => {
+            if (g.genero === 'Hombre') dataGeneros.hombres = g.total;
+            if (g.genero === 'Mujer') dataGeneros.mujeres = g.total;
+            if (g.genero === 'Prefiero no decirlo') dataGeneros.prefieroNoDecirlo = g.total;
+          });
+        }
+        this.stats.generos = dataGeneros;
+        this.listaNegocios = res.lista || [];
+
+        setTimeout(() => {
+          if (this.vistaActual === 'dashboard' || this.vistaActual === 'usuarios') {
+            this.crearGraficas();
+          }
+        }, 100);
       }
-      this.stats.generos = data;
-    });
-
-    this.dashboardService.getListaNegocios().subscribe(res => {
-      this.listaNegocios = res;
     });
   }
 
@@ -181,8 +159,9 @@ export class AdministradorInicioPage implements OnInit {
 
     const canvasLinea = document.getElementById('graficaLinea') as HTMLCanvasElement;
     if (canvasLinea) {
-      this.dashboardService.getGananciasMensuales().subscribe(res => {
-        const labels = res.map((r: any) => `Mes ${r.mes}`);
+      this.dashboardService.getGananciasMensuales(this.filtro).subscribe(res => {
+        // Traducción dinámica de la etiqueta "Mes"
+        const labels = res.map((r: any) => `${this.translate.instant('ADMIN.MONTH')} ${r.mes}`);
         const data = res.map((r: any) => r.total);
 
         const chartLinea = new Chart(canvasLinea, {
@@ -190,7 +169,7 @@ export class AdministradorInicioPage implements OnInit {
           data: {
             labels,
             datasets: [{
-              label: 'Ganancias',
+              label: this.translate.instant('ADMIN.EARNINGS'),
               data,
               borderColor: '#f472b6', 
               backgroundColor: 'rgba(244, 114, 182, 0.2)',
@@ -209,13 +188,13 @@ export class AdministradorInicioPage implements OnInit {
       const chartDona = new Chart(canvasDona, {
         type: 'doughnut',
         data: {
-          labels: ['Básica', 'Premium', 'VIP'],
+          labels: [
+            this.translate.instant('ADMIN.MEMBERSHIP.BASIC'), 
+            this.translate.instant('ADMIN.MEMBERSHIP.PREMIUM'), 
+            this.translate.instant('ADMIN.MEMBERSHIP.VIP')
+          ],
           datasets: [{
-            data: [
-              this.stats.membresias.basica,
-              this.stats.membresias.premium,
-              this.stats.membresias.vip
-            ],
+            data: [this.stats.membresias.basica, this.stats.membresias.premium, this.stats.membresias.vip],
             backgroundColor: ['#a7f3d0', '#fbcfe8', '#fcd34d']
           }]
         },
@@ -237,7 +216,7 @@ export class AdministradorInicioPage implements OnInit {
         data: {
           labels: top.map(l => l.nombre),
           datasets: [{
-            label: 'Visitas',
+            label: this.translate.instant('ADMIN.VISITS'),
             data: top.map(l => l.visitas),
             backgroundColor: '#a7f3d0'
           }]
@@ -252,131 +231,123 @@ export class AdministradorInicioPage implements OnInit {
       const chartGeneros = new Chart(canvasGeneros, {
         type: 'doughnut',
         data: {
-          labels: ['Mujeres', 'Hombres', 'Prefiero no decirlo'],
+          labels: [
+            this.translate.instant('ADMIN.GENDERS.WOMEN'), 
+            this.translate.instant('ADMIN.GENDERS.MEN'), 
+            this.translate.instant('ADMIN.GENDERS.PREFER_NOT_SAY')
+          ],
           datasets: [{
-            // Aquí inyectamos los datos dinámicos:
-            data: [
-              this.stats.generos.mujeres, 
-              this.stats.generos.hombres, 
-              this.stats.generos.prefieroNoDecirlo
-            ], 
+            data: [this.stats.generos.mujeres, this.stats.generos.hombres, this.stats.generos.prefieroNoDecirlo], 
             backgroundColor: ['#fbcfe8', '#bfdbfe', '#e2e8f0'],
             borderWidth: 0
           }]
         },
-        options: { 
-          responsive: true, 
-          maintainAspectRatio: false,
-          cutout: '65%' 
-        }
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
       });
       this.charts.push(chartGeneros);
     }
-}
-exportarPDF() {
-    const doc = new jsPDF();
-    const fecha = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
 
-    // 1. Encabezado
+  exportarPDF() {
+    const doc = new jsPDF();
+    const fecha = new Date().toLocaleDateString(this.translate.currentLang === 'en' ? 'en-US' : 'es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(22);
-    doc.setTextColor(244, 114, 182); // Rosa del dashboard
-    doc.text('Calvillo Experience - Reporte General', 14, 20);
+    doc.setTextColor(244, 114, 182);
+    doc.text(`Calvillo Experience - ${this.translate.instant('ADMIN.REPORT_TITLE')}`, 14, 20);
 
     doc.setFontSize(12);
     doc.setTextColor(100, 116, 139);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Fecha de generación: ${fecha} | Filtro: ${this.filtro.toUpperCase()}`, 14, 28);
+    doc.text(`${this.translate.instant('ADMIN.GENERATION_DATE')}: ${fecha} | ${this.translate.instant('ADMIN.FILTER')}: ${this.filtro.toUpperCase()}`, 14, 28);
 
     doc.setDrawColor(251, 207, 232);
     doc.setLineWidth(0.5);
     doc.line(14, 32, 196, 32);
 
-    // 2. Tabla de Resumen (KPIs)
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(51, 65, 85);
-    doc.text('Resumen de Rendimiento', 14, 42);
+    doc.text(this.translate.instant('ADMIN.PERFORMANCE_SUMMARY'), 14, 42);
     
     autoTable(doc, {
       startY: 46,
-      head: [['Métrica', 'Total']],
+      head: [[this.translate.instant('ADMIN.METRIC'), this.translate.instant('ADMIN.TOTAL')]],
       body: [
-        ['Usuarios Registrados', this.stats.usuarios],
-        ['Turistas', this.stats.turistas],
-        ['Negocios Activos', this.stats.negocios],
-        ['Ganancias Acumuladas', `$${this.stats.ganancias} MXN`]
+        [this.translate.instant('ADMIN.REGISTERED_USERS'), this.stats.usuarios],
+        [this.translate.instant('ADMIN.TOURISTS'), this.stats.turistas],
+        [this.translate.instant('ADMIN.ACTIVE_BUSINESSES'), this.stats.negocios],
+        [this.translate.instant('ADMIN.ACCUMULATED_EARNINGS'), `$${this.stats.ganancias}`]
       ],
       theme: 'grid',
-      headStyles: { fillColor: [244, 114, 182] } // Encabezado rosa
+      headStyles: { fillColor: [244, 114, 182] }
     });
 
-    // 3. Tabla de Demografía (Géneros)
-    doc.text('Demografía de Usuarios', 14, (doc as any).lastAutoTable.finalY + 12);
+    doc.text(this.translate.instant('ADMIN.USER_DEMOGRAPHICS'), 14, (doc as any).lastAutoTable.finalY + 12);
     
     autoTable(doc, {
       startY: (doc as any).lastAutoTable.finalY + 16,
-      head: [['Género', 'Cantidad de Usuarios']],
+      head: [[this.translate.instant('ADMIN.GENDER'), this.translate.instant('ADMIN.USER_AMOUNT')]],
       body: [
-        ['Mujeres', this.stats.generos.mujeres],
-        ['Hombres', this.stats.generos.hombres],
-        ['Prefiero no decirlo', this.stats.generos.prefieroNoDecirlo]
+        [this.translate.instant('ADMIN.GENDERS.WOMEN'), this.stats.generos.mujeres],
+        [this.translate.instant('ADMIN.GENDERS.MEN'), this.stats.generos.hombres],
+        [this.translate.instant('ADMIN.GENDERS.PREFER_NOT_SAY'), this.stats.generos.prefieroNoDecirlo]
       ],
       theme: 'grid',
-      headStyles: { fillColor: [167, 243, 208], textColor: [51, 65, 85] } // Encabezado menta
+      headStyles: { fillColor: [167, 243, 208], textColor: [51, 65, 85] }
     });
 
-    // 4. Tabla del Directorio de Negocios
-    doc.text('Directorio de Negocios', 14, (doc as any).lastAutoTable.finalY + 12);
+    doc.text(this.translate.instant('ADMIN.BUSINESS_DIRECTORY'), 14, (doc as any).lastAutoTable.finalY + 12);
     
     const datosNegocios = this.listaNegocios.map(n => [
       n.nombre, 
       n.categoria.charAt(0).toUpperCase() + n.categoria.slice(1), 
-      n.membresia === 'Sin Membresia' ? 'Sin Membresía' : n.membresia
+      n.membresia === 'Sin Membresia' ? this.translate.instant('ADMIN.NO_MEMBERSHIP') : n.membresia
     ]);
 
     autoTable(doc, {
       startY: (doc as any).lastAutoTable.finalY + 16,
-      head: [['Nombre del Negocio', 'Categoría', 'Membresía']],
-      body: datosNegocios.length > 0 ? datosNegocios : [['Sin datos', '-', '-']],
+      head: [[this.translate.instant('ADMIN.BUSINESS_NAME'), this.translate.instant('ADMIN.CATEGORY'), this.translate.instant('ADMIN.MEMBERSHIP_TITLE')]],
+      body: datosNegocios.length > 0 ? datosNegocios : [[this.translate.instant('ADMIN.NO_DATA'), '-', '-']],
       theme: 'striped',
-      headStyles: { fillColor: [51, 65, 85] } // Encabezado oscuro
+      headStyles: { fillColor: [51, 65, 85] }
     });
 
-    // Generar archivo
-    doc.save(`Reporte_Calvillo_${this.filtro}.pdf`);
+    doc.save(`Report_${this.filtro}.pdf`);
   }
 
   exportarExcel() {
     import('xlsx').then(XLSX => {
       const wb = XLSX.utils.book_new();
 
-      // Hoja 1: Resumen General
       const dataResumen = [
-        { Metrica: 'Usuarios Totales', Total: this.stats.usuarios },
-        { Metrica: 'Turistas', Total: this.stats.turistas },
-        { Metrica: 'Negocios', Total: this.stats.negocios },
-        { Metrica: 'Ganancias Totales', Total: `$${this.stats.ganancias}` }
+        { Metrica: this.translate.instant('ADMIN.TOTAL_USERS'), Total: this.stats.usuarios },
+        { Metrica: this.translate.instant('ADMIN.TOURISTS'), Total: this.stats.turistas },
+        { Metrica: this.translate.instant('ADMIN.BUSINESSES'), Total: this.stats.negocios },
+        { Metrica: this.translate.instant('ADMIN.TOTAL_EARNINGS'), Total: `$${this.stats.ganancias}` }
       ];
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataResumen), 'Resumen');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataResumen), this.translate.instant('ADMIN.SUMMARY'));
 
-      // Hoja 2: Demografía
       const dataGeneros = [
-        { Genero: 'Mujeres', Cantidad: this.stats.generos.mujeres },
-        { Genero: 'Hombres', Cantidad: this.stats.generos.hombres },
-        { Genero: 'Prefiero no decirlo', Cantidad: this.stats.generos.prefieroNoDecirlo }
+        { Genero: this.translate.instant('ADMIN.GENDERS.WOMEN'), Cantidad: this.stats.generos.mujeres },
+        { Genero: this.translate.instant('ADMIN.GENDERS.MEN'), Cantidad: this.stats.generos.hombres },
+        { Genero: this.translate.instant('ADMIN.GENDERS.PREFER_NOT_SAY'), Cantidad: this.stats.generos.prefieroNoDecirlo }
       ];
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataGeneros), 'Demografía');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataGeneros), this.translate.instant('ADMIN.DEMOGRAPHICS'));
 
-      // Hoja 3: Directorio de Negocios
       const dataNegocios = this.listaNegocios.map(n => ({
         Nombre: n.nombre,
         Categoria: n.categoria.charAt(0).toUpperCase() + n.categoria.slice(1),
-        Membresia: n.membresia === 'Sin Membresia' ? 'Sin Membresía' : n.membresia
+        Membresia: n.membresia === 'Sin Membresia' ? this.translate.instant('ADMIN.NO_MEMBERSHIP') : n.membresia
       }));
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataNegocios.length > 0 ? dataNegocios : [{Nombre: 'Sin datos'}]), 'Directorio');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataNegocios.length > 0 ? dataNegocios : [{Nombre: this.translate.instant('ADMIN.NO_DATA')}]), this.translate.instant('ADMIN.DIRECTORY'));
 
-      // Generar archivo
-      XLSX.writeFile(wb, `Reporte_Calvillo_${this.filtro}.xlsx`);
+      XLSX.writeFile(wb, `Report_${this.filtro}.xlsx`);
     });
-}
+  }
+
+  cerrarSesion() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

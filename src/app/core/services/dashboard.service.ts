@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,33 +10,44 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  getGanancias() {
-    return this.http.get<any>(`${this.API}/ganancias`);
+  // Función auxiliar para adjuntar el filtro a la URL si existe
+  private getOptions(filtro?: string) {
+    let params = new HttpParams();
+    if (filtro) {
+      params = params.set('filtro', filtro);
+    }
+    return { params };
   }
 
-  getMembresias() {
-    return this.http.get<any>(`${this.API}/membresias`);
+  getGanancias(filtro?: string) {
+    return this.http.get<any>(`${this.API}/ganancias`, this.getOptions(filtro));
   }
 
-  getGananciasMensuales() {
-    return this.http.get<any>(`${this.API}/ganancias-mensuales`);
+  getMembresias(filtro?: string) {
+    return this.http.get<any>(`${this.API}/membresias`, this.getOptions(filtro));
   }
 
-  getUsuarios() {
-    return this.http.get<any>(`${this.API}/usuarios`);
+  getGananciasMensuales(filtro?: string) {
+    return this.http.get<any>(`${this.API}/ganancias-mensuales`, this.getOptions(filtro));
   }
 
-  getTuristas() {
-    return this.http.get<any>(`${this.API}/turistas`);
+  getUsuarios(filtro?: string) {
+    return this.http.get<any>(`${this.API}/usuarios`, this.getOptions(filtro));
   }
 
-  getNegocios() {
-    return this.http.get<any>(`${this.API}/negocios`);
+  getTuristas(filtro?: string) {
+    return this.http.get<any>(`${this.API}/turistas`, this.getOptions(filtro));
   }
-  getGeneros() {
-    return this.http.get<any>(`${this.API}/generos`);
+
+  getNegocios(filtro?: string) {
+    return this.http.get<any>(`${this.API}/negocios`, this.getOptions(filtro));
   }
-  getListaNegocios() {
-    return this.http.get<any[]>(`${this.API}/lista-negocios`);
+
+  getGeneros(filtro?: string) {
+    return this.http.get<any>(`${this.API}/generos`, this.getOptions(filtro));
+  }
+
+  getListaNegocios(filtro?: string) {
+    return this.http.get<any[]>(`${this.API}/lista-negocios`, this.getOptions(filtro));
   }
 }

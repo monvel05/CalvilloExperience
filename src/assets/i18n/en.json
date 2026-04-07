@@ -119,5 +119,81 @@
     "ALERT_MISSING_FIELDS": "Please complete the date, check-in time, and number of people.",
     "ALERT_SUCCESS": "Reservation successfully created in Calvillo Experience",
     "ALERT_ERROR": "There was a problem connecting to the server."
+  },
+  "ADMIN": {
+    "ROLE": "Administrator",
+    "MENU": {
+      "DASHBOARD": "Dashboard",
+      "USERS": "Users",
+      "BUSINESSES": "Businesses",
+      "SOCIAL_WALL": "Social Wall",
+      "REPORTS": "Reports",
+      "SETTINGS": "Settings",
+      "LOGOUT": "Logout"
+    },
+    "HEADER": {
+      "SUMMARY": "General System Summary"
+    },
+    "TITLE": {
+      "USERS_DETAIL": "User Details",
+      "BUSINESS_DIRECTORY": "Business Directory",
+      "REPORTS_GEN": "Generate Reports"
+    },
+    "FILTER": {
+      "TODAY": "Today",
+      "7DAYS": "7 Days",
+      "MONTH": "Month",
+      "YEAR": "Year"
+    },
+    "CARDS": {
+      "USERS": "Users",
+      "TOURISTS": "Tourists",
+      "BUSINESSES": "Businesses",
+      "EARNINGS": "Earnings"
+    },
+    "CHARTS": {
+      "MONTHLY_EARNINGS": "Monthly Earnings",
+      "MEMBERSHIPS": "Memberships",
+      "TOP_PLACES": "Top Places",
+      "GENDER_DIST": "Gender Distribution"
+    },
+    "GENDERS": {
+      "WOMEN": "Women",
+      "MEN": "Men",
+      "PREFER_NOT_SAY": "Prefer not to say"
+    },
+    "MEMBERSHIP": {
+      "BASIC": "Basic",
+      "PREMIUM": "Premium",
+      "VIP": "VIP"
+    },
+    "NO_MEMBERSHIP": "No Membership",
+    "MEMBERSHIP_TITLE": "Membership",
+    "EXPORT": {
+      "PDF": "Export PDF",
+      "EXCEL": "Export Excel"
+    },
+    "REPORT_TITLE": "General Report",
+    "GENERATION_DATE": "Generated on",
+    "PERFORMANCE_SUMMARY": "Performance Summary",
+    "METRIC": "Metric",
+    "TOTAL": "Total",
+    "REGISTERED_USERS": "Registered Users",
+    "ACTIVE_BUSINESSES": "Active Businesses",
+    "ACCUMULATED_EARNINGS": "Accumulated Earnings",
+    "USER_DEMOGRAPHICS": "User Demographics",
+    "GENDER": "Gender",
+    "USER_AMOUNT": "Amount of Users",
+    "BUSINESS_NAME": "Business Name",
+    "CATEGORY": "Category",
+    "NO_DATA": "No data",
+    "TOTAL_USERS": "Total Users",
+    "TOTAL_EARNINGS": "Total Earnings",
+    "SUMMARY": "Summary",
+    "DEMOGRAPHICS": "Demographics",
+    "DIRECTORY": "Directory",
+    "MONTH": "Month",
+    "EARNINGS": "Earnings",
+    "VISITS": "Visits"
   }
 }

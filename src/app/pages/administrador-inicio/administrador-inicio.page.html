@@ -6,53 +6,56 @@
 
       <div class="perfil">
         <h3>Admin</h3>
-        <span>Administrador</span>
+        <span>{{ 'ADMIN.ROLE' | translate }}</span>
       </div>
 
       <ul>
         <li [class.active]="vistaActual === 'dashboard'" (click)="cambiarVista('dashboard')">
-          <ion-icon name="grid-outline"></ion-icon> Dashboard
+          <ion-icon name="grid-outline"></ion-icon> {{ 'ADMIN.MENU.DASHBOARD' | translate }}
         </li>
         <li [class.active]="vistaActual === 'usuarios'" (click)="cambiarVista('usuarios')">
-          <ion-icon name="people-outline"></ion-icon> Usuarios
+          <ion-icon name="people-outline"></ion-icon> {{ 'ADMIN.MENU.USERS' | translate }}
         </li>
         <li [class.active]="vistaActual === 'negocios'" (click)="cambiarVista('negocios')">
-          <ion-icon name="storefront-outline"></ion-icon> Negocios
+          <ion-icon name="storefront-outline"></ion-icon> {{ 'ADMIN.MENU.BUSINESSES' | translate }}
         </li>
         <li (click)="cambiarVista('muro-social')">
-          <ion-icon name="images-outline"></ion-icon> Muro Social
+          <ion-icon name="images-outline"></ion-icon> {{ 'ADMIN.MENU.SOCIAL_WALL' | translate }}
         </li>
         <li [class.active]="vistaActual === 'reportes'" (click)="cambiarVista('reportes')">
-          <ion-icon name="bar-chart-outline"></ion-icon> Reportes
+          <ion-icon name="bar-chart-outline"></ion-icon> {{ 'ADMIN.MENU.REPORTS' | translate }}
         </li>
         <li [class.active]="vistaActual === 'configuracion'" (click)="cambiarVista('configuracion')">
-          <ion-icon name="settings-outline"></ion-icon> Configuración
+          <ion-icon name="settings-outline"></ion-icon> {{ 'ADMIN.MENU.SETTINGS' | translate }}
+        </li>
+        <li (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon> {{ 'ADMIN.MENU.LOGOUT' | translate }}
         </li>
       </ul>
     </div>
 
     <div class="main">
       <div class="header">
-        <h1 [class.vista-oculta]="vistaActual !== 'dashboard'">Dashboard</h1>
-        <h1 [class.vista-oculta]="vistaActual !== 'usuarios'">Detalle de Usuarios</h1>
-        <h1 [class.vista-oculta]="vistaActual !== 'negocios'">Directorio de Negocios</h1>
-        <h1 [class.vista-oculta]="vistaActual !== 'reportes'">Generación de Reportes</h1>
-        <h1 [class.vista-oculta]="vistaActual !== 'configuracion'">Configuración</h1>
-        <p>Resumen general del sistema</p>
+        <h1 [class.vista-oculta]="vistaActual !== 'dashboard'">{{ 'ADMIN.MENU.DASHBOARD' | translate }}</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'usuarios'">{{ 'ADMIN.TITLE.USERS_DETAIL' | translate }}</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'negocios'">{{ 'ADMIN.TITLE.BUSINESS_DIRECTORY' | translate }}</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'reportes'">{{ 'ADMIN.TITLE.REPORTS_GEN' | translate }}</h1>
+        <h1 [class.vista-oculta]="vistaActual !== 'configuracion'">{{ 'ADMIN.MENU.SETTINGS' | translate }}</h1>
+        <p>{{ 'ADMIN.HEADER.SUMMARY' | translate }}</p>
       </div>
 
       <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'dashboard'">
         <ion-segment [(ngModel)]="filtro" (ionChange)="cambiarFiltro()" class="custom-segment">
-          <ion-segment-button value="hoy">Hoy</ion-segment-button>
-          <ion-segment-button value="7dias">7 días</ion-segment-button>
-          <ion-segment-button value="mes">Mes</ion-segment-button>
-          <ion-segment-button value="anio">Año</ion-segment-button>
+          <ion-segment-button value="hoy">{{ 'ADMIN.FILTER.TODAY' | translate }}</ion-segment-button>
+          <ion-segment-button value="7dias">{{ 'ADMIN.FILTER.7DAYS' | translate }}</ion-segment-button>
+          <ion-segment-button value="mes">{{ 'ADMIN.FILTER.MONTH' | translate }}</ion-segment-button>
+          <ion-segment-button value="anio">{{ 'ADMIN.FILTER.YEAR' | translate }}</ion-segment-button>
         </ion-segment>
 
         <div class="cards">
           <div class="card">
             <div class="card-header">
-              <p>Usuarios</p>
+              <p>{{ 'ADMIN.CARDS.USERS' | translate }}</p>
               <ion-icon name="people" class="icon-usuarios"></ion-icon>
             </div>
             <h2>{{ stats?.usuarios }}</h2>
@@ -60,7 +63,7 @@
 
           <div class="card">
             <div class="card-header">
-              <p>Turistas</p>
+              <p>{{ 'ADMIN.CARDS.TOURISTS' | translate }}</p>
               <ion-icon name="airplane" class="icon-turistas"></ion-icon>
             </div>
             <h2>{{ stats?.turistas }}</h2>
@@ -68,7 +71,7 @@
 
           <div class="card">
             <div class="card-header">
-              <p>Negocios</p>
+              <p>{{ 'ADMIN.CARDS.BUSINESSES' | translate }}</p>
               <ion-icon name="storefront" class="icon-negocios"></ion-icon>
             </div>
             <h2>{{ stats?.negocios }}</h2>
@@ -76,7 +79,7 @@
 
           <div class="card">
             <div class="card-header">
-              <p>Ganancias</p>
+              <p>{{ 'ADMIN.CARDS.EARNINGS' | translate }}</p>
               <ion-icon name="cash" class="icon-ganancias"></ion-icon>
             </div>
             <h2>${{ stats?.ganancias }}</h2>
@@ -85,19 +88,19 @@
 
         <div class="charts-grid">
           <div class="chart-card large">
-            <h3>Ganancias mensuales</h3>
+            <h3>{{ 'ADMIN.CHARTS.MONTHLY_EARNINGS' | translate }}</h3>
             <div class="chart-container">
               <canvas id="graficaLinea"></canvas>
             </div>
           </div>
           <div class="chart-card">
-            <h3>Membresías</h3>
+            <h3>{{ 'ADMIN.CHARTS.MEMBERSHIPS' | translate }}</h3>
             <div class="chart-container">
               <canvas id="graficaDona"></canvas>
             </div>
           </div>
           <div class="chart-card">
-            <h3>Top lugares</h3>
+            <h3>{{ 'ADMIN.CHARTS.TOP_PLACES' | translate }}</h3>
             <div class="chart-container">
               <canvas id="graficaTop"></canvas>
             </div>
@@ -108,7 +111,7 @@
       <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'usuarios'">
         <div class="charts-grid" style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;">
           <div class="chart-card">
-            <h3 style="text-align: center; margin-bottom: 20px;">Distribución por Género</h3>
+            <h3 style="text-align: center; margin-bottom: 20px;">{{ 'ADMIN.CHARTS.GENDER_DIST' | translate }}</h3>
             <div class="chart-container">
               <canvas id="graficaGeneros"></canvas>
             </div>
@@ -128,7 +131,7 @@
                 </div>
               </div>
               <span class="badge" [ngClass]="getClaseMembresia(negocio.membresia)">
-                {{ negocio.membresia === 'Sin Membresia' ? 'Sin Membresía' : 'Membresía ' + negocio.membresia }}
+                {{ negocio.membresia === 'Sin Membresia' ? ('ADMIN.NO_MEMBERSHIP' | translate) : ('ADMIN.MEMBERSHIP_TITLE' | translate) + ' ' + negocio.membresia }}
               </span>
             </div>
           }
@@ -139,17 +142,17 @@
         <div class="export-buttons">
           <ion-button class="btn-export pdf" (click)="exportarPDF()">
             <ion-icon name="document-text-outline" slot="start"></ion-icon>
-            Exportar PDF
+            {{ 'ADMIN.EXPORT.PDF' | translate }}
           </ion-button>
           <ion-button class="btn-export excel" (click)="exportarExcel()">
             <ion-icon name="grid-outline" slot="start"></ion-icon>
-            Exportar Excel
+            {{ 'ADMIN.EXPORT.EXCEL' | translate }}
           </ion-button>
         </div>
       </div>
 
       <div class="vista-seccion" [class.vista-oculta]="vistaActual !== 'configuracion'">
-        </div>
+      </div>
 
     </div>
   </div>
