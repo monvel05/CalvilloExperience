@@ -1,17 +1,45 @@
-// Paleta de colores
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
-$border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+// ============================================
+// CALVILLO EXPERIENCE - RESERVAR PAGE
+// NUEVA PALETA COMPLETA
+// ============================================
+
+// ═══════════════════════════════════════════
+//  PALETA PRINCIPAL
+// ═══════════════════════════════════════════
+$peach-orange: #FFCE99;        // Fondos secundarios, detalles cálidos
+$ornery-tangerine: #F58421;    // Botones principales, acentos fuertes
+$army-green: #3B5226;          // Textos oscuros, bordes serios
+$jaipur-pink: #D44084;         // Elementos destacados, hover, fechas seleccionadas
+$cherry-blossom-pink: #FFB5C7; // Bordes suaves, fondos alternativos
+
+// ═══════════════════════════════════════════
+//  FONDOS Y TEXTOS (basados en tu paleta)
+// ═══════════════════════════════════════════
+$fondo-hueso: #FFF9F0;          // Fondo principal (color hueso)
+$blanco: #FFFFFF;
+$texto-oscuro: $army-green;     // Army Green para texto principal
+$texto-suave: rgba($army-green, 0.65); // Army Green con opacidad
+
+// ═══════════════════════════════════════════
+//  DEGRADADOS CON PALETA NUEVA
+// ═══════════════════════════════════════════
+$degradado-hero: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom-pink);
+
+// ═══════════════════════════════════════════
+//  SOMBRAS Y BORDES
+// ═══════════════════════════════════════════
+$sombra: 0 8px 24px rgba($army-green, 0.12);
+$sombra-fuerte: 0 4px 12px rgba($jaipur-pink, 0.35);
+$border-color: $cherry-blossom-pink;
+$border-suave: rgba($peach-orange, 0.5);
+
+// ═══════════════════════════════════════════
+//  ESTILOS PRINCIPALES
+// ═══════════════════════════════════════════
 
 .citrus-main-bg {
-  --background: #{$cream};
+  --background: #{$fondo-hueso};
 }
 
 .dashboard-container {
@@ -20,16 +48,16 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   margin: 0 auto;
 }
 
-// Hero Section
+// Hero Section con degradado Jaipur Pink + Ornery Tangerine
 .hero-section {
-  background: linear-gradient(135deg, $pink-primary 0%, $pink-secondary 100%);
+  background: $degradado-hero;
   border-radius: 24px;
   padding: 32px 28px;
   margin-bottom: 28px;
-  box-shadow: $shadow;
+  box-shadow: $sombra;
   
   .hero-content {
-    color: $white;
+    color: $blanco;
     
     .hero-title {
       font-size: 2rem;
@@ -79,13 +107,14 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 // Tarjeta de información
 .booking-info {
   .info-card {
-    background: $white;
+    background: $blanco;
     border-radius: 24px;
     padding: 28px;
-    box-shadow: $shadow;
+    box-shadow: $sombra;
+    border: 1px solid $border-suave;
   }
   
-  // Fechas en línea como la imagen
+  // Fechas en línea
   .dates-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -98,7 +127,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        color: $gray-text;
+        color: $texto-suave;
         margin-bottom: 12px;
       }
       
@@ -108,24 +137,24 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         gap: 12px;
         padding: 14px 16px;
         background: #F8FAFE;
-        border: 1.5px solid $border-color;
+        border: 1.5px solid $border-suave;
         border-radius: 14px;
         cursor: pointer;
         transition: all 0.2s;
         
         &:hover {
-          border-color: $pink-secondary;
-          background: $white;
+          border-color: $ornery-tangerine;
+          background: $blanco;
         }
         
         ion-icon {
-          color: $olive;
+          color: $jaipur-pink;
           font-size: 1.2rem;
         }
         
         ion-datetime-button {
           --background: transparent;
-          --color: $gray-text;
+          --color: $texto-suave;
           --border-radius: 0;
           --padding-start: 0;
           --padding-end: 0;
@@ -146,9 +175,9 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       align-items: center;
       gap: 8px;
       padding: 8px 16px;
-      background: rgba(191, 42, 82, 0.1);
+      background: rgba($jaipur-pink, 0.1);
       border-radius: 40px;
-      color: $pink-primary;
+      color: $jaipur-pink;
       font-size: 0.85rem;
       font-weight: 500;
       
@@ -167,7 +196,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: $gray-text;
+      color: $texto-suave;
       margin-bottom: 12px;
     }
     
@@ -182,14 +211,14 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         --padding-top: 14px;
         --padding-bottom: 14px;
         background: #F8FAFE;
-        border: 1.5px solid $border-color;
+        border: 1.5px solid $border-suave;
         border-radius: 14px;
         width: 100%;
         font-weight: 500;
-        color: $dark-text;
+        color: $texto-oscuro;
         
         &::part(placeholder) {
-          color: $gray-text;
+          color: $texto-suave;
         }
       }
       
@@ -197,7 +226,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         position: absolute;
         right: 16px;
         pointer-events: none;
-        color: $olive;
+        color: $jaipur-pink;
         font-size: 1rem;
       }
     }
@@ -212,7 +241,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: $gray-text;
+      color: $texto-suave;
       margin-bottom: 12px;
     }
     
@@ -222,23 +251,23 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       gap: 12px;
       padding: 14px 16px;
       background: #F8FAFE;
-      border: 1.5px solid $border-color;
+      border: 1.5px solid $border-suave;
       border-radius: 14px;
       cursor: pointer;
       transition: all 0.2s;
       
       &:hover {
-        border-color: $pink-secondary;
-        background: $white;
+        border-color: $ornery-tangerine;
+        background: $blanco;
       }
       
       ion-icon {
-        color: $olive;
+        color: $jaipur-pink;
         font-size: 1.2rem;
       }
       
       span {
-        color: $gray-text;
+        color: $texto-suave;
         font-size: 0.9rem;
         font-weight: 500;
       }
@@ -248,8 +277,8 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   .btn-reservar {
     width: 100%;
     padding: 16px;
-    background: $pink-primary;
-    color: $white;
+    background: $degradado-hero;
+    color: $blanco;
     border: none;
     border-radius: 14px;
     font-weight: 700;
@@ -258,7 +287,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+    box-shadow: $sombra-fuerte;
     
     &:active {
       transform: scale(0.98);
@@ -269,18 +298,19 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 // Sección de calendario
 .calendar-section {
   .calendar-card {
-    background: $white;
+    background: $blanco;
     border-radius: 24px;
     padding: 28px;
-    box-shadow: $shadow;
+    box-shadow: $sombra;
+    border: 1px solid $border-suave;
     
     .section-title {
       font-size: 1.2rem;
       font-weight: 600;
-      color: $pink-primary;
+      color: $jaipur-pink;
       margin: 0 0 20px 0;
       padding-bottom: 12px;
-      border-bottom: 2px solid $mustard;
+      border-bottom: 2px solid $peach-orange;
       display: inline-block;
     }
   }
@@ -297,7 +327,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       .calendar-nav {
         background: none;
         border: none;
-        color: $pink-primary;
+        color: $jaipur-pink;
         font-size: 1.2rem;
         cursor: pointer;
         padding: 8px;
@@ -305,13 +335,13 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         transition: background 0.2s;
         
         &:active {
-          background: rgba(191, 42, 82, 0.1);
+          background: rgba($jaipur-pink, 0.1);
         }
       }
       
       .calendar-month {
         font-weight: 700;
-        color: $dark-text;
+        color: $texto-oscuro;
         font-size: 1rem;
       }
     }
@@ -325,7 +355,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       span {
         font-size: 0.7rem;
         font-weight: 600;
-        color: $gray-text;
+        color: $texto-suave;
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
@@ -353,19 +383,19 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
         
         &.available {
-          color: $dark-text;
+          color: $texto-oscuro;
           
           &:hover {
-            background: rgba(191, 42, 82, 0.1);
+            background: rgba($jaipur-pink, 0.1);
             transform: scale(1.05);
           }
         }
         
         &.selected {
-          background: $pink-primary;
+          background: $jaipur-pink;
           color: white;
           transform: scale(1.05);
-          box-shadow: 0 2px 8px rgba(191, 42, 82, 0.3);
+          box-shadow: $sombra-fuerte;
         }
         
         &.disabled {
@@ -386,8 +416,8 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         align-items: center;
         gap: 8px;
         padding: 10px 24px;
-        background: $mustard;
-        color: $dark-text;
+        background: $peach-orange;
+        color: $texto-oscuro;
         border: none;
         border-radius: 40px;
         font-weight: 700;
@@ -396,15 +426,16 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         letter-spacing: 0.5px;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(242, 174, 46, 0.3);
+        box-shadow: 0 2px 8px rgba($peach-orange, 0.4);
         
         ion-icon {
           font-size: 1.1rem;
+          color: $jaipur-pink;
         }
         
         &:active {
           transform: scale(0.96);
-          box-shadow: 0 1px 4px rgba(242, 174, 46, 0.4);
+          box-shadow: 0 1px 4px rgba($peach-orange, 0.5);
         }
       }
     }
@@ -421,7 +452,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         align-items: center;
         gap: 8px;
         font-size: 0.75rem;
-        color: $gray-text;
+        color: $texto-suave;
         
         .legend-dot {
           width: 12px;
@@ -429,11 +460,11 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
           border-radius: 50%;
           
           &.available-dot {
-            background: $pink-primary;
+            background: $jaipur-pink;
           }
           
           &.selected-dot {
-            background: $pink-primary;
+            background: $jaipur-pink;
           }
           
           &.unavailable-dot {
@@ -448,7 +479,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     .hours-title {
       font-size: 0.9rem;
       font-weight: 600;
-      color: $dark-text;
+      color: $texto-oscuro;
       margin: 0 0 12px 0;
     }
     
@@ -465,13 +496,13 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         
         .hour-day {
           font-size: 0.85rem;
-          color: $gray-text;
+          color: $texto-suave;
         }
         
         .hour-time {
           font-size: 0.85rem;
           font-weight: 500;
-          color: $pink-primary;
+          color: $jaipur-pink;
         }
       }
     }
@@ -480,7 +511,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
 // Footer información
 .footer-info {
-  background: $white;
+  background: $blanco;
   border-radius: 20px;
   padding: 20px 28px;
   display: flex;
@@ -488,7 +519,8 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   align-items: center;
   flex-wrap: wrap;
   gap: 20px;
-  box-shadow: $shadow;
+  box-shadow: $sombra;
+  border: 1px solid $border-suave;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -500,7 +532,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       font-size: 0.7rem;
       font-weight: 600;
       text-transform: uppercase;
-      color: $gray-text;
+      color: $texto-suave;
       letter-spacing: 0.5px;
       display: block;
       margin-bottom: 8px;
@@ -513,12 +545,12 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       
       ion-icon {
         font-size: 1.3rem;
-        color: $olive;
+        color: $jaipur-pink;
       }
       
       span {
         font-size: 0.85rem;
-        color: $dark-text;
+        color: $texto-oscuro;
         font-weight: 500;
       }
     }
@@ -539,13 +571,13 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       gap: 8px;
       
       ion-icon {
-        color: $pink-primary;
+        color: $jaipur-pink;
         font-size: 1.1rem;
       }
       
       span {
         font-size: 0.85rem;
-        color: $dark-text;
+        color: $texto-oscuro;
       }
     }
   }
@@ -554,21 +586,21 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 // Estilos del header
 ion-header {
   ion-toolbar {
-    --background: #{$cream};
+    --background: #{$fondo-hueso};
     --border-width: 0;
     
     ion-title {
       font-weight: 700;
-      color: $pink-primary;
+      color: $jaipur-pink;
       font-size: 1.2rem;
     }
     
     ion-back-button {
-      --color: $pink-primary;
+      --color: $jaipur-pink;
     }
   }
 
   .hidden {
-  display: none;
-}
+    display: none;
+  }
 }

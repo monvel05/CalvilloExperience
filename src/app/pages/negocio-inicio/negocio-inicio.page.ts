@@ -5,13 +5,18 @@ import { Router } from '@angular/router';
 import { NavController, ToastController, AlertController } from '@ionic/angular';
 import { 
   IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, 
-  IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, 
-  IonCardContent, IonFab, IonFabButton 
-} from '@ionic/angular/standalone';
+  IonContent, IonFab, IonFabButton, IonCardHeader, IonCardContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
-  personCircleOutline, imageOutline, pencilOutline, 
-  trashOutline, add, storefrontOutline, addCircleOutline, logOutOutline // <-- Añadido logOutOutline
+  personCircleOutline, 
+  logOutOutline, 
+  leafOutline,
+  storefrontOutline, 
+  pencilOutline, 
+  trashOutline, 
+  addCircleOutline,
+  imageOutline,
+  add
 } from 'ionicons/icons';
 
 interface Negocio {
@@ -27,11 +32,10 @@ interface Negocio {
   templateUrl: './negocio-inicio.page.html',
   styleUrls: ['./negocio-inicio.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonCardContent, IonCardHeader, 
     CommonModule, FormsModule, 
     IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, 
-    IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, 
-    IonCardContent, IonFab, IonFabButton
+    IonContent, IonFab, IonFabButton
   ] 
 })
 export class NegocioInicioPage implements OnInit {
@@ -47,8 +51,18 @@ export class NegocioInicioPage implements OnInit {
   ];
 
   constructor() {
-    // Registramos el nuevo ícono aquí
-    addIcons({ personCircleOutline, imageOutline, pencilOutline, trashOutline, add, storefrontOutline, addCircleOutline, logOutOutline });
+    // SIN duplicados - cada nombre UNA sola vez
+    addIcons({
+      'person-circle-outline': personCircleOutline,
+      'log-out-outline': logOutOutline,
+      'leaf-outline': leafOutline,
+      'storefront-outline': storefrontOutline,
+      'pencil-outline': pencilOutline,
+      'trash-outline': trashOutline,
+      'add-circle-outline': addCircleOutline,
+      'image-outline': imageOutline,
+      'add': add
+    });
   }
 
   ngOnInit() { }
@@ -62,7 +76,6 @@ export class NegocioInicioPage implements OnInit {
   }
 
   editarNegocio(negocio: Negocio) {
-    // Mandamos los datos al formulario (negocio-presentacion)
     this.router.navigate(['/negocio-presentacion'], { state: { negocioData: negocio } });
   }
 
@@ -95,10 +108,6 @@ export class NegocioInicioPage implements OnInit {
           text: 'Salir',
           role: 'destructive',
           handler: () => {
-            // Aquí puedes limpiar tus variables de sesión o tokens si es necesario
-            // localStorage.clear();
-            
-            // Redirigimos al usuario a la vista de login (asegúrate de que la ruta coincida con tu app)
             this.navCtrl.navigateRoot('/login'); 
           }
         }

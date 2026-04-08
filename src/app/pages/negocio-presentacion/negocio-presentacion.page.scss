@@ -1,238 +1,126 @@
-// Paleta de colores base
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
-$border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+// ============================================
+// CALVILLO EXPERIENCE - PALETA CORREGIDA
+// ============================================
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom-pink: #FFB5C7;
+$fondo-hueso: #FFF9F0;
+$blanco: #FFFFFF;
+$texto-oscuro: $army-green;
+$texto-suave: rgba($army-green, 0.65);
 
-/* ==========================================
-   HEADER
-   ========================================== */
-.custom-header {
-  ion-toolbar {
-    --background: #{$cream};
-    --border-width: 0;
-    
-    ion-title {
-      font-weight: 800;
-      color: $pink-primary;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
-    }
-    ion-back-button {
-      --color: $pink-primary;
-    }
-  }
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$sombra: 0 8px 24px rgba($army-green, 0.12);
+
+/* HEADER */
+.custom-header ion-toolbar {
+  --background: #{$degradado-principal};
+  --color: white;
+  --min-height: 70px;
 }
 
-/* ==========================================
-   CONTENIDO GENERAL
-   ========================================== */
-.main-content-dark {
-  --background: #{$cream};
-}
-
-.header-bienvenida {
-  margin-bottom: 24px;
-  
-  h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: $dark-text;
-    margin: 0 0 8px 0;
-    letter-spacing: -0.5px;
-  }
-  
-  p {
-    color: $gray-text;
-    font-size: 0.95rem;
-    margin: 0;
-  }
-}
-
-/* ==========================================
-   CONTENEDOR DE IMAGEN (PORTADA)
-   ========================================== */
+/* CONTENEDOR DE IMAGEN Y BOTÓN "SUBIR PORTADA" */
 .cover-image-container {
   position: relative;
-  border-radius: 24px;
+  width: 100%;
+  height: 250px;
+  border-radius: 20px;
   overflow: hidden;
-  height: 350px;
-  box-shadow: $shadow;
-  background: $white;
-  margin-bottom: 24px;
-
-  @media (min-width: 768px) {
-    position: sticky;
-    top: 20px;
-  }
+  box-shadow: $sombra;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 20px;
 
   .cover-img {
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 1;
   }
 
   .change-image-btn {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    --background: rgba(255, 255, 255, 0.9);
-    --color: #{$pink-primary};
-    --border-radius: 16px;
-    --padding-start: 20px;
-    --padding-end: 20px;
-    font-weight: 700;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(4px);
-    width: max-content;
+    z-index: 2;
+    --background: #{$blanco};
+    --color: #{$jaipur-pink};
+    --border-radius: 12px;
+    --box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-weight: 800;
+    font-size: 0.85rem;
+    height: 45px;
   }
 }
 
-/* ==========================================
-   TARJETAS DEL FORMULARIO
-   ========================================== */
+/* FORMULARIO Y TARJETAS */
+.main-content-dark { --background: #{$fondo-hueso}; }
+
 .compact-card {
-  background: $white;
-  border-radius: 24px;
-  box-shadow: $shadow;
-  margin-bottom: 24px;
-  border: none;
+  background: $blanco;
+  border-radius: 20px;
+  box-shadow: $sombra;
+  margin-bottom: 20px;
+  border: 1px solid rgba($peach-orange, 0.3);
 
-  ion-card-header {
-    padding: 24px 24px 12px;
-    
-    .electric-subtitle {
-      color: $olive;
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin: 0;
-    }
-  }
-
-  ion-card-content {
-    padding: 0 24px 24px;
+  .electric-subtitle {
+    color: $ornery-tangerine;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
   }
 }
 
-/* ==========================================
-   INPUTS Y SELECTS
-   ========================================== */
 .custom-input {
-  --background: #F8FAFE;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 14px;
-  --padding-bottom: 14px;
-  border: 1.5px solid $border-color;
-  border-radius: 14px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: $dark-text;
-  width: 100%;
-  margin-bottom: 16px;
-  transition: all 0.3s ease;
-
-  &::part(placeholder) {
-    color: #94a3b8;
-  }
-
-  &.ion-focused {
-    border-color: $pink-secondary;
-    --background: #{$white};
-    box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
-  }
+  --background: #fdfdfd;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  margin-bottom: 10px;
+  border: 1.5px solid #eee;
+  border-radius: 12px;
 }
 
-ion-textarea.custom-input {
-  --padding-top: 16px;
-  min-height: 120px;
-}
-
-.error-msg {
-  display: block;
-  margin-top: -10px;
-  margin-bottom: 16px;
-  padding-left: 8px;
-  font-weight: 600;
-}
-
-/* ==========================================
-   CONFIGURACIÓN DE RESERVAS
-   ========================================== */
+/* RESERVACIONES TOGGLE */
 .reservation-config {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 8px 0;
-
-  .text-content {
-    .bright-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: $dark-text;
-      margin: 0 0 4px 0;
-    }
-    .description-text {
-      font-size: 0.85rem;
-      color: $gray-text;
-      margin: 0;
-    }
-  }
-
+  align-items: center;
+  
   ion-toggle {
-    --background-checked: #{$pink-primary};
+    --background-checked: #{$jaipur-pink};
+    --handle-background-checked: white;
   }
 }
 
-/* ==========================================
-   FOOTER Y BOTÓN DE GUARDAR
-   ========================================== */
+/* FOOTER Y BOTÓN GUARDAR (SOLUCIÓN AL CORTE) */
 ion-footer {
-  background: transparent;
-
-  &::before {
-    display: none; // Quita la sombra por defecto de Ionic
-  }
-
-  .transparent-toolbar {
-    --background: transparent;
-    --border-width: 0;
-  }
+  background: $fondo-hueso;
+  padding: 15px 20px;
+  padding-bottom: calc(15px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba($cherry-blossom-pink, 0.4);
 
   .save-button-container {
-    background: linear-gradient(to top, #{$cream} 80%, rgba(242, 233, 206, 0) 100%);
-    padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
-    
+    display: flex;
+    justify-content: center;
+
     ion-button {
-      --background: #{$pink-primary};
-      --color: #{$white};
+      --background: #{$degradado-principal};
+      --color: white;
       --border-radius: 16px;
-      --padding-top: 20px;
-      --padding-bottom: 20px;
-      --box-shadow: 0 8px 24px rgba(191, 42, 82, 0.35);
-      margin: 0 auto;
+      --box-shadow: 0 10px 20px rgba($jaipur-pink, 0.3);
+      margin: 0;
+      width: 100%;
+      max-width: 500px;
+      height: 60px; // Altura fija para que el texto sea legible
       font-weight: 800;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       letter-spacing: 1px;
-      max-width: 600px;
-      
-      &::part(native):active {
-        transform: scale(0.98);
-      }
 
       &.button-disabled {
-        --background: #cbd5e1;
+        --background: #ccc;
         --box-shadow: none;
-        opacity: 0.7;
+        opacity: 0.6;
       }
     }
   }

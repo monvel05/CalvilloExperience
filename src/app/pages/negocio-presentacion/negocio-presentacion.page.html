@@ -13,7 +13,7 @@
       <ion-col size="12" size-md="5">
         <div class="cover-image-container">
           <img [src]="negocioForm.get('imagen')?.value || 'assets/images/placeholder.jpg'" alt="Portada del Negocio" class="cover-img">
-          <ion-button class="change-image-btn" color="light" (click)="abrirSelectorImagen(fileInput)">
+          <ion-button class="change-image-btn" (click)="abrirSelectorImagen(fileInput)">
             <ion-icon slot="start" name="image-outline"></ion-icon>
             {{ negocioForm.get('imagen')?.value ? 'CAMBIAR PORTADA' : 'SUBIR PORTADA' }}
           </ion-button>
@@ -23,12 +23,11 @@
 
       <ion-col size="12" size-md="7">
         <div class="header-bienvenida">
-          <h2>{{ modoEdicion ? 'Actualiza tu información' : 'Detalles de tu experiencia' }}</h2>
-          <p>La información que coloques aquí será visible para todos los turistas.</p>
+          <h2 class="form-main-title">{{ modoEdicion ? 'Actualiza tu información' : 'Detalles de tu experiencia' }}</h2>
+          <p class="form-main-subtitle">La información será visible para todos los turistas.</p>
         </div>
 
         <form [formGroup]="negocioForm">
-          
           <div class="compact-card">
             <ion-card-header>
               <p class="electric-subtitle">INFORMACIÓN GENERAL</p>
@@ -50,10 +49,6 @@
             </ion-card-header>
             <ion-card-content>
               <ion-input type="tel" label="Teléfono (10 dígitos)" labelPlacement="stacked" fill="solid" formControlName="telefono" placeholder="495 123 4567" class="custom-input"></ion-input>
-              <ion-text color="danger" class="error-msg" *ngIf="negocioForm.get('telefono')?.invalid && negocioForm.get('telefono')?.touched">
-                <small>El número debe tener exactamente 10 dígitos.</small>
-              </ion-text>
-              
               <div class="horarios-grid">
                 <ion-select label="Días de Trabajo" labelPlacement="stacked" fill="solid" formControlName="diasTrabajo" multiple="true" class="custom-input">
                   <ion-select-option value="Lunes">Lunes</ion-select-option>
@@ -90,20 +85,18 @@
               <ion-input label="Dirección Completa" labelPlacement="stacked" fill="solid" formControlName="ubicacion" placeholder="Ej. Calle Hidalgo #123, Calvillo" class="custom-input"></ion-input>
             </ion-card-content>
           </div>
-
         </form>
       </ion-col>
     </ion-row>
   </ion-grid>
+  <div style="height: 120px;"></div>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="transparent-toolbar">
-    <div class="save-button-container">
-      <ion-button expand="block" (click)="guardarCambios()" [disabled]="negocioForm.invalid" [class.button-disabled]="negocioForm.invalid">
-        <ion-icon slot="start" name="save-outline"></ion-icon>
-        {{ modoEdicion ? 'ACTUALIZAR NEGOCIO' : 'GUARDAR NEGOCIO' }}
-      </ion-button>
-    </div>
-  </ion-toolbar>
+  <div class="save-button-container">
+    <ion-button expand="block" (click)="guardarCambios()" [disabled]="negocioForm.invalid" [class.button-disabled]="negocioForm.invalid">
+      <ion-icon slot="start" name="save-outline"></ion-icon>
+      {{ modoEdicion ? 'ACTUALIZAR NEGOCIO' : 'GUARDAR NEGOCIO' }}
+    </ion-button>
+  </div>
 </ion-footer>

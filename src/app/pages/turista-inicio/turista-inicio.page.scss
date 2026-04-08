@@ -1,13 +1,32 @@
-// Paleta de colores
-$rosa-claro: #D96C80;
-$rosa-oscuro: #BF2A52;
-$verde-olivo: #BFB74B;
-$crema: #F2E9CE;
-$naranja: #F2AE2E;
+// ============================================
+// CALVILLO EXPERIENCE - TURISTA INICIO PAGE
+// NUEVA PALETA: Peach Orange / Jaipur Pink / Army Green
+// DROPDOWN COLORIDO POR CATEGORÍAS
+// ============================================
 
+// NUEVA PALETA DE COLORES
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom: #FFB5C7;
+
+// FONDOS
+$fondo-hueso: #FDF5E6;
+$blanco: #FFFFFF;
+$texto-oscuro: #2C3E50;
+$texto-suave: #6C7A89;
+
+// DEGRADADOS
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom);
+
+// ============================================
+// HEADER
+// ============================================
 ion-header {
   ion-toolbar {
-    --background: #{$rosa-oscuro};
+    --background: #{$degradado-principal};
     --color: white;
     padding: 0 16px;
     
@@ -21,22 +40,34 @@ ion-header {
     .perfil-avatar {
       width: 40px;
       height: 40px;
+      margin-right: 12px;
+      border: 2px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      
-      ion-img {
-        border-radius: 50%;
-        border: 2px solid white;
+      overflow: hidden;
+
+      .icono-perfil-default {
+        font-size: 48px;
+        color: white;
+        margin: 0;
+        padding: 0;
       }
     }
   }
 }
 
+// ============================================
+// CONTENIDO PRINCIPAL
+// ============================================
 ion-content {
-  --background: #{$crema};
-  --padding-bottom: 100px; /* Espacio extra al final */
+  --background: #{$fondo-hueso};
+  --padding-bottom: 100px;
   
   .welcome-section {
-    background: linear-gradient(135deg, $rosa-oscuro 0%, $rosa-claro 100%);
+    background: $degradado-principal;
     padding: 24px 20px 32px;
     border-radius: 0 0 30px 30px;
     margin-bottom: 20px;
@@ -56,41 +87,49 @@ ion-content {
     }
   }
   
-  /* Dropdown de categorías */
+  /* Dropdown de categorías - VERSIÓN COLORIDA */
   .dropdown-container {
     padding: 0 16px;
     margin-bottom: 20px;
     position: relative;
     
-    .dropdown-item {
-      --background: white;
-      --border-radius: 16px;
-      --padding-start: 16px;
-      --padding-end: 16px;
-      --inner-padding-end: 0;
-      --min-height: 52px;
-      margin: 0;
+    .dropdown-header {
+      background: $blanco;
       border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 206, 153, 0.4);
       
-      .dropdown-label {
+      &:hover {
+        background: #fafafa;
+        border-color: $peach-orange;
+      }
+      
+      .dropdown-selected {
         display: flex;
         align-items: center;
         gap: 12px;
-        font-weight: 600;
-        font-size: 1rem;
-        color: $rosa-oscuro;
         
-        .dropdown-icon {
+        .selected-icon {
           font-size: 1.3rem;
-          color: $naranja;
+          color: $jaipur-pink;
+        }
+        
+        .selected-text {
+          font-weight: 600;
+          font-size: 1rem;
+          color: $texto-oscuro;
         }
       }
       
       .dropdown-arrow {
         font-size: 1.2rem;
-        color: $rosa-claro;
+        color: $jaipur-pink;
         transition: transform 0.3s ease;
       }
     }
@@ -100,16 +139,17 @@ ion-content {
       top: 60px;
       left: 16px;
       right: 16px;
-      background: white;
+      background: $blanco;
       border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       z-index: 100;
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.3s ease;
+      border: 1px solid rgba(255, 206, 153, 0.3);
       
       &.dropdown-open {
-        max-height: 320px;
+        max-height: 400px;
       }
       
       .dropdown-option {
@@ -118,75 +158,107 @@ ion-content {
         gap: 12px;
         padding: 14px 16px;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: all 0.2s ease;
+        border-left: 4px solid transparent;
         
-        &:hover {
-          background: rgba($rosa-claro, 0.1);
+        // Opción "Todos" - Jaipur Pink
+        &:nth-child(1) {
+          &:hover {
+            background: rgba(212, 64, 132, 0.08);
+            border-left-color: $jaipur-pink;
+          }
+          &:active {
+            background: rgba(212, 64, 132, 0.15);
+          }
+          ion-icon {
+            color: $jaipur-pink;
+          }
         }
         
-        &:active {
-          background: rgba($rosa-claro, 0.2);
+        // Opción "Artesanías" - Peach Orange
+        &:nth-child(2) {
+          &:hover {
+            background: rgba(255, 206, 153, 0.2);
+            border-left-color: $peach-orange;
+          }
+          &:active {
+            background: rgba(255, 206, 153, 0.3);
+          }
+          ion-icon {
+            color: $peach-orange;
+          }
         }
         
-        ion-icon {
-          font-size: 1.2rem;
-          color: $naranja;
+        // Opción "Atractivos" - Ornery Tangerine
+        &:nth-child(3) {
+          &:hover {
+            background: rgba(245, 132, 33, 0.1);
+            border-left-color: $ornery-tangerine;
+          }
+          &:active {
+            background: rgba(245, 132, 33, 0.2);
+          }
+          ion-icon {
+            color: $ornery-tangerine;
+          }
+        }
+        
+        // Opción "Gastronomía" - Cherry Blossom
+        &:nth-child(4) {
+          &:hover {
+            background: rgba(255, 181, 199, 0.25);
+            border-left-color: $cherry-blossom;
+          }
+          &:active {
+            background: rgba(255, 181, 199, 0.35);
+          }
+          ion-icon {
+            color: #E8A0B5;
+          }
+        }
+        
+        // Opción "Hospedaje" - Army Green
+        &:nth-child(5) {
+          &:hover {
+            background: rgba(59, 82, 38, 0.08);
+            border-left-color: $army-green;
+          }
+          &:active {
+            background: rgba(59, 82, 38, 0.12);
+          }
+          ion-icon {
+            color: $army-green;
+          }
+        }
+        
+        // Opción "Transporte" - Degradado Jaipur Pink + Tangerine
+        &:nth-child(6) {
+          &:hover {
+            background: linear-gradient(135deg, rgba(212, 64, 132, 0.08), rgba(245, 132, 33, 0.08));
+            border-left-color: $ornery-tangerine;
+          }
+          &:active {
+            background: linear-gradient(135deg, rgba(212, 64, 132, 0.12), rgba(245, 132, 33, 0.12));
+          }
+          ion-icon {
+            background: $degradado-principal;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
         }
         
         span {
           font-size: 0.95rem;
-          color: #333;
+          color: $texto-oscuro;
           font-weight: 500;
         }
       }
     }
   }
-
-  .dropdown-header {
-  background: white;
-  border-radius: 16px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: #fafafa;
-  }
-  
-  .dropdown-selected {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    
-    .selected-icon {
-      font-size: 1.3rem;
-      color: $naranja;
-    }
-    
-    .selected-text {
-      font-weight: 600;
-      font-size: 1rem;
-      color: $rosa-oscuro;
-    }
-  }
-  
-  .dropdown-arrow {
-    font-size: 1.2rem;
-    color: $rosa-claro;
-    transition: transform 0.3s ease;
-  }
-}
   
   .negocios-section {
     padding: 0 16px 20px;
-    
-    &.hidden {
-      display: none;
-    }
     
     .section-header {
       display: flex;
@@ -198,7 +270,7 @@ ion-content {
         margin: 0;
         font-size: 1.3rem;
         font-weight: 600;
-        color: $rosa-oscuro;
+        color: $jaipur-pink;
         font-family: 'Poppins', sans-serif;
       }
     }
@@ -211,21 +283,23 @@ ion-content {
       
       .negocio-card {
         margin: 0;
-        border-radius: 16px;
+        border-radius: 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
+        border: 1px solid rgba(255, 206, 153, 0.3);
         
         &:hover {
           transform: translateY(-4px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+          border-color: $peach-orange;
         }
         
         .card-image-container {
           position: relative;
           height: 180px;
           overflow: hidden;
-          border-radius: 16px 16px 0 0;
+          border-radius: 20px 20px 0 0;
           
           .card-image {
             width: 100%;
@@ -237,7 +311,7 @@ ion-content {
             position: absolute;
             top: 12px;
             right: 12px;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.7);
             padding: 4px 10px;
             border-radius: 20px;
             display: flex;
@@ -245,7 +319,7 @@ ion-content {
             gap: 4px;
             
             .star-icon {
-              color: $naranja;
+              color: $ornery-tangerine;
               font-size: 0.9rem;
             }
             
@@ -262,8 +336,8 @@ ion-content {
           
           .negocio-nombre {
             font-size: 1.1rem;
-            font-weight: 600;
-            color: $rosa-oscuro;
+            font-weight: 700;
+            color: $texto-oscuro;
             margin-bottom: 4px;
           }
           
@@ -272,10 +346,11 @@ ion-content {
             align-items: center;
             gap: 4px;
             font-size: 0.8rem;
+            color: $army-green;
             
             .categoria-icon {
               font-size: 0.9rem;
-              color: $verde-olivo;
+              color: $army-green;
             }
           }
         }
@@ -291,30 +366,13 @@ ion-content {
               align-items: center;
               gap: 8px;
               font-size: 0.8rem;
-              color: #666;
+              color: $texto-suave;
               margin-bottom: 6px;
               
               ion-icon {
                 font-size: 1rem;
-                color: $naranja;
+                color: $peach-orange;
               }
-            }
-          }
-          
-          .precio-container {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-            
-            .precio-label {
-              font-size: 0.75rem;
-              color: #999;
-            }
-            
-            .precio-valor {
-              font-size: 1.2rem;
-              font-weight: 700;
-              color: $rosa-oscuro;
             }
           }
         }
@@ -322,84 +380,32 @@ ion-content {
     }
   }
   
-  /* Espaciador para el FAB */
   .footer-spacer {
     height: 80px;
     width: 100%;
   }
 }
 
-/* Estilos del botón flotante */
+// ============================================
+// BOTÓN FLOTANTE (FAB)
+// ============================================
 .scroll-fab {
-  --background: #{$naranja};
-  --background-activated: #{$rosa-claro};
-  --box-shadow: 0 4px 12px rgba(242, 174, 46, 0.4);
+  --background: #{$ornery-tangerine};
+  --background-activated: #{$jaipur-pink};
+  --box-shadow: 0 4px 12px rgba(245, 132, 33, 0.4);
   margin-bottom: 20px;
   
   ion-icon {
     font-size: 1.5rem;
   }
-
-  // Estilos para el toolbar (ajusta los colores a tu gusto moderno)
-ion-toolbar {
-  --background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  --color: white;
 }
 
-// Contenedor del avatar
-.perfil-avatar {
-  width: 40px;
-  height: 40px;
-  margin-right: 15px;
-  border: 2px solid white; // Borde blanco visible
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  overflow: hidden;
-
-  // Estilo para el nuevo icono de Ionic
-  .icono-perfil-default {
-    font-size: 44px; // Un poco más grande para que llene bien el círculo
-    color: white;    // Color de relleno blanco según tu referencia
-  }
-
-  // Estilos del Toolbar
-ion-toolbar {
-  --background: linear-gradient(135deg, #a11d4d 0%, #d82d6a 100%); // Ajustado al tono de tu imagen
-  --color: white;
-}
-
-// Contenedor del avatar (el círculo con borde)
-.perfil-avatar {
-  width: px;      // Tamaño del círculo
-  height: 45px;
-  margin-right: 12px;
-  border: 2px solid white; 
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible; // Permite que el icono rellene hasta el borde
-  cursor: pointer;
-
-  ion-icon {
-    // EL TRUCO: El font-size debe ser igual o ligeramente mayor al width del avatar
-    font-size: 48px; 
-    color: white;
-    // Eliminamos márgenes internos del icono si los tuviera
-    margin: 0;
-    padding: 0;
-  }
-}
-}
-
-
-}
-
-/* Ajuste para dispositivos con notch */
+// Ajuste para dispositivos con notch
 ion-fab {
   margin-bottom: env(safe-area-inset-bottom, 0);
+}
+
+// Spinner
+ion-spinner {
+  --color: #{$jaipur-pink};
 }

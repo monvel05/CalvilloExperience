@@ -1,18 +1,36 @@
-// Paleta de colores base
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
-$border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+// ============================================
+// CALVILLO EXPERIENCE - ADMINISTRADOR PAGE
+// PALETA: Peach Orange / Jaipur Pink / Army Green / Ornery Tangerine / Cherry Blossom
+// ============================================
 
-// Fondo principal
+// NUEVA PALETA DE COLORES
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom: #FFB5C7;
+
+// FONDOS
+$fondo-hueso: #FFF9F0;
+$blanco: #FFFFFF;
+$texto-oscuro: #2C3E50;
+$texto-suave: #6C7A89;
+
+// DEGRADADOS
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom);
+$degradado-verde: linear-gradient(135deg, $army-green, lighten($army-green, 20%));
+
+// SOMBRAS
+$sombra: 0 8px 24px rgba(59, 82, 38, 0.12);
+$sombra-hover: 0 12px 28px rgba(59, 82, 38, 0.2);
+$border-color: #E8EDF2;
+
+/* ==========================================
+   FONDO PRINCIPAL
+   ========================================== */
 ion-content {
-  --background: #{$cream};
+  --background: #{$fondo-hueso};
 }
 
 .dashboard-container {
@@ -25,44 +43,81 @@ ion-content {
 }
 
 /* ==========================================
-   SIDEBAR (Menú lateral flotante)
+   SIDEBAR (Menú lateral)
    ========================================== */
 .sidebar {
-  width: 260px;
-  background: $white;
-  border-radius: 24px;
-  box-shadow: $shadow;
+  width: 280px;
+  background: $blanco;
+  border-radius: 28px;
+  box-shadow: $sombra;
   display: flex;
   flex-direction: column;
-  padding: 32px 20px;
-  flex-shrink: 0; // Para evitar que se reduzca en pantallas medianas
+  padding: 28px 20px;
+  flex-shrink: 0;
+  border: 1px solid rgba($peach-orange, 0.3);
   
   .logo {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: $pink-primary;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     margin-bottom: 32px;
-    letter-spacing: -0.5px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba($peach-orange, 0.3);
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: $degradado-principal;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      ion-icon {
+        font-size: 1.4rem;
+        color: $blanco;
+      }
+    }
+    
+    .logo-text {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: $army-green;
+      letter-spacing: -0.5px;
+    }
   }
   
   .perfil {
     text-align: center;
     margin-bottom: 32px;
     padding-bottom: 24px;
-    border-bottom: 1.5px solid $border-color;
+    border-bottom: 1.5px solid rgba($peach-orange, 0.3);
+    
+    .avatar-mini {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 12px;
+      
+      ion-icon {
+        font-size: 3rem;
+        color: $jaipur-pink;
+      }
+    }
     
     h3 {
       margin: 0 0 4px 0;
-      color: $dark-text;
+      color: $texto-oscuro;
       font-weight: 700;
       font-size: 1.1rem;
     }
+    
     span {
-      color: $gray-text;
-      font-size: 0.85rem;
+      color: $texto-suave;
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      font-weight: 600;
     }
   }
   
@@ -75,12 +130,12 @@ ion-content {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
+      padding: 12px 16px;
+      margin-bottom: 6px;
       border-radius: 14px;
-      color: $gray-text;
+      color: $texto-suave;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.2s ease;
       
@@ -89,14 +144,14 @@ ion-content {
       }
       
       &:hover {
-        background: rgba(191, 42, 82, 0.05);
-        color: $pink-secondary;
+        background: rgba($peach-orange, 0.2);
+        color: $jaipur-pink;
       }
       
       &.active {
-        background: $pink-primary;
-        color: $white;
-        box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+        background: $degradado-principal;
+        color: $blanco;
+        box-shadow: 0 4px 12px rgba($jaipur-pink, 0.35);
       }
     }
   }
@@ -109,27 +164,31 @@ ion-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden; // Oculta el overflow general, le delegamos el scroll a cada sección
+  overflow: hidden;
   
   .header {
     margin-bottom: 24px;
     padding-top: 10px;
-    flex-shrink: 0; // Vital: Evita que el header se aplaste cuando el contenido scrollea
+    flex-shrink: 0;
     
     h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: $dark-text;
+      font-size: 2rem;
+      font-weight: 800;
       margin: 0 0 8px 0;
       letter-spacing: -0.5px;
+      background: $degradado-principal;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     
     p {
-      color: $gray-text;
+      color: $army-green;
       margin: 0;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 2px;
+      font-weight: 600;
     }
   }
 }
@@ -139,42 +198,42 @@ ion-content {
    ========================================== */
 .vista-seccion {
   flex: 1;
-  overflow-y: auto; // Activa el scroll vertical
-  min-height: 0; // Obligatorio para que Flexbox no se desborde
-  padding-right: 12px; // Separación para que el scrollbar no tape contenido
-  padding-bottom: 24px; // Espacio libre al final
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 12px;
+  padding-bottom: 24px;
 }
 
 /* ==========================================
-   COMPONENTES INTERNOS
+   SEGMENTOS (Filtros de tiempo)
    ========================================== */
-
-// Segmentos (Filtros de tiempo)
 .custom-segment {
-  background: $white;
+  background: $blanco;
   border-radius: 16px;
   padding: 6px;
   margin-bottom: 28px;
-  box-shadow: $shadow;
+  box-shadow: $sombra;
   max-width: 500px;
   flex-shrink: 0;
   
   ion-segment-button {
-    --color: $gray-text;
-    --color-checked: $white;
+    --color: $texto-suave;
+    --color-checked: $blanco;
     --indicator-color: transparent;
     font-weight: 600;
     font-size: 0.85rem;
     min-height: 40px;
     
     &::part(indicator-background) {
-      background: $pink-primary;
+      background: $degradado-principal;
       border-radius: 12px;
     }
   }
 }
 
-// Tarjetas de Estadísticas (Cards)
+/* ==========================================
+   TARJETAS DE ESTADÍSTICAS
+   ========================================== */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -182,14 +241,17 @@ ion-content {
   margin-bottom: 32px;
   
   .card {
-    background: $white;
+    background: $blanco;
     border-radius: 24px;
     padding: 24px;
-    box-shadow: $shadow;
-    transition: transform 0.2s;
+    box-shadow: $sombra;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba($peach-orange, 0.3);
     
     &:hover {
       transform: translateY(-4px);
+      box-shadow: $sombra-hover;
+      border-color: $peach-orange;
     }
     
     .card-header {
@@ -200,8 +262,8 @@ ion-content {
       
       p {
         margin: 0;
-        color: $gray-text;
-        font-size: 0.8rem;
+        color: $texto-suave;
+        font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -209,12 +271,12 @@ ion-content {
       
       ion-icon {
         font-size: 1.4rem;
-        padding: 12px;
+        padding: 10px;
         border-radius: 14px;
         
-        &.icon-usuarios { color: $pink-primary; background: rgba(191, 42, 82, 0.1); }
-        &.icon-turistas { color: $mustard; background: rgba(242, 174, 46, 0.1); }
-        &.icon-negocios { color: $olive; background: rgba(191, 183, 75, 0.1); }
+        &.icon-usuarios { color: $jaipur-pink; background: rgba($jaipur-pink, 0.1); }
+        &.icon-turistas { color: $ornery-tangerine; background: rgba($ornery-tangerine, 0.1); }
+        &.icon-negocios { color: $army-green; background: rgba($army-green, 0.1); }
         &.icon-ganancias { color: #2ecc71; background: rgba(46, 204, 113, 0.1); }
       }
     }
@@ -223,13 +285,15 @@ ion-content {
       margin: 0;
       font-size: 2.2rem;
       font-weight: 800;
-      color: $dark-text;
+      color: $texto-oscuro;
       letter-spacing: -1px;
     }
   }
 }
 
-// Gráficas
+/* ==========================================
+   GRÁFICAS
+   ========================================== */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -237,22 +301,23 @@ ion-content {
   margin-bottom: 24px;
   
   .chart-card {
-    background: $white;
+    background: $blanco;
     border-radius: 24px;
-    padding: 28px;
-    box-shadow: $shadow;
+    padding: 24px;
+    box-shadow: $sombra;
+    border: 1px solid rgba($peach-orange, 0.3);
     
     &.large {
       grid-column: 1 / -1;
     }
     
     h3 {
-      margin: 0 0 24px 0;
-      color: $pink-primary;
-      font-size: 1.2rem;
+      margin: 0 0 20px 0;
+      color: $army-green;
+      font-size: 1.1rem;
       font-weight: 700;
-      padding-bottom: 12px;
-      border-bottom: 2px solid $mustard;
+      padding-bottom: 10px;
+      border-bottom: 2px solid $peach-orange;
       display: inline-block;
     }
     
@@ -264,7 +329,9 @@ ion-content {
   }
 }
 
-// Directorio de Negocios
+/* ==========================================
+   DIRECTORIO DE NEGOCIOS
+   ========================================== */
 .negocios-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -272,19 +339,20 @@ ion-content {
   padding-bottom: 20px;
   
   .negocio-card {
-    background: $white;
+    background: $blanco;
     border-radius: 20px;
     padding: 20px;
-    box-shadow: $shadow;
+    box-shadow: $sombra;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid transparent;
+    border: 1px solid rgba($peach-orange, 0.3);
     transition: all 0.2s;
     
     &:hover {
       transform: translateY(-4px);
-      border-color: $pink-secondary;
+      box-shadow: $sombra-hover;
+      border-color: $peach-orange;
     }
     
     .negocio-info {
@@ -294,23 +362,23 @@ ion-content {
       
       ion-icon {
         font-size: 1.5rem;
-        color: $olive;
-        background: rgba(191, 183, 75, 0.1);
+        color: $peach-orange;
+        background: rgba($peach-orange, 0.2);
         padding: 12px;
         border-radius: 14px;
       }
       
       h4 {
         margin: 0 0 4px 0;
-        color: $dark-text;
+        color: $texto-oscuro;
         font-weight: 700;
-        font-size: 1.05rem;
+        font-size: 1rem;
       }
       
       p {
         margin: 0;
-        color: $gray-text;
-        font-size: 0.85rem;
+        color: $texto-suave;
+        font-size: 0.8rem;
         font-weight: 500;
       }
     }
@@ -318,64 +386,71 @@ ion-content {
     .badge {
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       
-      &.basica { background: rgba(191, 183, 75, 0.1); color: $olive; }
-      &.premium { background: rgba(242, 174, 46, 0.1); color: $mustard; }
-      &.sin-membresia { background: rgba(108, 122, 137, 0.1); color: $gray-text; }
+      &.basica { background: rgba($peach-orange, 0.2); color: $ornery-tangerine; }
+      &.premium { background: rgba($jaipur-pink, 0.1); color: $jaipur-pink; }
+      &.sin-membresia { background: rgba($texto-suave, 0.1); color: $texto-suave; }
     }
   }
 }
 
-// Botones de Exportación
+/* ==========================================
+   BOTONES DE EXPORTACIÓN
+   ========================================== */
 .export-buttons {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
   
   .btn-export {
     --border-radius: 14px;
-    --padding-top: 16px;
-    --padding-bottom: 16px;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
     --padding-start: 24px;
     --padding-end: 24px;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     letter-spacing: 0.5px;
     text-transform: uppercase;
     
     &.pdf {
-      --background: #{$pink-primary};
-      --color: #{$white};
-      --box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+      --background: #{$degradado-principal};
+      --color: #{$blanco};
+      --box-shadow: 0 4px 12px rgba($jaipur-pink, 0.35);
     }
     
     &.excel {
-      --background: #{$mustard};
-      --color: #{$dark-text};
-      --box-shadow: 0 4px 12px rgba(242, 174, 46, 0.3);
+      --background: #{$army-green};
+      --color: #{$blanco};
+      --box-shadow: 0 4px 12px rgba($army-green, 0.35);
     }
   }
 }
 
-// Utilidades
+/* ==========================================
+   UTILIDADES
+   ========================================== */
 .vista-oculta {
   display: none !important;
 }
 
-// Scrollbar personalizado para las vistas con overflow
+/* ==========================================
+   SCROLLBAR PERSONALIZADO
+   ========================================== */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(108, 122, 137, 0.3);
+  background: rgba($peach-orange, 0.6);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(108, 122, 137, 0.5);
+  background: $peach-orange;
 }

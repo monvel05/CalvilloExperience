@@ -1,156 +1,218 @@
-//Muro social: // Paleta de colores base
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
+// ============================================
+// CALVILLO EXPERIENCE - MURO SOCIAL PAGE
+// PALETA: Peach Orange / Jaipur Pink / Army Green / Ornery Tangerine / Cherry Blossom
+// ============================================
+
+// NUEVA PALETA DE COLORES
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom: #FFB5C7;
+
+// FONDOS
+$fondo-hueso: #FFF9F0;
+$blanco: #FFFFFF;
+$texto-oscuro: #2C3E50;
+$texto-suave: #6C7A89;
+
+// DEGRADADOS
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom);
+$degradado-avatar: linear-gradient(135deg, $jaipur-pink, $peach-orange);
+
+// SOMBRAS
+$sombra: 0 8px 24px rgba(59, 82, 38, 0.12);
+$sombra-hover: 0 12px 28px rgba(59, 82, 38, 0.2);
 $border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
 /* ==========================================
-   HEADER Y FONDO
+   HEADER CON DEGRADADO
    ========================================== */
-ion-header {
+.custom-header {
   ion-toolbar {
-    --background: #{$cream};
+    --background: #{$degradado-principal};
     --border-width: 0;
-    
-    ion-title {
-      font-weight: 800;
-      color: $pink-primary;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
-    }
-    
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 70px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
     ion-back-button {
-      --color: $pink-primary;
+      --color: white;
+      
+      &:hover, &:active {
+        --color: #{$peach-orange};
+      }
     }
   }
 }
 
+/* ==========================================
+   CONTENIDO PRINCIPAL
+   ========================================== */
 ion-content {
-  --background: #{$cream};
+  --background: #{$fondo-hueso};
 }
 
 .dashboard-container {
-  padding: 16px 16px 40px;
-  max-width: 680px; // Un poco más angosto para que el feed parezca una red social real
+  padding: 20px 16px 40px;
+  max-width: 680px;
   margin: 0 auto;
 }
 
+/* ==========================================
+   HEADER DEL MURO
+   ========================================== */
 .header-muro {
   text-align: center;
-  margin-bottom: 24px !important;
+  margin-bottom: 24px;
   
   p {
-    color: $gray-text !important;
-    font-size: 0.9rem !important;
+    color: $army-green;
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
+    margin: 0;
   }
 }
 
 /* ==========================================
-   TARJETAS BASE (Cards)
+   TARJETAS BASE
    ========================================== */
 .card {
-  background: $white !important;
-  border-radius: 24px !important;
-  box-shadow: $shadow !important;
-  padding: 24px !important;
-  margin-bottom: 24px !important;
-  border: none !important;
+  background: $blanco;
+  border-radius: 24px;
+  box-shadow: $sombra;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid rgba($peach-orange, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    box-shadow: $sombra-hover;
+    border-color: $peach-orange;
+  }
 }
 
 /* ==========================================
-   ZONA DE PUBLICAR
+   TARJETA PARA PUBLICAR
    ========================================== */
 .card-publicar {
   .perfil-publicar {
     h3 {
       margin: 0 0 16px 0;
-      color: $pink-primary;
+      color: $army-green;
       font-weight: 800;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       letter-spacing: -0.5px;
     }
   }
 
-  // Caja de texto
   .input-text {
     width: 100%;
-    background: #F8FAFE;
-    border: 1.5px solid $border-color;
+    background: #FEFCF8;
+    border: 1.5px solid rgba($peach-orange, 0.5);
     border-radius: 16px;
     padding: 16px;
     font-family: inherit;
     font-size: 0.95rem;
-    color: $dark-text;
-    resize: none;
+    color: $texto-oscuro;
+    resize: vertical;
     min-height: 100px;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 
     &:focus {
       outline: none;
-      border-color: $pink-secondary;
-      background: $white;
-      box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
+      border-color: $jaipur-pink;
+      background: $blanco;
+      box-shadow: 0 0 0 4px rgba($jaipur-pink, 0.1);
     }
 
     &::placeholder {
-      color: $gray-text;
+      color: $texto-suave;
       font-weight: 500;
     }
   }
 
-  // Fila de botones inferiores
   .input-row {
-    border-top: 1.5px solid $border-color !important;
-    padding-top: 16px !important;
-    margin-top: 16px !important;
+    border-top: 1.5px solid rgba($peach-orange, 0.4);
+    padding-top: 16px;
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .file-selection-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
     .btn-upload {
-      color: $olive !important;
-      background: rgba(191, 183, 75, 0.1) !important;
-      padding: 10px 16px;
-      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $ornery-tangerine;
+      background: rgba($peach-orange, 0.2);
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
       transition: all 0.2s ease;
       
       ion-icon {
         font-size: 1.2rem;
       }
 
+      &:hover {
+        background: rgba($peach-orange, 0.3);
+      }
+
       &:active {
-        transform: scale(0.95);
-        background: rgba(191, 183, 75, 0.2) !important;
+        transform: scale(0.96);
       }
     }
 
     .file-name-badge {
-      background: rgba(191, 42, 82, 0.1) !important;
-      color: $pink-primary !important;
-      border: none !important;
-      font-size: 0.8rem !important;
-      padding: 8px 12px !important;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba($army-green, 0.1);
+      color: $army-green;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      font-weight: 500;
+      
+      ion-icon {
+        font-size: 1rem;
+        color: $army-green;
+      }
     }
 
     .btn-publicar {
-      --background: #{$pink-primary} !important;
-      --color: #{$white};
-      --border-radius: 14px;
+      --background: #{$degradado-principal};
+      --color: #{$blanco};
+      --border-radius: 40px;
       --padding-start: 24px;
       --padding-end: 24px;
+      --padding-top: 12px;
+      --padding-bottom: 12px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       letter-spacing: 0.5px;
-      --box-shadow: 0 4px 12px rgba(191, 42, 82, 0.3);
+      --box-shadow: 0 4px 12px rgba($jaipur-pink, 0.35);
+      text-transform: uppercase;
 
       &::part(native):active {
-        transform: scale(0.98);
+        transform: scale(0.97);
       }
     }
   }
@@ -160,89 +222,124 @@ ion-content {
    PUBLICACIONES DEL FEED
    ========================================== */
 .publicacion {
-  padding: 20px !important;
-  
   .header-muro {
-    margin-bottom: 16px !important;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 16px;
     text-align: left;
     
-    // Avatar cuadrado con bordes curvos (Squircle)
     .avatar-sm {
-      background: linear-gradient(135deg, $mustard, $olive) !important;
-      border-radius: 14px !important; 
+      width: 48px;
+      height: 48px;
+      background: $degradado-avatar;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      ion-icon {
+        font-size: 1.6rem;
+        color: $blanco;
+      }
     }
 
     .info {
-      span:first-child {
-        color: $dark-text !important;
-        font-size: 1.05rem;
+      display: flex;
+      flex-direction: column;
+      
+      .nombre-usuario {
+        color: $texto-oscuro;
+        font-size: 1rem;
+        font-weight: 800;
         letter-spacing: -0.3px;
       }
-      span:last-child {
-        color: $gray-text !important;
+      
+      .fecha {
+        color: $texto-suave;
         font-weight: 600;
-        font-size: 0.8rem !important;
+        font-size: 0.7rem;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
     }
   }
 
-  // Contenedor de la imagen de la publicación
   .contenedor-foto {
-    margin: 16px 0 !important;
+    width: 100%;
+    max-height: 350px;
+    overflow: hidden;
+    border-radius: 16px;
+    margin: 12px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba($peach-orange, 0.1);
     
     img {
-      border-radius: 16px !important;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+      width: 100%;
+      height: 100%;
+      max-height: 350px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.02);
+      }
     }
   }
 
-  // Texto de la publicación
   .contenido-texto {
-    color: $dark-text !important;
+    color: $texto-oscuro;
+    margin-top: 12px;
+    
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
     
     strong {
-      color: $pink-primary;
+      color: $jaipur-pink;
       font-weight: 800;
       margin-right: 6px;
     }
   }
 
-  // Botones de Me Gusta y Eliminar
   .acciones {
-    border-top: 1.5px solid $border-color !important;
-    margin-top: 20px !important;
-    padding-top: 12px !important;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    border-top: 1.5px solid rgba($peach-orange, 0.3);
+    margin-top: 16px;
+    padding-top: 14px;
 
     ion-button {
       font-weight: 700;
-      font-size: 0.95rem;
-      --border-radius: 12px;
+      font-size: 0.85rem;
+      --border-radius: 30px;
+      margin: 0;
 
-      // Botón Like
       &:first-child {
-        --color: #{$pink-primary} !important;
+        --color: #{$jaipur-pink};
         
         ion-icon {
           font-size: 1.2rem;
         }
 
         &::part(native):active {
-          background: rgba(191, 42, 82, 0.1);
+          --color: #{$ornery-tangerine};
         }
       }
 
-      // Botón Eliminar
       &:last-child {
-        --color: #{$gray-text} !important;
+        --color: #{$texto-suave};
 
         ion-icon {
           font-size: 1.2rem;
         }
 
         &::part(native):active {
-          --color: #e74c3c !important;
-          background: rgba(231, 76, 60, 0.1);
+          --color: #e74c3c;
         }
       }
     }
@@ -253,58 +350,41 @@ ion-content {
    ESTADO VACÍO (Sin publicaciones)
    ========================================== */
 .loading-state {
-  background: $white;
+  background: $blanco;
   border-radius: 24px;
-  box-shadow: $shadow;
-  padding: 48px 24px !important;
+  box-shadow: $sombra;
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px solid rgba($peach-orange, 0.3);
 
   ion-icon {
-    color: $pink-secondary !important;
-    opacity: 0.3 !important;
+    font-size: 56px;
+    color: $peach-orange;
+    opacity: 0.6;
+    margin-bottom: 16px;
   }
 
   p {
-    color: $gray-text !important;
+    color: $texto-suave;
     font-weight: 600;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    margin: 0;
   }
 }
 
 /* ==========================================
-   ESTILOS PARA LAS FOTOS DEL MURO
+   SCROLLBAR PERSONALIZADO
    ========================================== */
-.contenedor-foto {
-  width: 100%;
-  /* Le ponemos una altura máxima para que las fotos muy altas no ocupen toda la pantalla */
-  max-height: 350px; 
-  overflow: hidden;
-  border-radius: 8px; /* Un bordecito redondeado para que se vea elegante */
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0; /* Un color de fondo por si la imagen tarda en cargar */
+::-webkit-scrollbar {
+  width: 6px;
 }
-
-.contenedor-foto img {
-  width: 100%;
-  height: 100%;
-  max-height: 350px;
-  /* La magia está aquí: cover hace que la foto llene el espacio sin deformarse */
-  object-fit: cover; 
+::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-.input-text {
-  width: 100%; /* Toma todo el ancho disponible */
-  box-sizing: border-box; /* ¡Esta es la magia! Evita que el padding lo desborde */
-  resize: vertical; /* Opcional: permite que el usuario solo pueda estirarlo hacia abajo, no hacia los lados */
-  
-  /* Mantén los otros estilos que ya tenías para que siga viéndose bonito */
-  min-height: 80px;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc; /* o el color que estés usando */
-  margin-top: 10px;
-  margin-bottom: 15px;
+::-webkit-scrollbar-thumb {
+  background: rgba($peach-orange, 0.6);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: $peach-orange;
 }

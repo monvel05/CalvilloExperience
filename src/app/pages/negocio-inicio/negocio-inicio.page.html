@@ -1,19 +1,34 @@
 <ion-header class="custom-header ion-no-border">
   <ion-toolbar>
+    <!-- Logo o ícono a la izquierda -->
+    <ion-buttons slot="start">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <ion-icon name="leaf-outline"></ion-icon>
+        </div>
+        <span class="logo-text">Calvillo Experience</span>
+      </div>
+    </ion-buttons>
+
+    <!-- Título central -->
     <ion-title>Mis Negocios</ion-title>
+
+    <!-- Botones a la derecha -->
     <ion-buttons slot="end">
-      <ion-button (click)="irAPerfil()">
+      <ion-button (click)="irAPerfil()" class="profile-btn">
         <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+        
       </ion-button>
-      <ion-button (click)="logout()" color="danger">
+      <ion-button (click)="logout()" class="logout-btn">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+        
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="main-content-dark ion-padding">
-  <div class="header-bienvenida" style="margin-bottom: 24px;">
+  <div class="header-bienvenida">
     <h2 class="form-main-title">Gestiona tus Experiencias</h2>
     <p class="form-main-subtitle">Administra la información que ven los turistas de Calvillo.</p>
   </div>
@@ -23,12 +38,12 @@
     @for (negocio of misNegocios; track negocio.id) {
       <div class="compact-card">
         <div class="image-column">
-          <div class="cover-image-container" style="height: 200px; margin-bottom: 0; border-radius: 24px 24px 0 0;">
+          <div class="cover-image-container">
             @if (negocio.imagen) {
-              <img [src]="negocio.imagen" [alt]="negocio.nombre" style="width: 100%; height: 100%; object-fit: cover;">
+              <img [src]="negocio.imagen" [alt]="negocio.nombre">
             } @else {
-              <div style="height: 100%; display: flex; align-items: center; justify-content: center; background: #E8EDF2;">
-                <ion-icon name="storefront-outline" style="font-size: 3rem; color: #6C7A89;"></ion-icon>
+              <div class="no-image">
+                <ion-icon name="storefront-outline"></ion-icon>
               </div>
             }
           </div>
@@ -36,17 +51,17 @@
 
         <ion-card-header>
           <p class="electric-subtitle">{{ negocio.categoria }}</p>
-          <h3 style="margin: 8px 0 0; font-size: 1.2rem; font-weight: 800; color: #2C3E50;">{{ negocio.nombre }}</h3>
+          <h3>{{ negocio.nombre }}</h3>
         </ion-card-header>
 
         <ion-card-content>
-          <p style="color: #6C7A89; margin-bottom: 16px; font-weight: 500;">{{ negocio.descripcion }}</p>
+          <p>{{ negocio.descripcion }}</p>
           
-          <div style="display: flex; gap: 10px; border-top: 1.5px solid #E8EDF2; padding-top: 16px;">
-            <ion-button fill="clear" style="--color: #BF2A52; margin: 0; flex: 1;" (click)="editarNegocio(negocio)">
+          <div class="card-actions">
+            <ion-button fill="clear" (click)="editarNegocio(negocio)">
               <ion-icon slot="start" name="pencil-outline"></ion-icon> Editar
             </ion-button>
-            <ion-button fill="clear" style="--color: #6C7A89; margin: 0; flex: 1;" (click)="borrarNegocio(negocio)">
+            <ion-button fill="clear" (click)="borrarNegocio(negocio)">
               <ion-icon slot="start" name="trash-outline"></ion-icon> Borrar
             </ion-button>
           </div>
@@ -54,10 +69,10 @@
       </div>
     }
 
-    <div class="compact-card" (click)="irAFormularioNuevo()" style="display: flex; align-items: center; justify-content: center; min-height: 150px; cursor: pointer; border: 2.5px dashed #D96C80; background: transparent; box-shadow: none;">
-      <div style="text-align: center; color: #BF2A52;">
-        <ion-icon name="add-circle-outline" style="font-size: 2.5rem;"></ion-icon>
-        <p style="margin: 8px 0 0; font-weight: 700;">Registrar nuevo negocio</p>
+    <div class="compact-card add-card" (click)="irAFormularioNuevo()">
+      <div class="add-content">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <p>Registrar nuevo negocio</p>
       </div>
     </div>
 

@@ -1,33 +1,162 @@
-//Negocio inicio: // Paleta de colores base de Calvillo Experience
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
+// ============================================
+// CALVILLO EXPERIENCE - NEGOCIO INICIO PAGE
+// NUEVA PALETA: Peach Orange / Jaipur Pink / Army Green / Ornery Tangerine / Cherry Blossom
+// ============================================
+
+// NUEVA PALETA DE COLORES
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom: #FFB5C7;
+
+// FONDOS
+$fondo-hueso: #FFF9F0;  // Hueso más limpio
+$blanco: #FFFFFF;
+$texto-oscuro: #2C3E50;
+$texto-suave: #6C7A89;
+
+// DEGRADADOS
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom);
+$degradado-acento: linear-gradient(135deg, $ornery-tangerine, $peach-orange);
+
+// SOMBRAS
+$sombra: 0 8px 24px rgba(59, 82, 38, 0.12);
+$sombra-hover: 0 12px 28px rgba(59, 82, 38, 0.2);
 $border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
 /* ==========================================
-   HEADER
+   HEADER CON DEGRADADO - ESTILO CALVILLO EXPERIENCE
    ========================================== */
 .custom-header {
   ion-toolbar {
-    --background: #{$cream};
+    --background: #{$degradado-principal};
     --border-width: 0;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 70px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+}
+
+/* Logo y branding para fondo degradado */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
-    ion-title {
-      font-weight: 800;
-      color: $pink-primary;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
+    ion-icon {
+      font-size: 1.3rem;
+      color: white;
+    }
+  }
+  
+  .logo-text {
+    font-weight: 800;
+    font-size: 1rem;
+    color: white;
+    letter-spacing: -0.3px;
+    
+    @media (min-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* Título central para fondo degradado */
+ion-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: white;
+  text-align: center;
+  background: none;
+  -webkit-text-fill-color: white;
+  
+  @media (min-width: 768px) {
+    font-size: 1.3rem;
+  }
+}
+
+/* Botones del header para fondo degradado */
+ion-buttons[slot="end"] {
+  gap: 8px;
+  
+  ion-button {
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    --border-radius: 30px;
+    margin: 0;
+    height: 44px;
+    --color: white;
+    
+    &::part(native) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
     }
     
-    ion-back-button {
-      --color: $pink-primary;
+    ion-icon {
+      font-size: 1.3rem;
+      margin: 0;
     }
+    
+    .btn-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+  }
+  
+  .profile-btn {
+    --color: white;
+    
+    &:hover, &:active {
+      --color: #{$peach-orange};
+    }
+  }
+  
+  .logout-btn {
+    --color: white;
+    
+    &:hover, &:active {
+      --color: #{$peach-orange};
+    }
+  }
+}
+
+/* Responsive: en móviles pequeños ocultar etiquetas */
+@media (max-width: 480px) {
+  .custom-header ion-toolbar {
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+  
+  .logo-container .logo-text {
+    display: none;
+  }
+  
+  ion-buttons[slot="end"] ion-button .btn-label {
+    display: none;
+  }
+  
+  ion-buttons[slot="end"] ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
   }
 }
 
@@ -35,10 +164,189 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
    CONTENIDO PRINCIPAL
    ========================================== */
 .main-content-dark {
-  --background: #{$cream};
+  --background: #{$fondo-hueso};
 }
 
-/* COLUMNA DE IMAGEN */
+/* ==========================================
+   HEADER DE BIENVENIDA
+   ========================================== */
+.header-bienvenida {
+  margin-bottom: 24px;
+}
+
+.form-main-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: $texto-oscuro;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  background: $degradado-principal;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.form-main-subtitle {
+  color: $army-green;
+  font-size: 1rem;
+  margin: 0 0 28px 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   TARJETAS DE NEGOCIOS (CARDS)
+   ========================================== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.compact-card {
+  background: $blanco;
+  border-radius: 24px;
+  box-shadow: $sombra;
+  margin: 0;
+  border: 1px solid rgba($peach-orange, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $sombra-hover;
+    border-color: $peach-orange;
+  }
+
+  .image-column {
+    .cover-image-container {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      border-radius: 24px 24px 0 0;
+      overflow: hidden;
+      background: $blanco;
+      margin-bottom: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      
+      &:hover img {
+        transform: scale(1.03);
+      }
+
+      .no-image {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba($peach-orange, 0.2), rgba($cherry-blossom, 0.2));
+        
+        ion-icon {
+          font-size: 3rem;
+          color: $peach-orange;
+        }
+      }
+    }
+  }
+
+  ion-card-header {
+    padding: 20px 20px 8px;
+    
+    .electric-subtitle {
+      color: $ornery-tangerine;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    
+    h3 {
+      margin: 8px 0 0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: $texto-oscuro;
+    }
+  }
+
+  ion-card-content {
+    padding: 0 20px 20px;
+    
+    p {
+      color: $texto-suave;
+      margin-bottom: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+
+  /* Acciones de la tarjeta */
+  .card-actions {
+    display: flex;
+    gap: 10px;
+    border-top: 1.5px solid rgba($peach-orange, 0.4);
+    padding-top: 16px;
+    margin-top: 0;
+    
+    ion-button {
+      margin: 0;
+      flex: 1;
+      font-weight: 600;
+      
+      &:first-child {
+        --color: #{$jaipur-pink};
+      }
+      
+      &:last-child {
+        --color: #{$texto-suave};
+      }
+    }
+  }
+}
+
+/* Tarjeta para agregar nuevo negocio */
+.compact-card.add-card {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  cursor: pointer;
+  border: 2.5px dashed $jaipur-pink;
+  background: rgba($jaipur-pink, 0.03);
+  box-shadow: none;
+  
+  &:hover {
+    background: rgba($jaipur-pink, 0.08);
+    border-color: $ornery-tangerine;
+    transform: translateY(-4px);
+  }
+  
+  .add-content {
+    text-align: center;
+    color: $jaipur-pink;
+    
+    ion-icon {
+      font-size: 2.5rem;
+    }
+    
+    p {
+      margin: 8px 0 0;
+      font-weight: 700;
+      color: $jaipur-pink;
+    }
+  }
+}
+
+/* ==========================================
+   COLUMNA DE IMAGEN (para formulario)
+   ========================================== */
 .image-column {
   .cover-image-container {
     position: relative;
@@ -46,11 +354,10 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     height: 350px;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: $shadow;
-    background: $white;
+    box-shadow: $sombra;
+    background: $blanco;
     margin-bottom: 24px;
     
-    // Si la pantalla es grande, se queda fija (sticky) mientras el formulario hace scroll
     @media (min-width: 768px) {
       position: sticky;
       top: 20px;
@@ -69,15 +376,15 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      --background: rgba(255, 255, 255, 0.9);
-      --color: #{$pink-primary};
+      --background: rgba(255, 255, 255, 0.95);
+      --color: #{$jaipur-pink};
       --border-radius: 16px;
       --padding-start: 20px;
       --padding-end: 20px;
       font-weight: 700;
       font-size: 0.85rem;
       letter-spacing: 0.5px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px rgba(59, 82, 38, 0.15);
       backdrop-filter: blur(4px);
       width: max-content;
 
@@ -85,53 +392,6 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         transform: scale(0.96);
       }
     }
-  }
-}
-
-/* ==========================================
-   TÍTULOS DEL FORMULARIO
-   ========================================== */
-.form-main-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: $dark-text;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-}
-
-.form-main-subtitle {
-  color: $gray-text;
-  font-size: 1rem;
-  margin: 0 0 28px 0;
-  font-weight: 500;
-}
-
-/* ==========================================
-   TARJETAS DE SECCIÓN (Cards)
-   ========================================== */
-.compact-card {
-  background: $white;
-  border-radius: 24px;
-  box-shadow: $shadow;
-  margin: 0 0 24px 0;
-  border: none;
-
-  ion-card-header {
-    padding: 24px 24px 12px;
-    
-    .electric-subtitle {
-      color: $olive;
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin: 0;
-    }
-  }
-
-  ion-card-content {
-    padding: 0 24px 24px;
   }
 }
 
@@ -148,11 +408,10 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     margin-bottom: 0;
   }
 
-  // Ícono lateral
   .input-icon {
-    margin-top: 34px; // Lo alinea visualmente con la caja del input
+    margin-top: 34px;
     font-size: 1.4rem;
-    color: $gray-text;
+    color: $peach-orange;
   }
 
   .input-labels-container {
@@ -161,26 +420,24 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     flex-direction: column;
     width: 100%;
 
-    // Etiquetas superiores ("Nombre del Negocio", etc.)
     .input-top-label, .textarea-top-label {
       font-size: 0.85rem;
       font-weight: 700;
-      color: $dark-text;
+      color: $texto-oscuro;
       margin-bottom: 8px;
     }
 
-    // Estilo universal para inputs, selects y textareas
     ion-input, ion-select, ion-textarea {
-      --background: #F8FAFE;
+      --background: #FEFCF8;
       --padding-start: 16px;
       --padding-end: 16px;
       --padding-top: 14px;
       --padding-bottom: 14px;
-      border: 1.5px solid $border-color;
+      border: 1.5px solid rgba($peach-orange, 0.5);
       border-radius: 14px;
       font-size: 0.95rem;
       font-weight: 500;
-      color: $dark-text;
+      color: $texto-oscuro;
       width: 100%;
       transition: all 0.3s ease;
 
@@ -189,29 +446,26 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       }
 
       &.ion-focused {
-        border-color: $pink-secondary;
-        --background: $white;
-        box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
+        border-color: $jaipur-pink;
+        --background: $blanco;
+        box-shadow: 0 0 0 4px rgba($jaipur-pink, 0.1);
       }
     }
 
-    // Ajuste especial para TextArea (Descripción)
     ion-textarea {
       --padding-top: 16px;
       min-height: 120px;
     }
 
-    // Ajuste especial para Select (Días)
     ion-select {
       &::part(icon) {
-        color: $olive;
+        color: $jaipur-pink;
       }
     }
 
-    // Estilizar el componente de hora para que no rompa el diseño
     ion-datetime {
-      background: #F8FAFE;
-      border: 1.5px solid $border-color;
+      background: #FEFCF8;
+      border: 1.5px solid rgba($peach-orange, 0.5);
       border-radius: 14px;
       padding: 4px;
       width: 100%;
@@ -230,8 +484,8 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
   .main-icon {
     font-size: 1.8rem;
-    color: $mustard;
-    background: rgba(242, 174, 46, 0.15);
+    color: $ornery-tangerine;
+    background: rgba($ornery-tangerine, 0.15);
     padding: 12px;
     border-radius: 16px;
   }
@@ -243,20 +497,20 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       margin: 0 0 4px 0;
       font-size: 1.1rem;
       font-weight: 800;
-      color: $dark-text;
+      color: $texto-oscuro;
     }
     
     .description-text {
       margin: 0;
       font-size: 0.85rem;
-      color: $gray-text;
+      color: $texto-suave;
       font-weight: 500;
     }
   }
 
   ion-toggle {
-    --background-checked: #{$pink-primary};
-    --handle-background-checked: #{$white};
+    --background-checked: #{$jaipur-pink};
+    --handle-background-checked: #{$blanco};
   }
 }
 
@@ -267,17 +521,17 @@ ion-footer {
   background: transparent;
 
   .save-button-container {
-    background: linear-gradient(to top, #{$cream} 80%, rgba(242, 233, 206, 0) 100%);
+    background: linear-gradient(to top, #{$fondo-hueso} 80%, rgba(253, 245, 230, 0) 100%);
     padding-bottom: calc(20px + env(safe-area-inset-bottom));
     padding-top: 30px;
     
     ion-button {
-      --background: #{$pink-primary};
-      --color: #{$white};
+      --background: #{$degradado-principal};
+      --color: #{$blanco};
       --border-radius: 16px;
       --padding-top: 20px;
       --padding-bottom: 20px;
-      --box-shadow: 0 8px 24px rgba(191, 42, 82, 0.35);
+      --box-shadow: 0 8px 24px rgba($jaipur-pink, 0.35);
       margin: 0;
       font-weight: 800;
       font-size: 1.05rem;
@@ -289,7 +543,6 @@ ion-footer {
         transform: scale(0.98);
       }
 
-      // Estilo cuando el formulario es inválido
       &.button-disabled {
         --background: #cbd5e1;
         --box-shadow: none;

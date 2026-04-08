@@ -1,18 +1,46 @@
-//Info-negocio: 
-// Paleta de colores base
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
-$border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+// ============================================
+// CALVILLO EXPERIENCE - INFO NEGOCIO PAGE
+// NUEVA PALETA COMPLETA
+// ============================================
+
+// ═══════════════════════════════════════════
+//  PALETA PRINCIPAL
+// ═══════════════════════════════════════════
+$peach-orange: #FFCE99;        // Fondos secundarios, detalles cálidos
+$ornery-tangerine: #F58421;    // Botones principales, acentos fuertes
+$army-green: #3B5226;          // Textos oscuros, bordes serios
+$jaipur-pink: #D44084;         // Elementos destacados, hover, acordeón
+$cherry-blossom-pink: #FFB5C7; // Bordes suaves, fondos alternativos
+
+// ═══════════════════════════════════════════
+//  FONDOS Y TEXTOS (basados en tu paleta)
+// ═══════════════════════════════════════════
+$fondo-hueso: #FFF9F0;          // Fondo principal (color hueso)
+$blanco: #FFFFFF;
+$texto-oscuro: $army-green;     // Army Green para texto principal
+$texto-suave: rgba($army-green, 0.65); // Army Green con opacidad
+
+// ═══════════════════════════════════════════
+//  DEGRADADOS CON PALETA NUEVA
+// ═══════════════════════════════════════════
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom-pink);
+
+// ═══════════════════════════════════════════
+//  SOMBRAS Y BORDES
+// ═══════════════════════════════════════════
+$sombra: 0 8px 24px rgba($army-green, 0.12);
+$sombra-fuerte: 0 8px 20px rgba($jaipur-pink, 0.35);
+$sombra-suave: 0 4px 12px rgba($army-green, 0.08);
+$border-color: $cherry-blossom-pink;
+$border-suave: rgba($peach-orange, 0.5);
+
+// ═══════════════════════════════════════════
+//  ESTILOS PRINCIPALES
+// ═══════════════════════════════════════════
 
 .fondo-claro {
-  --background: #{$cream};
+  --background: #{$fondo-hueso};
 }
 
 .loader-container {
@@ -38,7 +66,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
 
   ion-button {
-    --color: #{$pink-primary};
+    --color: #{$jaipur-pink};
     font-weight: 700;
     font-size: 0.95rem;
     margin: 0;
@@ -52,16 +80,17 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     gap: 6px;
-    background: $white;
-    color: $gray-text;
+    background: $blanco;
+    color: $texto-suave;
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: $sombra-suave;
+    border: 1px solid $border-suave;
 
     ion-icon {
-      color: $olive;
+      color: $jaipur-pink;
       font-size: 1.1rem;
     }
   }
@@ -92,7 +121,8 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     min-height: 350px;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: $shadow;
+    box-shadow: $sombra;
+    border: 1px solid $border-suave;
 
     @media (max-width: 768px) {
       min-height: 280px;
@@ -111,8 +141,8 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       position: absolute;
       top: 16px;
       right: 16px;
-      background: $mustard;
-      color: $dark-text;
+      background: $degradado-principal;
+      color: $blanco;
       padding: 8px 14px;
       border-radius: 20px;
       font-weight: 800;
@@ -120,10 +150,11 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(242, 174, 46, 0.4);
+      box-shadow: $sombra-fuerte;
 
       ion-icon {
         font-size: 1.1rem;
+        color: $peach-orange;
       }
     }
   }
@@ -143,7 +174,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: $olive;
+      color: $jaipur-pink;
       margin: 0 0 8px 0;
     }
 
@@ -155,7 +186,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       .business-name {
         font-size: 2.2rem;
         font-weight: 800;
-        color: $dark-text;
+        color: $texto-oscuro;
         margin: 0;
         letter-spacing: -0.5px;
         line-height: 1.2;
@@ -163,14 +194,14 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
       .verified-icon {
         font-size: 1.6rem;
-        color: #2ecc71; // Un verde vibrante para verificación
+        color: $ornery-tangerine;
       }
     }
   }
 
   .business-description {
     p {
-      color: $gray-text;
+      color: $texto-suave;
       font-size: 1rem;
       line-height: 1.6;
       margin: 0;
@@ -179,10 +210,11 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
   /* ACORDEONES (Estilo Tarjeta) */
   .info-accordions {
-    background: $white;
+    background: $blanco;
     border-radius: 24px;
     padding: 8px 24px;
-    box-shadow: $shadow;
+    box-shadow: $sombra;
+    border: 1px solid $border-suave;
 
     .accordion {
       border-bottom: 1.5px solid $border-color;
@@ -208,24 +240,24 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
           align-items: center;
           gap: 12px;
           font-weight: 700;
-          color: $dark-text;
+          color: $texto-oscuro;
           font-size: 1.05rem;
 
           ion-icon {
-            color: $pink-primary;
+            color: $jaipur-pink;
             font-size: 1.3rem;
           }
         }
 
         > ion-icon {
-          color: $gray-text;
+          color: $texto-suave;
         }
       }
 
       .accordion-content {
         display: none;
         padding-bottom: 20px;
-        color: $gray-text;
+        color: $texto-suave;
         font-size: 0.95rem;
         line-height: 1.6;
 
@@ -240,7 +272,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
         strong {
-          color: $dark-text;
+          color: $texto-oscuro;
         }
 
         .address-text {
@@ -255,12 +287,12 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     margin-top: 8px;
 
     .reserve-btn {
-      --background: #{$pink-primary};
-      --color: #{$white};
+      --background: #{$degradado-principal};
+      --color: #{$blanco};
       --border-radius: 16px;
       --padding-top: 18px;
       --padding-bottom: 18px;
-      --box-shadow: 0 8px 20px rgba(191, 42, 82, 0.3);
+      --box-shadow: #{$sombra-fuerte};
       margin: 0;
       font-weight: 700;
       font-size: 1.05rem;
@@ -279,19 +311,20 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       display: flex;
       align-items: center;
       gap: 12px;
-      background: $white;
+      background: $blanco;
       padding: 16px 20px;
       border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: $sombra-suave;
+      border: 1px solid $border-suave;
 
       ion-icon {
         font-size: 1.8rem;
-        color: $olive;
+        color: $jaipur-pink;
       }
 
       p {
         margin: 0;
-        color: $gray-text;
+        color: $texto-suave;
         font-size: 0.95rem;
         font-weight: 500;
         line-height: 1.4;
@@ -303,15 +336,15 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 // Botón de mapa (Outline)
 .btn-direcciones {
   --border-color: #{$border-color};
-  --color: #{$dark-text};
+  --color: #{$texto-oscuro};
   --border-radius: 12px;
   --border-width: 1.5px;
   margin-top: 16px;
   font-weight: 600;
   
-  &:hover {
-    --border-color: #{$olive};
-    --color: #{$olive};
+  &:hover, &:active {
+    --border-color: #{$ornery-tangerine};
+    --color: #{$ornery-tangerine};
   }
 }
 

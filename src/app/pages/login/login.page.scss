@@ -1,32 +1,31 @@
 // ============================================
 // CALVILLO EXPERIENCE - LOGIN PAGE
-// PALETA DE COLORES (especificada por el cliente)
+// NUEVA PALETA: Peach Orange / Jaipur Pink / Army Green
 // ============================================
 
-// PALETA PRINCIPAL
-$rosa-vibrante: #BF2A52;
-$magenta-fucsia: #D81B60;
-$naranja-atardecer: #FB8C00;
-$verde-guayaba: #43A047;
-$azul-electrico: #1E88E5;
-$morado-profundo: #5E35B1;
+// NUEVA PALETA DE COLORES
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom: #FFB5C7;
 
 // FONDOS
-$fondo-hueso: #FDF5E6;        // Principal
-$fondo-secundario: #FFFDD0;   // Cálido
-
-// ACENTOS Y TEXTOS
-$acento-oliva: #BFB74B;
-$texto-oscuro: #2C3E50;
+$fondo-hueso: #FDF5E6;
 $blanco: #FFFFFF;
-$borde-suave: #EAE5D9;
+
+// TEXTOS
+$texto-oscuro: #2C3E50;
+$texto-suave: #6C7A89;
+
+// SOMBRAS
 $sombra: 0 8px 24px rgba(0, 0, 0, 0.08);
 $error-color: #e74c3c;
 
-// DEGRADADOS
-$degradado-rosa: linear-gradient(135deg, #BF2A52, #D96C80);
-$degradado-verde: linear-gradient(135deg, #43A047, #AEEA00);
-$degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
+// DEGRADADOS CON LA NUEVA PALETA
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom);
+$degradado-verde: linear-gradient(135deg, $army-green, lighten($army-green, 20%));
 
 // ============================================
 // FONDO PRINCIPAL (COLOR HUESO)
@@ -51,22 +50,22 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
    ========================================== */
 .language-switcher {
   ion-chip {
-    --background: rgba(191, 42, 82, 0.1);
-    --color: #{$rosa-vibrante};
+    --background: rgba(212, 64, 132, 0.12);
+    --color: #{$jaipur-pink};
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(191, 42, 82, 0.2);
+    border: 1px solid rgba(212, 64, 132, 0.25);
     font-weight: 600;
     font-size: 0.85rem;
     padding: 0 16px;
     height: 36px;
     
     ion-icon {
-      color: #{$rosa-vibrante};
+      color: #{$jaipur-pink};
       font-size: 1.2rem;
     }
 
     &:active {
-      --background: rgba(191, 42, 82, 0.2);
+      --background: rgba(212, 64, 132, 0.2);
       transform: scale(0.97);
       transition: transform 0.1s ease;
     }
@@ -84,42 +83,80 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
   padding: 40px 32px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
   animation: slideUpFade 0.5s ease-out;
-  border: 1px solid rgba(191, 186, 139, 0.25);
+  border: 1px solid rgba(255, 206, 153, 0.4);
+  position: relative;
+  
+  // Borde decorativo superior con la nueva paleta
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: $degradado-principal;
+    border-radius: 32px 32px 0 0;
+  }
 
-  /* HEADER DEL LOGIN */
+  /* HEADER DEL LOGIN - ESTILO ELEGANTE */
   .login-header {
     text-align: center;
     margin-bottom: 36px;
 
     .login-logo {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.05));
+      width: 85px;
+      height: 85px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      background: $degradado-principal;
+      padding: 8px;
+      box-shadow: 0 8px 20px rgba(212, 64, 132, 0.25);
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.02);
+      }
     }
 
-    h1 {
-      font-size: 2rem;
+    // Primer h3: "Calvillo" - GRANDE, ELEGANTE, CON DEGRADADO
+    h3:first-of-type {
+      font-size: 2.8rem;
       font-weight: 800;
-      color: $texto-oscuro;
-      margin: 0;
-      letter-spacing: -0.5px;
+      margin: 0 0 4px 0;
+      letter-spacing: -1px;
       line-height: 1.1;
-      background: $degradado-rosa;
+      background: $degradado-principal;
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      display: inline-block;
+      text-shadow: 0 2px 10px rgba(212, 64, 132, 0.15);
     }
 
-    p {
-      color: $acento-oliva;
-      font-size: 1rem;
+    // Segundo h3: "experience" - ELEGANTE, COLOR ARMY GREEN, MAYÚSCULAS
+    h3:last-of-type {
+      font-size: 0.85rem;
       font-weight: 700;
+      margin: 0;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      margin: 4px 0 0 0;
+      color: $army-green;
+      position: relative;
+      display: inline-block;
+      padding-top: 8px;
+      
+      // Línea decorativa sutil arriba de "experience"
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 35px;
+        height: 2px;
+        background: $peach-orange;
+        border-radius: 2px;
+      }
     }
   }
 
@@ -134,13 +171,13 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
       --border-radius: 16px;
       --padding-start: 16px;
       --inner-padding-end: 16px;
-      border: 1.5px solid $borde-suave;
+      border: 1.5px solid rgba(255, 206, 153, 0.5);
       border-radius: 16px;
       margin: 0;
       transition: all 0.3s ease;
       
       ion-icon {
-        color: $acento-oliva;
+        color: $peach-orange;
         font-size: 1.3rem;
         margin-right: 12px;
         transition: color 0.3s ease;
@@ -158,12 +195,12 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
 
       /* Estado Activo / Focus */
       &.item-has-focus {
-        border-color: $rosa-vibrante;
+        border-color: $jaipur-pink;
         --background: #{$blanco};
-        box-shadow: 0 0 0 4px rgba(191, 42, 82, 0.1);
+        box-shadow: 0 0 0 4px rgba(212, 64, 132, 0.1);
 
         ion-icon {
-          color: $rosa-vibrante;
+          color: $jaipur-pink;
         }
       }
 
@@ -198,13 +235,13 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
 
     /* BOTÓN DE LOGIN */
     .login-button {
-      --background: #{$rosa-vibrante};
-      --background-activated: #{$magenta-fucsia};
+      --background: #{$degradado-principal};
+      --background-activated: #{$ornery-tangerine};
       --color: #{$blanco};
       --border-radius: 40px;
       --padding-top: 18px;
       --padding-bottom: 18px;
-      --box-shadow: 0 8px 20px rgba(191, 42, 82, 0.3);
+      --box-shadow: 0 8px 20px rgba(212, 64, 132, 0.35);
       margin-top: 12px;
       font-weight: 700;
       font-size: 1rem;
@@ -226,7 +263,7 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
     text-align: center;
     margin-top: 32px;
     padding-top: 24px;
-    border-top: 1px solid $borde-suave;
+    border-top: 1px solid rgba(255, 206, 153, 0.4);
 
     p {
       color: $texto-oscuro;
@@ -234,7 +271,7 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
       margin: 0;
 
       .register-link a {
-        color: $rosa-vibrante;
+        color: $jaipur-pink;
         font-weight: 700;
         text-decoration: none;
         margin-left: 4px;
@@ -248,7 +285,7 @@ $degradado-naranja: linear-gradient(135deg, #F2AE2E, #FFB74D);
           left: 0;
           width: 0;
           height: 2px;
-          background: $degradado-rosa;
+          background: $degradado-principal;
           transition: width 0.2s ease;
         }
 

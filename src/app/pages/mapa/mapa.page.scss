@@ -1,25 +1,50 @@
-//Mapa: // Paleta de colores base
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
-$border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+// ============================================
+// CALVILLO EXPERIENCE - MAPA PAGE
+// NUEVA PALETA COMPLETA
+// ============================================
+
+// ═══════════════════════════════════════════
+//  PALETA PRINCIPAL
+// ═══════════════════════════════════════════
+$peach-orange: #FFCE99;        // Fondos secundarios, detalles cálidos
+$ornery-tangerine: #F58421;    // Botones principales, acentos fuertes
+$army-green: #3B5226;          // Textos oscuros, bordes serios
+$jaipur-pink: #D44084;         // Elementos destacados, hover, selección
+$cherry-blossom-pink: #FFB5C7; // Bordes suaves, fondos alternativos
+
+// ═══════════════════════════════════════════
+//  FONDOS Y TEXTOS (basados en tu paleta)
+// ═══════════════════════════════════════════
+$fondo-hueso: #FFF9F0;          // Fondo principal (color hueso)
+$blanco: #FFFFFF;
+$texto-oscuro: $army-green;     // Army Green para texto principal
+$texto-suave: rgba($army-green, 0.65); // Army Green con opacidad
+
+// ═══════════════════════════════════════════
+//  DEGRADADOS CON PALETA NUEVA
+// ═══════════════════════════════════════════
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom-pink);
+
+// ═══════════════════════════════════════════
+//  SOMBRAS Y BORDES
+// ═══════════════════════════════════════════
+$sombra: 0 8px 24px rgba($army-green, 0.12);
+$sombra-fuerte: 0 8px 20px rgba($jaipur-pink, 0.3);
+$sombra-tab: 0 -4px 20px rgba($army-green, 0.08);
+$border-color: $cherry-blossom-pink;
+$border-suave: rgba($peach-orange, 0.5);
 
 /* ==========================================
    HEADER Y SEGMENTOS DE CATEGORÍA
    ========================================== */
 ion-header {
   ion-toolbar {
-    --background: #{$white};
+    --background: #{$blanco};
     --border-width: 0;
     padding-top: 8px;
     padding-bottom: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 16px rgba($army-green, 0.06);
   }
 }
 
@@ -28,10 +53,11 @@ ion-segment {
   border-radius: 20px;
   margin: 0 16px;
   padding: 4px;
+  border: 1px solid $border-suave;
 
   ion-segment-button {
-    --color: #{$gray-text};
-    --color-checked: #{$white};
+    --color: #{$texto-suave};
+    --color-checked: #{$blanco};
     --indicator-color: transparent;
     font-weight: 600;
     font-size: 0.85rem;
@@ -39,9 +65,9 @@ ion-segment {
     border-radius: 16px;
 
     &::part(indicator-background) {
-      background: #{$pink-primary};
+      background: $degradado-principal;
       border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(191, 42, 82, 0.3);
+      box-shadow: $sombra-fuerte;
     }
   }
 }
@@ -50,11 +76,11 @@ ion-segment {
    MODAL (Bottom Sheet)
    ========================================== */
 ion-modal {
-  --border-radius: 24px 24px 0 0; // Bordes curvos solo arriba
-  --box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1);
+  --border-radius: 24px 24px 0 0;
+  --box-shadow: 0 -8px 24px rgba($army-green, 0.15);
 
   .modal-content {
-    --background: #{$white};
+    --background: #{$blanco};
 
     .contenido {
       padding: 24px 24px 32px;
@@ -62,7 +88,7 @@ ion-modal {
       .titulo {
         font-size: 1.6rem;
         font-weight: 800;
-        color: #{$dark-text};
+        color: $texto-oscuro;
         margin: 0 0 20px 0;
         letter-spacing: -0.5px;
         line-height: 1.2;
@@ -73,14 +99,14 @@ ion-modal {
         align-items: center;
         gap: 16px;
         margin-bottom: 16px;
-        color: #{$gray-text};
+        color: $texto-suave;
         font-size: 0.95rem;
         font-weight: 500;
 
         ion-icon {
-          color: #{$olive};
+          color: $jaipur-pink;
           font-size: 1.3rem;
-          background: rgba(191, 183, 75, 0.1);
+          background: rgba($jaipur-pink, 0.1);
           padding: 10px;
           border-radius: 14px;
         }
@@ -107,9 +133,9 @@ ion-modal {
           --padding-bottom: 16px;
 
           &[fill="solid"] {
-            --background: #{$pink-primary};
-            --color: #{$white};
-            --box-shadow: 0 8px 20px rgba(191, 42, 82, 0.3);
+            --background: #{$degradado-principal};
+            --color: #{$blanco};
+            --box-shadow: #{$sombra-fuerte};
             
             &::part(native):active {
               transform: scale(0.98);
@@ -118,13 +144,13 @@ ion-modal {
 
           &[fill="outline"] {
             --border-color: #{$border-color};
-            --color: #{$dark-text};
+            --color: #{$texto-oscuro};
             --border-width: 1.5px;
             --background: transparent;
 
             &::part(native):active {
-              --border-color: #{$olive};
-              --color: #{$olive};
+              --border-color: #{$ornery-tangerine};
+              --color: #{$ornery-tangerine};
             }
           }
         }
@@ -138,15 +164,16 @@ ion-modal {
    ========================================== */
 ion-footer {
   ion-tab-bar {
-    --background: #{$white};
+    --background: #{$blanco};
     --border: none;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: $sombra-tab;
     height: 70px;
-    padding-bottom: env(safe-area-inset-bottom); // Soporte para el notch de los iPhone
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid $border-suave;
     
     ion-tab-button {
-      --color: #{$gray-text};
-      --color-selected: #{$pink-primary};
+      --color: #{$texto-suave};
+      --color-selected: #{$jaipur-pink};
       transition: all 0.2s ease;
 
       ion-icon {
@@ -164,7 +191,7 @@ ion-footer {
       &.tab-selected, &:active {
         ion-icon {
           transform: translateY(-2px);
-          filter: drop-shadow(0 2px 4px rgba(191, 42, 82, 0.3));
+          filter: drop-shadow(0 2px 4px rgba($jaipur-pink, 0.3));
         }
       }
     }

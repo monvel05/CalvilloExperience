@@ -1,38 +1,70 @@
-//Perfil: // Paleta de colores base
-$pink-primary: #BF2A52;
-$pink-secondary: #D96C80;
-$mustard: #F2AE2E;
-$olive: #BFB74B;
-$cream: #F2E9CE;
-$white: #FFFFFF;
-$dark-text: #2C3E50;
-$gray-text: #6C7A89;
-$border-color: #E8EDF2;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+// ============================================
+// CALVILLO EXPERIENCE - PERFIL PAGE
+// PALETA: Peach Orange / Jaipur Pink / Army Green / Ornery Tangerine / Cherry Blossom
+// ============================================
+
+// NUEVA PALETA DE COLORES
+$peach-orange: #FFCE99;
+$ornery-tangerine: #F58421;
+$army-green: #3B5226;
+$jaipur-pink: #D44084;
+$cherry-blossom: #FFB5C7;
+
+// FONDOS
+$fondo-hueso: #FFF9F0;
+$blanco: #FFFFFF;
+$texto-oscuro: #2C3E50;
+$texto-suave: #6C7A89;
+
+// DEGRADADOS
+$degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
+$degradado-secundario: linear-gradient(135deg, $peach-orange, $cherry-blossom);
+$degradado-avatar: linear-gradient(135deg, $jaipur-pink, $peach-orange);
+
+// SOMBRAS
+$sombra: 0 8px 24px rgba(59, 82, 38, 0.12);
+$sombra-hover: 0 12px 28px rgba(59, 82, 38, 0.2);
 
 /* ==========================================
-   HEADER Y FONDO
+   HEADER CON DEGRADADO
    ========================================== */
-ion-header {
+.custom-header {
   ion-toolbar {
-    --background: #{$cream};
+    --background: #{$degradado-principal};
     --border-width: 0;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 70px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
     ion-title {
-      font-weight: 800;
-      color: $pink-primary;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+      text-align: center;
+      background: none;
+      -webkit-text-fill-color: white;
+      
+      @media (min-width: 768px) {
+        font-size: 1.3rem;
+      }
     }
 
     ion-button {
-      --color: $pink-primary;
+      --color: white;
+      
+      &:hover, &:active {
+        --color: #{$peach-orange};
+      }
     }
   }
 }
 
-ion-content {
-  --background: #{$cream};
+/* ==========================================
+   CONTENIDO PRINCIPAL
+   ========================================== */
+.main-content {
+  --background: #{$fondo-hueso};
 }
 
 /* ==========================================
@@ -46,29 +78,33 @@ ion-content {
   margin-top: 16px;
 
   .avatar-circle {
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, $pink-primary 0%, $pink-secondary 100%);
+    width: 110px;
+    height: 110px;
+    background: $degradado-avatar;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 8px 24px rgba(191, 42, 82, 0.3);
+    box-shadow: 0 8px 24px rgba($jaipur-pink, 0.35);
     margin-bottom: 16px;
-    border: 4px solid $white; // Un borde blanco para que contraste con el fondo crema
+    border: 4px solid $blanco;
 
     ion-icon {
-      font-size: 3rem;
-      color: $white;
+      font-size: 3.2rem;
+      color: $blanco;
     }
   }
 
   h2 {
     font-size: 1.5rem;
     font-weight: 800;
-    color: $dark-text;
+    color: $texto-oscuro;
     margin: 0;
     letter-spacing: -0.5px;
+    background: $degradado-principal;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
@@ -76,70 +112,84 @@ ion-content {
    FORMULARIO (Tarjeta Blanca)
    ========================================== */
 .profile-form {
-  background: $white;
-  border-radius: 24px;
+  background: $blanco;
+  border-radius: 28px;
   padding: 32px 24px;
-  box-shadow: $shadow;
+  box-shadow: $sombra;
   max-width: 600px;
   margin: 0 auto;
+  border: 1px solid rgba($peach-orange, 0.3);
 
-  .custom-input {
-    --background: transparent;
-    --padding-start: 0;
-    --inner-padding-end: 0;
+  /* ==========================================
+     INPUTS MODERNOS
+     ========================================== */
+  .input-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
     margin-bottom: 24px;
 
-    // Ícono lateral
-    ion-icon[slot="start"] {
-      color: $olive;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .input-icon {
+      margin-top: 32px;
       font-size: 1.4rem;
-      margin-top: 28px; // Baja el ícono para que se alinee con el input y no con el label
-      margin-right: 16px;
-      background: rgba(191, 183, 75, 0.1);
+      color: $peach-orange;
+      background: rgba($peach-orange, 0.15);
       padding: 10px;
-      border-radius: 12px;
-    }
-
-    // Etiqueta superior (Label stacked)
-    ion-label[position="stacked"] {
-      font-size: 0.85rem !important;
-      font-weight: 700;
-      color: $dark-text;
-      margin-bottom: 10px;
-      transform: none;
-      letter-spacing: 0.5px;
-    }
-
-    // Cajas de texto, fechas y selectores
-    ion-input, ion-select {
-      --background: #F8FAFE;
-      --padding-start: 16px;
-      --padding-end: 16px;
-      --padding-top: 14px;
-      --padding-bottom: 14px;
-      border: 1.5px solid $border-color;
       border-radius: 14px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: $dark-text;
-      width: 100%;
-      transition: all 0.3s ease;
-
-      &::part(placeholder) {
-        color: #94a3b8;
-      }
-
-      &.ion-focused, &:focus {
-        border-color: $pink-secondary;
-        --background: #{$white};
-        box-shadow: 0 0 0 4px rgba(217, 108, 128, 0.1);
+      
+      ion-icon {
+        font-size: 1.4rem;
       }
     }
-    
-    // Color de la flecha en los <ion-select>
-    ion-select::part(icon) {
-      color: $olive;
-      opacity: 0.8;
+
+    .input-labels-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      .input-top-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: $army-green;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      ion-input, ion-select {
+        --background: #FEFCF8;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --padding-top: 14px;
+        --padding-bottom: 14px;
+        border: 1.5px solid rgba($peach-orange, 0.5);
+        border-radius: 14px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: $texto-oscuro;
+        width: 100%;
+        transition: all 0.3s ease;
+
+        &::part(placeholder) {
+          color: #94a3b8;
+        }
+
+        &.ion-focused, &:focus {
+          border-color: $jaipur-pink;
+          --background: $blanco;
+          box-shadow: 0 0 0 4px rgba($jaipur-pink, 0.1);
+        }
+      }
+
+      ion-select::part(icon) {
+        color: $jaipur-pink;
+        opacity: 0.8;
+      }
     }
   }
 
@@ -147,15 +197,15 @@ ion-content {
      BOTÓN DE GUARDAR
      ========================================== */
   .save-button {
-    --background: #{$pink-primary};
-    --color: #{$white};
+    --background: #{$degradado-principal};
+    --color: #{$blanco};
     --border-radius: 16px;
     --padding-top: 18px;
     --padding-bottom: 18px;
-    --box-shadow: 0 8px 20px rgba(191, 42, 82, 0.3);
+    --box-shadow: 0 8px 20px rgba($jaipur-pink, 0.35);
     margin-top: 32px;
-    font-weight: 700;
-    font-size: 1.05rem;
+    font-weight: 800;
+    font-size: 1rem;
     letter-spacing: 1px;
     text-transform: uppercase;
 
@@ -163,11 +213,10 @@ ion-content {
       transform: scale(0.98);
     }
 
-    // Estilo cuando el formulario es inválido o está guardando
     &[disabled] {
       --background: #cbd5e1;
       --box-shadow: none;
-      opacity: 0.8;
+      opacity: 0.7;
     }
   }
 }
@@ -176,8 +225,8 @@ ion-content {
    TOAST (Notificación de guardado)
    ========================================== */
 ion-toast {
-  --background: #{$dark-text};
-  --color: #{$white};
+  --background: #{$army-green};
+  --color: #{$blanco};
   --border-radius: 16px;
   --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   font-weight: 600;
