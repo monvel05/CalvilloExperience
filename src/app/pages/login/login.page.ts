@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core'; // Usamos inject
+import { Component, OnInit, inject } from '@angular/core'; 
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service'; // Ruta corregida a .service
@@ -9,7 +9,7 @@ import {
 } from 'ionicons/icons';
 import { 
   IonLabel, IonItem, IonInput, IonContent, 
-  IonButton, IonIcon, IonChip, NavController, ToastController // Agregamos NavController y Toast
+  IonButton, IonIcon, IonChip, NavController, ToastController 
 } from "@ionic/angular/standalone";
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
