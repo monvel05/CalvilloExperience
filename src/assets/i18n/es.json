@@ -119,5 +119,81 @@
     "ALERT_MISSING_FIELDS": "Por favor, completa la fecha, hora de entrada y número de personas.",
     "ALERT_SUCCESS": "Reserva creada con éxito en Calvillo Experience",
     "ALERT_ERROR": "Hubo un problema al conectar con el servidor."
+  }, 
+  "ADMIN": {
+    "ROLE": "Administrador",
+    "MENU": {
+      "DASHBOARD": "Dashboard",
+      "USERS": "Usuarios",
+      "BUSINESSES": "Negocios",
+      "SOCIAL_WALL": "Muro Social",
+      "REPORTS": "Reportes",
+      "SETTINGS": "Configuración",
+      "LOGOUT": "Cerrar Sesión"
+    },
+    "HEADER": {
+      "SUMMARY": "Resumen general del sistema"
+    },
+    "TITLE": {
+      "USERS_DETAIL": "Detalle de Usuarios",
+      "BUSINESS_DIRECTORY": "Directorio de Negocios",
+      "REPORTS_GEN": "Generación de Reportes"
+    },
+    "FILTER": {
+      "TODAY": "Hoy",
+      "7DAYS": "7 días",
+      "MONTH": "Mes",
+      "YEAR": "Año"
+    },
+    "CARDS": {
+      "USERS": "Usuarios",
+      "TOURISTS": "Turistas",
+      "BUSINESSES": "Negocios",
+      "EARNINGS": "Ganancias"
+    },
+    "CHARTS": {
+      "MONTHLY_EARNINGS": "Ganancias mensuales",
+      "MEMBERSHIPS": "Membresías",
+      "TOP_PLACES": "Top lugares",
+      "GENDER_DIST": "Distribución por Género"
+    },
+    "GENDERS": {
+      "WOMEN": "Mujeres",
+      "MEN": "Hombres",
+      "PREFER_NOT_SAY": "Prefiero no decirlo"
+    },
+    "MEMBERSHIP": {
+      "BASIC": "Básica",
+      "PREMIUM": "Premium",
+      "VIP": "VIP"
+    },
+    "NO_MEMBERSHIP": "Sin Membresía",
+    "MEMBERSHIP_TITLE": "Membresía",
+    "EXPORT": {
+      "PDF": "Exportar PDF",
+      "EXCEL": "Exportar Excel"
+    },
+    "REPORT_TITLE": "Reporte General",
+    "GENERATION_DATE": "Fecha de generación",
+    "PERFORMANCE_SUMMARY": "Resumen de Rendimiento",
+    "METRIC": "Métrica",
+    "TOTAL": "Total",
+    "REGISTERED_USERS": "Usuarios Registrados",
+    "ACTIVE_BUSINESSES": "Negocios Activos",
+    "ACCUMULATED_EARNINGS": "Ganancias Acumuladas",
+    "USER_DEMOGRAPHICS": "Demografía de Usuarios",
+    "GENDER": "Género",
+    "USER_AMOUNT": "Cantidad de Usuarios",
+    "BUSINESS_NAME": "Nombre del Negocio",
+    "CATEGORY": "Categoría",
+    "NO_DATA": "Sin datos",
+    "TOTAL_USERS": "Usuarios Totales",
+    "TOTAL_EARNINGS": "Ganancias Totales",
+    "SUMMARY": "Resumen",
+    "DEMOGRAPHICS": "Demografía",
+    "DIRECTORY": "Directorio",
+    "MONTH": "Mes",
+    "EARNINGS": "Ganancias",
+    "VISITS": "Visitas"
   }
 }
