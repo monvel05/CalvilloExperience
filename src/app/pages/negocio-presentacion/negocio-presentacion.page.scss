@@ -1,6 +1,3 @@
-// ============================================
-// CALVILLO EXPERIENCE - PALETA CORREGIDA
-// ============================================
 $peach-orange: #FFCE99;
 $ornery-tangerine: #F58421;
 $army-green: #3B5226;
@@ -8,20 +5,16 @@ $jaipur-pink: #D44084;
 $cherry-blossom-pink: #FFB5C7;
 $fondo-hueso: #FFF9F0;
 $blanco: #FFFFFF;
-$texto-oscuro: $army-green;
-$texto-suave: rgba($army-green, 0.65);
 
 $degradado-principal: linear-gradient(135deg, $jaipur-pink, $ornery-tangerine);
 $sombra: 0 8px 24px rgba($army-green, 0.12);
 
-/* HEADER */
 .custom-header ion-toolbar {
   --background: #{$degradado-principal};
   --color: white;
   --min-height: 70px;
 }
 
-/* CONTENEDOR DE IMAGEN Y BOTÓN "SUBIR PORTADA" */
 .cover-image-container {
   position: relative;
   width: 100%;
@@ -47,14 +40,10 @@ $sombra: 0 8px 24px rgba($army-green, 0.12);
     --background: #{$blanco};
     --color: #{$jaipur-pink};
     --border-radius: 12px;
-    --box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     font-weight: 800;
-    font-size: 0.85rem;
-    height: 45px;
   }
 }
 
-/* FORMULARIO Y TARJETAS */
 .main-content-dark { --background: #{$fondo-hueso}; }
 
 .compact-card {
@@ -75,53 +64,43 @@ $sombra: 0 8px 24px rgba($army-green, 0.12);
 .custom-input {
   --background: #fdfdfd;
   --border-radius: 12px;
-  --padding-start: 12px;
   margin-bottom: 10px;
   border: 1.5px solid #eee;
   border-radius: 12px;
 }
 
-/* RESERVACIONES TOGGLE */
 .reservation-config {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  ion-toggle {
-    --background-checked: #{$jaipur-pink};
-    --handle-background-checked: white;
-  }
+  ion-toggle { --background-checked: #{$jaipur-pink}; }
 }
 
-/* FOOTER Y BOTÓN GUARDAR (SOLUCIÓN AL CORTE) */
-ion-footer {
-  background: $fondo-hueso;
-  padding: 15px 20px;
-  padding-bottom: calc(15px + env(safe-area-inset-bottom));
-  border-top: 1px solid rgba($cherry-blossom-pink, 0.4);
+/* FOOTER CORREGIDO: Z-INDEX Y FONDO SÓLIDO */
+.sticky-footer {
+  background: #{$fondo-hueso}; /* Color igual al fondo para integración total */
+  padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba($jaipur-pink, 0.1);
+  z-index: 999; /* Asegura que esté por encima de todo */
 
   .save-button-container {
-    display: flex;
-    justify-content: center;
-
     ion-button {
       --background: #{$degradado-principal};
       --color: white;
-      --border-radius: 16px;
-      --box-shadow: 0 10px 20px rgba($jaipur-pink, 0.3);
-      margin: 0;
-      width: 100%;
-      max-width: 500px;
-      height: 60px; // Altura fija para que el texto sea legible
+      --border-radius: 18px;
+      --box-shadow: 0 10px 25px rgba($jaipur-pink, 0.3);
+      height: 60px;
       font-weight: 800;
       font-size: 1.1rem;
-      letter-spacing: 1px;
+      margin: 0;
 
       &.button-disabled {
-        --background: #ccc;
+        --background: #d1d1d1;
         --box-shadow: none;
-        opacity: 0.6;
+        opacity: 0.8;
       }
     }
   }
+  
 }
