@@ -2,27 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
-  IonContent, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonButtons,      
-  IonBackButton,    
-  IonButton, 
-  IonIcon,
-  NavController // Solo usaremos este para salir del menú de turistas
+  IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,      
+  IonBackButton, IonButton, IonIcon, NavController 
 } from '@ionic/angular/standalone';
 
+// Importamos tus servicios
 import { CloudinaryService } from '../../core/services/cloudinary-service';
 import { MuroSocialService } from '../../core/services/muro-social.service';
+import { AuthService } from '../../core/services/auth.service'; 
+
+// Importamos la interfaz (ajusta la ruta si te marca error)
+import { DatosUsuario } from 'src/app/shared/interfaces/datos-usuario'; 
 
 import { addIcons } from 'ionicons';
 import { 
-  arrowBackOutline, 
-  imageOutline, 
-  paperPlaneOutline, 
-  heart, 
-  trashOutline,
+  arrowBackOutline, imageOutline, paperPlaneOutline, heart, trashOutline,
   imagesOutline, checkmarkCircle 
 } from 'ionicons/icons';
 
@@ -32,42 +26,58 @@ import {
   styleUrls: ['./muro-social.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule,
-    IonContent, 
-    IonHeader, 
-    IonToolbar, 
-    IonTitle, 
-    IonButtons,      
-    IonBackButton,    
-    IonButton, 
-    IonIcon
+    CommonModule, FormsModule, IonContent, IonHeader, 
+    IonToolbar, IonTitle, IonButtons, IonBackButton, 
+    IonButton, IonIcon
   ]
 })
 export class MuroSocial implements OnInit {
 
+  // ==========================================
+  // 📦 VARIABLES
+  // ==========================================
   publicaciones: any[] = [];
   nombreArchivo: string = '';
-  idUsuario = 6;
+  
+  // Variables dinámicas del usuario
+  usuarioActual: DatosUsuario | null = null;
+  idUsuario: number = 0;
+  esAdmin: boolean = false; // <--- Aquí está declarada para que el HTML no marque error
 
   constructor(
     private cloudinary: CloudinaryService,
     private navCtrl: NavController,
-    private muroService: MuroSocialService
+    private muroService: MuroSocialService,
+    private authService: AuthService
   ) {
     addIcons({imageOutline,checkmarkCircle,paperPlaneOutline,heart,trashOutline,imagesOutline,'arrowBackOutline':arrowBackOutline});
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.obtenerUsuarioLogueado();
+  }
 
   ionViewWillEnter() {
     this.cargarPublicaciones();
   }
 
   // ==========================================
-  // 🧭 ÚNICA NAVEGACIÓN (Hacia afuera)
+  // 🔐 AUTENTICACIÓN DINÁMICA
   // ==========================================
-  
+  obtenerUsuarioLogueado() {
+    this.usuarioActual = this.authService.getUser();
+    
+    if (this.usuarioActual) {
+      this.idUsuario = this.usuarioActual.idUsuario; 
+      
+      // Validamos si es admin usando el idTipoUsuario de tu base de datos (1 = Administrador)
+      this.esAdmin = (this.usuarioActual as any).idTipoUsuario === 1; 
+    }
+  }
+
+  // ==========================================
+  // 🧭 NAVEGACIÓN
+  // ==========================================
   regresarAdmin() {
     this.navCtrl.navigateRoot('/administrador-inicio');
   }
@@ -75,7 +85,6 @@ export class MuroSocial implements OnInit {
   // ==========================================
   // 📱 FUNCIONES DEL MURO SOCIAL
   // ==========================================
-
   async cargarPublicaciones() {
     try {
       this.publicaciones = await this.muroService.getPublicaciones();
@@ -90,6 +99,10 @@ export class MuroSocial implements OnInit {
   }
 
   async darLike(id: number) {
+    if (!this.idUsuario) {
+      alert("Debes iniciar sesión para dar like.");
+      return; 
+    }
     try {
       await this.muroService.darLike(id, this.idUsuario);
       this.cargarPublicaciones();
@@ -99,6 +112,11 @@ export class MuroSocial implements OnInit {
   }
 
   async eliminarPublicacion(id: number) {
+    if (!this.esAdmin) {
+      alert("No tienes permisos para eliminar publicaciones.");
+      return;
+    }
+
     if (!confirm("¿Estás seguro de que deseas eliminar esta publicación?")) return;
 
     try {
@@ -117,6 +135,11 @@ export class MuroSocial implements OnInit {
       return;
     }
 
+    if (!this.idUsuario) {
+      alert("Debes iniciar sesión para publicar.");
+      return;
+    }
+
     try {
       let linkFoto = null;
 
@@ -127,8 +150,8 @@ export class MuroSocial implements OnInit {
 
       await this.muroService.crearPublicacion({
         descripcion,
-        idUsuario: this.idUsuario,
-        idNegocio: 1,
+        idUsuario: this.idUsuario, 
+        idNegocio: 1, 
         linkFoto
       });
 

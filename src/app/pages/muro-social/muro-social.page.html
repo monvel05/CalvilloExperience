@@ -1,16 +1,18 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/mapa" text="" icon="arrow-back-outline"></ion-back-button>
+      <ion-back-button
+        [defaultHref]="esAdmin ? '/administrador-inicio' : '/mapa'"
+        text=""
+        icon="arrow-back-outline"
+      ></ion-back-button>
     </ion-buttons>
-    <ion-title>Muro Social</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [scrollY]="true">
   <div class="dashboard-container">
     <div class="main-feed">
-      
       <div class="header-muro">
         <p>Descubre y comparte lo mejor de Calvillo Experience</p>
       </div>
@@ -20,23 +22,46 @@
           <h3>Comparte tu experiencia</h3>
         </div>
 
-        <textarea #txtDescripcion class="input-text" placeholder="¿Qué descubriste hoy en Calvillo?"></textarea>
+        <textarea
+          #txtDescripcion
+          class="input-text"
+          placeholder="¿Qué descubriste hoy en Calvillo?"
+        ></textarea>
 
         <div class="input-row">
-          <div class="file-selection-area" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <div
+            class="file-selection-area"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
             <label for="imagenPublicacion" class="btn-upload">
               <ion-icon name="image-outline"></ion-icon> Subir foto
             </label>
-            <input type="file" #imgPublicacion id="imagenPublicacion" accept="image/*" class="hidden-input" (change)="onFileSelected($event)" style="display: none;" />
-            
+            <input
+              type="file"
+              #imgPublicacion
+              id="imagenPublicacion"
+              accept="image/*"
+              class="hidden-input"
+              (change)="onFileSelected($event)"
+              style="display: none"
+            />
+
             @if (nombreArchivo) {
-              <span class="file-name-badge">
-                <ion-icon name="checkmark-circle"></ion-icon> {{ nombreArchivo }}
-              </span>
+            <span class="file-name-badge">
+              <ion-icon name="checkmark-circle"></ion-icon> {{ nombreArchivo }}
+            </span>
             }
           </div>
 
-          <ion-button class="btn-publicar" (click)="publicar(txtDescripcion, imgPublicacion)">
+          <ion-button
+            class="btn-publicar"
+            (click)="publicar(txtDescripcion, imgPublicacion)"
+          >
             <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
             Publicar
           </ion-button>
@@ -44,47 +69,87 @@
       </div>
 
       <div id="contenedorPublicaciones" class="contenedor-publicaciones">
-        
         @for (pub of publicaciones; track pub.idPublicacion) {
-          <div class="card publicacion">
-            
-            <div class="header-muro" style="display: flex; gap: 12px; align-items: center;">
-              <div class="avatar-sm"></div>
-              <div class="info" style="display: flex; flex-direction: column; justify-content: center; text-align: left;">
-                <span>{{ pub.nombre || 'Explorador' }}</span>
-                <span>{{ pub.fecha ? (pub.fecha | date:'medium') : 'Reciente' }}</span>
-              </div>
-            </div>
-  
-            @if (pub.foto || pub.linkFoto) {
-              <div class="contenedor-foto">
-                <img [src]="pub.foto || pub.linkFoto" alt="Foto de la publicación">
-              </div>
-            }
-  
-            <div class="contenido-texto">
-              <p><strong>{{ pub.nombre || 'Usuario' }}</strong> {{ pub.descripcion }}</p>
-            </div>
-  
-            <div class="acciones" style="display:flex; gap:10px; justify-content: space-between;">
-              <ion-button fill="clear" size="small" (click)="darLike(pub.idPublicacion)">
-                <ion-icon name="heart" slot="start"></ion-icon>
-                {{ pub.likes || 0 }}
-              </ion-button>
-              
-              <ion-button fill="clear" size="small" (click)="eliminarPublicacion(pub.idPublicacion)">
-                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-              </ion-button>
+        <div class="card publicacion">
+          <div
+            class="header-muro"
+            style="display: flex; gap: 12px; align-items: center"
+          >
+            <div class="avatar-sm"></div>
+            <div
+              class="info"
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: left;
+              "
+            >
+              <span>{{ pub.nombre || 'Explorador' }}</span>
+              <span
+                >{{ pub.fecha ? (pub.fecha | date:'medium') : 'Reciente'
+                }}</span
+              >
             </div>
           </div>
-          
-        } @empty {
-          <div class="loading-state">
-            <ion-icon name="images-outline" style="font-size: 56px; margin-bottom: 15px; display: block; text-align: center;"></ion-icon>
-            <p style="text-align: center;">Aún no hay publicaciones. ¡Sé el primero en compartir algo!</p>
-          </div>
-        }
 
+          @if (pub.foto || pub.linkFoto) {
+          <div class="contenedor-foto">
+            <img
+              [src]="pub.foto || pub.linkFoto"
+              alt="Foto de la publicación"
+            />
+          </div>
+          }
+
+          <div class="contenido-texto">
+            <p>
+              <strong>{{ pub.nombre || 'Usuario' }}</strong> {{ pub.descripcion
+              }}
+            </p>
+          </div>
+
+          <div
+            class="acciones"
+            style="display: flex; gap: 10px; justify-content: space-between"
+          >
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="darLike(pub.idPublicacion)"
+            >
+              <ion-icon name="heart" slot="start"></ion-icon>
+              {{ pub.likes || 0 }}
+            </ion-button>
+
+            @if (esAdmin) {
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="eliminarPublicacion(pub.idPublicacion)"
+            >
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            }
+          </div>
+        </div>
+
+        } @empty {
+        <div class="loading-state">
+          <ion-icon
+            name="images-outline"
+            style="
+              font-size: 56px;
+              margin-bottom: 15px;
+              display: block;
+              text-align: center;
+            "
+          ></ion-icon>
+          <p style="text-align: center">
+            Aún no hay publicaciones. ¡Sé el primero en compartir algo!
+          </p>
+        </div>
+        }
       </div>
     </div>
   </div>
